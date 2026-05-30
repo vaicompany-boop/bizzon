@@ -1,17 +1,32 @@
 ---
-
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ToolCard from '../components/ToolCard.astro';
+import { tools } from '../data/tools';
+const liveTools = tools.filter((tool) => tool.status === 'live');
+const plannedTools = tools.filter((tool) => tool.status === 'planned').slice(0, 3);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Bizzon — simple tools that just work" description="Bizzon is a growing collection of fast, private, browser-based tools for text, writing, and everyday productivity." canonicalPath="/">
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Simple tools, zero clutter</p>
+      <h1 class="mt-5 text-5xl font-black leading-tight tracking-tight text-slate-950 md:text-7xl">Tools that help you finish small tasks faster.</h1>
+      <p class="mt-6 max-w-2xl text-lg text-slate-600 md:text-xl">Bizzon is a utility hub for quick text, writing, and everyday productivity tasks. Open a tool, use it, move on.</p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a class="rounded-full bg-blue-600 px-6 py-3 text-center font-bold text-white shadow-sm transition hover:bg-blue-700 hover:text-white" href="/word-counter">Try Word Counter</a>
+        <a class="rounded-full border border-slate-300 bg-white px-6 py-3 text-center font-bold text-slate-800 transition hover:border-blue-300 hover:text-blue-700" href="/tools">Browse tools</a>
+      </div>
+    </div>
+    <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+      <p class="text-sm font-semibold text-slate-500">Live now</p>
+      <div class="mt-4 space-y-4">{liveTools.map((tool) => <ToolCard tool={tool} />)}</div>
+      <p class="mt-6 rounded-2xl bg-blue-50 p-4 text-sm text-blue-900">First tool is browser-only: your text is processed locally and is not uploaded.</p>
+    </div>
+  </section>
+  <section class="bg-white/70 py-14">
+    <div class="mx-auto max-w-6xl px-5">
+      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Coming next</p><h2 class="mt-3 text-3xl font-black text-slate-950 md:text-4xl">A focused set of useful utilities.</h2></div><a class="font-bold text-blue-700" href="/tools">See the tool roadmap →</a></div>
+      <div class="mt-8 grid gap-5 md:grid-cols-3">{plannedTools.map((tool) => <ToolCard tool={tool} />)}</div>
+    </div>
+  </section>
+</BaseLayout>

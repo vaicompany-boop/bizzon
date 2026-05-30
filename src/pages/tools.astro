@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ToolCard from '../components/ToolCard.astro';
+import { tools } from '../data/tools';
+---
+
+<BaseLayout title="Tools — Bizzon" description="Browse Bizzon's free browser-based tools for text, writing, and everyday productivity." canonicalPath="/tools">
+  <section class="mx-auto max-w-6xl px-5 py-14 md:py-20">
+    <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Useful tools for small everyday tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon starts with text and productivity utilities. The first tool is live now, with more simple tools planned next.</p></div>
+    <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{tools.map((tool) => <ToolCard tool={tool} />)}</div>
+  </section>
+</BaseLayout>
