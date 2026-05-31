@@ -13,15 +13,15 @@ export const tools: Tool[] = [
     status: 'live',
   },
   {
+    title: 'Case Converter',
+    href: '/case-converter',
+    description: 'Convert text to uppercase, lowercase, title case, sentence case, camelCase, kebab-case, and snake_case.',
+    status: 'live',
+  },
+  {
     title: 'Character Counter',
     href: '#',
     description: 'Quickly check total characters and character limits for everyday writing.',
-    status: 'planned',
-  },
-  {
-    title: 'Case Converter',
-    href: '#',
-    description: 'Convert text to uppercase, lowercase, sentence case, and title case.',
     status: 'planned',
   },
   {
