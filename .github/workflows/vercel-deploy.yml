@@ -10,6 +10,10 @@ concurrency:
   group: vercel-production-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Opt GitHub-provided JavaScript actions into the upcoming Node.js 24 runtime now.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   deploy:
     name: Build and deploy production
