@@ -20,9 +20,9 @@ export const tools: Tool[] = [
   },
   {
     title: 'Character Counter',
-    href: '#',
-    description: 'Quickly check total characters and character limits for everyday writing.',
-    status: 'planned',
+    href: '/character-counter',
+    description: 'Count characters, words, lines, paragraphs, and optional character limits in your browser.',
+    status: 'live',
   },
   {
     title: 'Text Cleaner',

@@ -1,0 +1,135 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="character-counter-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only utility</p>
+      <h2 id="character-counter-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Count characters as you type</h2>
+      <p class="mt-2 text-slate-600">Your text stays in your browser. Bizzon does not upload, store, or process it on a server.</p>
+    </div>
+    <div class="flex gap-3">
+      <button id="sampleCharacterText" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="clearCharacterText" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[1fr_18rem]">
+    <textarea
+      id="characterInput"
+      class="min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+      placeholder="Start typing or paste text to count characters..."
+      spellcheck="true"
+    ></textarea>
+
+    <aside class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+      <label for="characterLimit" class="text-sm font-bold text-slate-700">Optional character limit</label>
+      <input
+        id="characterLimit"
+        type="number"
+        min="1"
+        inputmode="numeric"
+        placeholder="e.g. 280"
+        class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base font-semibold text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+      />
+      <p class="mt-3 text-sm text-slate-600">Use this for posts, bios, titles, descriptions, forms, and character-limited fields.</p>
+      <button id="copyCharacterStats" type="button" class="mt-5 w-full rounded-full border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy stats</button>
+      <p id="characterCopyStatus" class="mt-2 min-h-5 text-sm font-semibold text-blue-700" aria-live="polite"></p>
+    </aside>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+    <div class="rounded-3xl bg-blue-600 p-5 text-white shadow-sm">
+      <p class="text-sm font-semibold text-blue-100">Total characters</p>
+      <p id="totalCharacters" class="mt-2 text-4xl font-black">0</p>
+    </div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Characters without spaces</p><p id="charactersNoSpaces" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Words</p><p id="characterWords" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Lines</p><p id="characterLines" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Paragraphs</p><p id="characterParagraphs" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-amber-100 p-5"><p class="text-sm font-semibold text-amber-700">Remaining characters</p><p id="remainingCharacters" class="mt-2 text-3xl font-black text-slate-950">—</p></div>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('characterInput') as HTMLTextAreaElement | null;
+  const limitInput = document.getElementById('characterLimit') as HTMLInputElement | null;
+  const sampleButton = document.getElementById('sampleCharacterText');
+  const clearButton = document.getElementById('clearCharacterText');
+  const copyButton = document.getElementById('copyCharacterStats');
+  const copyStatus = document.getElementById('characterCopyStatus');
+  const fields = {
+    total: document.getElementById('totalCharacters'),
+    noSpaces: document.getElementById('charactersNoSpaces'),
+    words: document.getElementById('characterWords'),
+    lines: document.getElementById('characterLines'),
+    paragraphs: document.getElementById('characterParagraphs'),
+    remaining: document.getElementById('remainingCharacters'),
+  };
+  const sample = 'Bizzon character counter helps you check short posts, bios, titles, product copy, and form text before you publish.';
+
+  function countWords(text: string) {
+    const matches = text.trim().match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu);
+    return matches ? matches.length : 0;
+  }
+
+  function countLines(text: string) {
+    if (!text) return 0;
+    return text.split(/\r\n|\r|\n/).length;
+  }
+
+  function countParagraphs(text: string) {
+    return text.split(/\n+/).map((part) => part.trim()).filter(Boolean).length;
+  }
+
+  function getStats() {
+    const text = input?.value ?? '';
+    const limit = Number(limitInput?.value || 0);
+    return {
+      total: text.length,
+      noSpaces: text.replace(/\s/g, '').length,
+      words: countWords(text),
+      lines: countLines(text),
+      paragraphs: countParagraphs(text),
+      remaining: limit > 0 ? limit - text.length : null,
+    };
+  }
+
+  function setStatus(message = '') {
+    if (copyStatus) copyStatus.textContent = message;
+  }
+
+  function render() {
+    const stats = getStats();
+    if (fields.total) fields.total.textContent = String(stats.total);
+    if (fields.noSpaces) fields.noSpaces.textContent = String(stats.noSpaces);
+    if (fields.words) fields.words.textContent = String(stats.words);
+    if (fields.lines) fields.lines.textContent = String(stats.lines);
+    if (fields.paragraphs) fields.paragraphs.textContent = String(stats.paragraphs);
+    if (fields.remaining) fields.remaining.textContent = stats.remaining === null ? '—' : String(stats.remaining);
+    setStatus();
+  }
+
+  function statsText() {
+    const stats = getStats();
+    return [
+      `Total characters: ${stats.total}`,
+      `Characters without spaces: ${stats.noSpaces}`,
+      `Words: ${stats.words}`,
+      `Lines: ${stats.lines}`,
+      `Paragraphs: ${stats.paragraphs}`,
+      `Remaining characters: ${stats.remaining === null ? 'No limit set' : stats.remaining}`,
+    ].join('\n');
+  }
+
+  input?.addEventListener('input', render);
+  limitInput?.addEventListener('input', render);
+  sampleButton?.addEventListener('click', () => { if (!input) return; input.value = sample; render(); input.focus(); });
+  clearButton?.addEventListener('click', () => { if (!input) return; input.value = ''; if (limitInput) limitInput.value = ''; render(); input.focus(); });
+  copyButton?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(statsText());
+      setStatus('Stats copied to clipboard.');
+    } catch {
+      setStatus('Copy failed. You can still read the stats below.');
+    }
+  });
+  render();
+</script>
