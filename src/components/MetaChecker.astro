@@ -1,0 +1,136 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="meta-checker-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only utility</p>
+      <h2 id="meta-checker-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Check SEO title and meta description length</h2>
+      <p class="mt-2 text-slate-600">Your text stays in your browser. Bizzon does not upload, store, or process your titles or descriptions on a server.</p>
+    </div>
+    <div class="flex gap-3">
+      <button id="sampleMetaText" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="clearMetaText" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div class="space-y-5">
+      <div>
+        <label for="metaTitleInput" class="text-sm font-bold text-slate-700">Meta title</label>
+        <textarea
+          id="metaTitleInput"
+          class="mt-2 min-h-36 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+          maxlength="180"
+          placeholder="Write or paste your page title..."
+          spellcheck="true"
+        ></textarea>
+      </div>
+      <div>
+        <label for="metaDescriptionInput" class="text-sm font-bold text-slate-700">Meta description</label>
+        <textarea
+          id="metaDescriptionInput"
+          class="mt-2 min-h-48 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+          maxlength="360"
+          placeholder="Write or paste your meta description..."
+          spellcheck="true"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="space-y-5">
+      <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <p class="text-sm font-bold uppercase tracking-[0.18em] text-slate-500">Google-style preview</p>
+        <div class="mt-4 rounded-2xl bg-white p-5 shadow-sm">
+          <p class="text-sm text-slate-500">https://bizzon.app/example-page</p>
+          <p id="serpTitlePreview" class="mt-1 text-xl font-medium leading-snug text-blue-700">Your SEO title preview appears here</p>
+          <p id="serpDescriptionPreview" class="mt-2 text-sm leading-6 text-slate-700">Your meta description preview appears here. Add enough useful context so searchers understand the page.</p>
+        </div>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2" aria-live="polite">
+        <div class="rounded-3xl bg-blue-600 p-5 text-white shadow-sm">
+          <p class="text-sm font-semibold text-blue-100">Title length</p>
+          <p id="titleLength" class="mt-2 text-4xl font-black">0</p>
+          <p id="titleSeoNote" class="mt-2 text-sm font-semibold text-blue-50">Aim for 50–60 characters.</p>
+        </div>
+        <div class="rounded-3xl bg-slate-100 p-5">
+          <p class="text-sm font-semibold text-slate-500">Description length</p>
+          <p id="descriptionLength" class="mt-2 text-4xl font-black text-slate-950">0</p>
+          <p id="descriptionSeoNote" class="mt-2 text-sm font-semibold text-slate-700">Aim for 120–160 characters.</p>
+        </div>
+      </div>
+      <div class="rounded-3xl bg-amber-100 p-5">
+        <p class="text-sm font-semibold text-amber-700">Quick guidance</p>
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm font-medium text-slate-800">
+          <li>Put the main keyword near the start of the title.</li>
+          <li>Make the description specific, readable, and click-worthy.</li>
+          <li>Length is a guide, not a guarantee — Google may rewrite snippets.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const titleInput = document.getElementById('metaTitleInput') as HTMLTextAreaElement | null;
+  const descriptionInput = document.getElementById('metaDescriptionInput') as HTMLTextAreaElement | null;
+  const sampleButton = document.getElementById('sampleMetaText');
+  const clearButton = document.getElementById('clearMetaText');
+  const fields = {
+    titleLength: document.getElementById('titleLength'),
+    descriptionLength: document.getElementById('descriptionLength'),
+    titleNote: document.getElementById('titleSeoNote'),
+    descriptionNote: document.getElementById('descriptionSeoNote'),
+    serpTitle: document.getElementById('serpTitlePreview'),
+    serpDescription: document.getElementById('serpDescriptionPreview'),
+  };
+
+  const sample = {
+    title: 'Free Slug Generator — Create Clean URL Slugs | Bizzon',
+    description: 'Turn titles, headlines, and filenames into clean SEO-friendly URL slugs in your browser. No login, no upload, and no clutter.',
+  };
+
+  function titleNote(length: number) {
+    if (length === 0) return 'Aim for 50–60 characters.';
+    if (length < 30) return 'Very short. Add clearer page context.';
+    if (length < 50) return 'Usable, but often a little short.';
+    if (length <= 60) return 'Good length for most SEO titles.';
+    if (length <= 70) return 'A bit long. It may still work.';
+    return 'Too long. Search results may truncate it.';
+  }
+
+  function descriptionNote(length: number) {
+    if (length === 0) return 'Aim for 120–160 characters.';
+    if (length < 80) return 'Short. Add more useful detail.';
+    if (length < 120) return 'Usable, but could be more descriptive.';
+    if (length <= 160) return 'Good length for most meta descriptions.';
+    if (length <= 180) return 'A bit long. Consider tightening it.';
+    return 'Too long. Search results may truncate it.';
+  }
+
+  function render() {
+    const title = titleInput?.value.trim() || '';
+    const description = descriptionInput?.value.trim() || '';
+    if (fields.titleLength) fields.titleLength.textContent = String(title.length);
+    if (fields.descriptionLength) fields.descriptionLength.textContent = String(description.length);
+    if (fields.titleNote) fields.titleNote.textContent = titleNote(title.length);
+    if (fields.descriptionNote) fields.descriptionNote.textContent = descriptionNote(description.length);
+    if (fields.serpTitle) fields.serpTitle.textContent = title || 'Your SEO title preview appears here';
+    if (fields.serpDescription) fields.serpDescription.textContent = description || 'Your meta description preview appears here. Add enough useful context so searchers understand the page.';
+  }
+
+  titleInput?.addEventListener('input', render);
+  descriptionInput?.addEventListener('input', render);
+  sampleButton?.addEventListener('click', () => {
+    if (!titleInput || !descriptionInput) return;
+    titleInput.value = sample.title;
+    descriptionInput.value = sample.description;
+    render();
+    titleInput.focus();
+  });
+  clearButton?.addEventListener('click', () => {
+    if (!titleInput || !descriptionInput) return;
+    titleInput.value = '';
+    descriptionInput.value = '';
+    render();
+    titleInput.focus();
+  });
+  render();
+</script>

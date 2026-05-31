@@ -38,8 +38,8 @@ export const tools: Tool[] = [
   },
   {
     title: 'Meta Title & Description Checker',
-    href: '#',
-    description: 'Preview and measure basic SEO title and meta description lengths.',
-    status: 'planned',
+    href: '/meta-title-description-checker',
+    description: 'Preview and measure basic SEO title and meta description lengths in your browser.',
+    status: 'live',
   },
 ];

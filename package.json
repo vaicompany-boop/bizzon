@@ -13,6 +13,7 @@
     "test:text-cleaner": "npm run build && node scripts/verify-text-cleaner.mjs",
     "test:home-tools": "npm run build && node scripts/verify-home-tools-polish.mjs",
     "test:slug-generator": "npm run build && node scripts/verify-slug-generator.mjs",
+    "test:meta-checker": "npm run build && node scripts/verify-meta-checker.mjs",
     "astro": "astro"
   },
   "dependencies": {
