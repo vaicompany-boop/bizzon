@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "test:character-counter": "npm run build && node scripts/verify-character-counter.mjs",
+    "test:text-cleaner": "npm run build && node scripts/verify-text-cleaner.mjs",
     "astro": "astro"
   },
   "dependencies": {

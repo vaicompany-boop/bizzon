@@ -26,9 +26,9 @@ export const tools: Tool[] = [
   },
   {
     title: 'Text Cleaner',
-    href: '#',
-    description: 'Remove extra spaces, empty lines, weird formatting, and copy-paste clutter.',
-    status: 'planned',
+    href: '/text-cleaner',
+    description: 'Remove extra spaces, empty lines, smart quotes, tabs, and copy-paste clutter in your browser.',
+    status: 'live',
   },
   {
     title: 'Slug Generator',

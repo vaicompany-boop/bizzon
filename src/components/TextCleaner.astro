@@ -1,0 +1,155 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="text-cleaner-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only utility</p>
+      <h2 id="text-cleaner-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Paste messy text and clean it up</h2>
+      <p class="mt-2 text-slate-600">Your text stays in your browser. Bizzon does not upload, store, or process it on a server.</p>
+    </div>
+    <div class="flex gap-3">
+      <button id="sampleDirtyText" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="clearDirtyText" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <label for="dirtyText" class="text-sm font-bold text-slate-700">Messy input</label>
+      <textarea
+        id="dirtyText"
+        class="mt-2 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="Paste messy text with extra spaces, empty lines, tabs, or smart quotes..."
+        spellcheck="true"
+      ></textarea>
+    </div>
+    <div>
+      <div class="flex items-center justify-between gap-3">
+        <label for="cleanText" class="text-sm font-bold text-slate-700">Clean output</label>
+        <button id="copyCleanText" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy output</button>
+      </div>
+      <textarea
+        id="cleanText"
+        class="mt-2 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-950 p-5 text-base text-white outline-none placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+        placeholder="Cleaned text appears here..."
+        readonly
+      ></textarea>
+      <p id="cleanCopyStatus" class="mt-2 min-h-5 text-sm font-semibold text-blue-700" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" role="group" aria-label="Text cleaning options">
+    <button data-clean="spaces" type="button" class="clean-option rounded-2xl bg-blue-600 px-4 py-3 text-left font-bold text-white shadow-sm transition hover:bg-blue-700">Fix extra spaces</button>
+    <button data-clean="lines" type="button" class="clean-option rounded-2xl bg-slate-100 px-4 py-3 text-left font-bold text-slate-900 transition hover:bg-blue-50 hover:text-blue-700">Remove empty lines</button>
+    <button data-clean="smart" type="button" class="clean-option rounded-2xl bg-slate-100 px-4 py-3 text-left font-bold text-slate-900 transition hover:bg-blue-50 hover:text-blue-700">Normalize smart quotes</button>
+    <button data-clean="all" type="button" class="clean-option rounded-2xl bg-slate-100 px-4 py-3 text-left font-bold text-slate-900 transition hover:bg-blue-50 hover:text-blue-700">Clean everything</button>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-3" aria-live="polite">
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Original characters</p><p id="dirtyCharacters" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-blue-600 p-5 text-white shadow-sm"><p class="text-sm font-semibold text-blue-100">Clean characters</p><p id="cleanCharacters" class="mt-2 text-4xl font-black">0</p></div>
+    <div class="rounded-3xl bg-amber-100 p-5"><p class="text-sm font-semibold text-amber-700">Characters removed</p><p id="removedCharacters" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('dirtyText') as HTMLTextAreaElement | null;
+  const output = document.getElementById('cleanText') as HTMLTextAreaElement | null;
+  const sampleButton = document.getElementById('sampleDirtyText');
+  const clearButton = document.getElementById('clearDirtyText');
+  const copyButton = document.getElementById('copyCleanText');
+  const copyStatus = document.getElementById('cleanCopyStatus');
+  const optionButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.clean-option'));
+  const fields = {
+    dirty: document.getElementById('dirtyCharacters'),
+    clean: document.getElementById('cleanCharacters'),
+    removed: document.getElementById('removedCharacters'),
+  };
+  const sample = `  This   text   has   extra     spaces.\n\n\nIt also has\ttabs, “smart quotes”, and weird spacing before punctuation !  `;
+  let activeMode = 'spaces';
+
+  function normalizeSmartQuotes(text: string) {
+    return text
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'")
+      .replace(/[–—]/g, '-');
+  }
+
+  function fixSpaces(text: string) {
+    return text
+      .replace(/[\t ]+/g, ' ')
+      .replace(/ +([,.!?;:])/g, '$1')
+      .split(/\r\n|\r|\n/)
+      .map((line) => line.trim())
+      .join('\n')
+      .trim();
+  }
+
+  function removeEmptyLines(text: string) {
+    return text
+      .split(/\r\n|\r|\n/)
+      .map((line) => line.trimEnd())
+      .filter((line) => line.trim().length > 0)
+      .join('\n')
+      .trim();
+  }
+
+  function clean(text: string, mode: string) {
+    switch (mode) {
+      case 'lines': return removeEmptyLines(text);
+      case 'smart': return normalizeSmartQuotes(text);
+      case 'all': return removeEmptyLines(fixSpaces(normalizeSmartQuotes(text)));
+      case 'spaces':
+      default: return fixSpaces(text);
+    }
+  }
+
+  function setStatus(message = '') {
+    if (copyStatus) copyStatus.textContent = message;
+  }
+
+  function updateActiveButton() {
+    optionButtons.forEach((button) => {
+      const isActive = button.dataset.clean === activeMode;
+      button.classList.toggle('bg-blue-600', isActive);
+      button.classList.toggle('text-white', isActive);
+      button.classList.toggle('shadow-sm', isActive);
+      button.classList.toggle('bg-slate-100', !isActive);
+      button.classList.toggle('text-slate-900', !isActive);
+      button.setAttribute('aria-pressed', String(isActive));
+    });
+  }
+
+  function render() {
+    if (!input || !output) return;
+    const cleaned = clean(input.value, activeMode);
+    output.value = cleaned;
+    if (fields.dirty) fields.dirty.textContent = String(input.value.length);
+    if (fields.clean) fields.clean.textContent = String(cleaned.length);
+    if (fields.removed) fields.removed.textContent = String(Math.max(0, input.value.length - cleaned.length));
+    setStatus();
+  }
+
+  input?.addEventListener('input', render);
+  sampleButton?.addEventListener('click', () => { if (!input) return; input.value = sample; render(); input.focus(); });
+  clearButton?.addEventListener('click', () => { if (!input || !output) return; input.value = ''; output.value = ''; render(); input.focus(); });
+  optionButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      activeMode = button.dataset.clean ?? 'spaces';
+      updateActiveButton();
+      render();
+    });
+  });
+  copyButton?.addEventListener('click', async () => {
+    if (!output) return;
+    try {
+      await navigator.clipboard.writeText(output.value);
+      setStatus(output.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    } catch {
+      output.select();
+      document.execCommand('copy');
+      setStatus(output.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    }
+  });
+
+  updateActiveButton();
+  render();
+</script>
