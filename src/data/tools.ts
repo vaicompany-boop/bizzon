@@ -32,9 +32,9 @@ export const tools: Tool[] = [
   },
   {
     title: 'Slug Generator',
-    href: '#',
-    description: 'Turn titles into clean URL slugs for blogs, pages, and projects.',
-    status: 'planned',
+    href: '/slug-generator',
+    description: 'Turn titles, headlines, filenames, and phrases into clean URL slugs in your browser.',
+    status: 'live',
   },
   {
     title: 'Meta Title & Description Checker',

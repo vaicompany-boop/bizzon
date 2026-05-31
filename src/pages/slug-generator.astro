@@ -1,0 +1,32 @@
+---
+import SlugGenerator from '../components/SlugGenerator.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Slug Generator — Create clean URL slugs from titles | Bizzon"
+  description="Free browser-based Slug Generator by Bizzon. Turn titles, headlines, filenames, and phrases into clean URL slugs without uploading your text."
+  canonicalPath="/slug-generator"
+  heading="Slug Generator"
+  intro="Turn titles, headlines, filenames, and phrases into clean URL-friendly slugs. Choose hyphens or underscores, lowercase output, and optional stop-word removal."
+>
+  <SlugGenerator />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Clean URL slugs</h2>
+      <p class="mt-3 text-slate-600">Remove punctuation, normalize accents, replace spaces, and turn messy titles into readable slugs.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Private by default</h2>
+      <p class="mt-3 text-slate-600">Your text stays in your browser. Bizzon does not upload or store your titles, drafts, or filenames.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Useful for publishing</h2>
+      <p class="mt-3 text-slate-600">Create slugs for blog posts, landing pages, documentation, products, filenames, and quick SEO drafts.</p>
+    </div>
+  </section>
+  <section class="mt-10 rounded-[2rem] border border-slate-200 bg-blue-50 p-6 md:p-8">
+    <h2 class="text-2xl font-black text-slate-950">Related text tools</h2>
+    <p class="mt-4 text-slate-700">Need to clean pasted text first? Try the <a class="font-bold text-blue-700" href="/text-cleaner">Text Cleaner</a>. Need format changes? Use the <a class="font-bold text-blue-700" href="/case-converter">Case Converter</a>. Need length checks? Open the <a class="font-bold text-blue-700" href="/character-counter">Character Counter</a>.</p>
+  </section>
+</ToolLayout>

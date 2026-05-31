@@ -1,0 +1,139 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="slug-generator-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only utility</p>
+      <h2 id="slug-generator-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Turn titles into clean URL slugs</h2>
+      <p class="mt-2 text-slate-600">Your text stays in your browser. Bizzon does not upload, store, or process it on a server.</p>
+    </div>
+    <div class="flex gap-3">
+      <button id="sampleSlugText" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="clearSlugText" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <label for="slugInput" class="text-sm font-bold text-slate-700">Title or text</label>
+      <textarea
+        id="slugInput"
+        class="mt-2 min-h-72 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="Paste a title, headline, filename, or phrase..."
+        spellcheck="true"
+      ></textarea>
+    </div>
+    <div>
+      <div class="flex items-center justify-between gap-3">
+        <label for="slugOutput" class="text-sm font-bold text-slate-700">Generated slug</label>
+        <button id="copySlug" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy slug</button>
+      </div>
+      <textarea
+        id="slugOutput"
+        class="mt-2 min-h-72 w-full resize-y rounded-3xl border border-slate-200 bg-slate-950 p-5 font-mono text-base text-white outline-none placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+        placeholder="generated-slug-appears-here"
+        readonly
+      ></textarea>
+      <p id="slugCopyStatus" class="mt-2 min-h-5 text-sm font-semibold text-blue-700" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr_1fr]">
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label for="separatorSelect" class="text-sm font-bold text-slate-700">Separator</label>
+      <select id="separatorSelect" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+        <option value="-">Hyphen -</option>
+        <option value="_">Underscore _</option>
+      </select>
+    </div>
+    <label class="flex items-center gap-3 rounded-3xl bg-slate-50 p-5 text-sm font-bold text-slate-700">
+      <input id="lowercaseSlug" type="checkbox" checked class="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+      Lowercase slug
+    </label>
+    <label class="flex items-center gap-3 rounded-3xl bg-slate-50 p-5 text-sm font-bold text-slate-700">
+      <input id="removeStopWords" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+      Remove common stop words
+    </label>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-3" aria-live="polite">
+    <div class="rounded-3xl bg-blue-600 p-5 text-white shadow-sm"><p class="text-sm font-semibold text-blue-100">Slug length</p><p id="slugLength" class="mt-2 text-4xl font-black">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Words in slug</p><p id="slugWords" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-amber-100 p-5"><p class="text-sm font-semibold text-amber-700">SEO note</p><p id="slugSeoNote" class="mt-2 text-base font-bold text-slate-950">Add a title to start.</p></div>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('slugInput') as HTMLTextAreaElement | null;
+  const output = document.getElementById('slugOutput') as HTMLTextAreaElement | null;
+  const separatorSelect = document.getElementById('separatorSelect') as HTMLSelectElement | null;
+  const lowercaseCheckbox = document.getElementById('lowercaseSlug') as HTMLInputElement | null;
+  const stopWordsCheckbox = document.getElementById('removeStopWords') as HTMLInputElement | null;
+  const sampleButton = document.getElementById('sampleSlugText');
+  const clearButton = document.getElementById('clearSlugText');
+  const copyButton = document.getElementById('copySlug');
+  const copyStatus = document.getElementById('slugCopyStatus');
+  const fields = {
+    length: document.getElementById('slugLength'),
+    words: document.getElementById('slugWords'),
+    seo: document.getElementById('slugSeoNote'),
+  };
+  const sample = 'How to Clean Messy Text: A Simple Guide for Writers & Marketers';
+  const stopWords = new Set(['a', 'an', 'and', 'are', 'as', 'at', 'be', 'but', 'by', 'for', 'from', 'how', 'in', 'into', 'is', 'it', 'of', 'on', 'or', 'the', 'to', 'with']);
+
+  function slugify(text: string) {
+    const separator = separatorSelect?.value || '-';
+    const shouldLowercase = lowercaseCheckbox?.checked ?? true;
+    const shouldRemoveStopWords = stopWordsCheckbox?.checked ?? false;
+    const normalized = text
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/&/g, ' and ')
+      .replace(/[^\p{L}\p{N}]+/gu, ' ')
+      .trim();
+    let parts = normalized.split(/\s+/).filter(Boolean);
+    if (shouldRemoveStopWords) parts = parts.filter((part) => !stopWords.has(part.toLocaleLowerCase()));
+    const slug = parts.join(separator).replace(new RegExp(`${separator}+`, 'g'), separator);
+    return shouldLowercase ? slug.toLocaleLowerCase() : slug;
+  }
+
+  function setStatus(message = '') {
+    if (copyStatus) copyStatus.textContent = message;
+  }
+
+  function updateSeoNote(slug: string) {
+    if (!fields.seo) return;
+    if (!slug) fields.seo.textContent = 'Add a title to start.';
+    else if (slug.length <= 60) fields.seo.textContent = 'Good length for most URLs.';
+    else if (slug.length <= 90) fields.seo.textContent = 'Usable, but consider shortening it.';
+    else fields.seo.textContent = 'Long slug. Shorter is usually better.';
+  }
+
+  function render() {
+    if (!input || !output) return;
+    const slug = slugify(input.value);
+    output.value = slug;
+    const words = slug ? slug.split(separatorSelect?.value || '-').filter(Boolean).length : 0;
+    if (fields.length) fields.length.textContent = String(slug.length);
+    if (fields.words) fields.words.textContent = String(words);
+    updateSeoNote(slug);
+    setStatus();
+  }
+
+  input?.addEventListener('input', render);
+  separatorSelect?.addEventListener('change', render);
+  lowercaseCheckbox?.addEventListener('change', render);
+  stopWordsCheckbox?.addEventListener('change', render);
+  sampleButton?.addEventListener('click', () => { if (!input) return; input.value = sample; render(); input.focus(); });
+  clearButton?.addEventListener('click', () => { if (!input || !output) return; input.value = ''; output.value = ''; render(); input.focus(); });
+  copyButton?.addEventListener('click', async () => {
+    if (!output) return;
+    try {
+      await navigator.clipboard.writeText(output.value);
+      setStatus(output.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    } catch {
+      output.select();
+      document.execCommand('copy');
+      setStatus(output.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    }
+  });
+  render();
+</script>
