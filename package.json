@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "test:character-counter": "npm run build && node scripts/verify-character-counter.mjs",
     "test:text-cleaner": "npm run build && node scripts/verify-text-cleaner.mjs",
+    "test:home-tools": "npm run build && node scripts/verify-home-tools-polish.mjs",
     "astro": "astro"
   },
   "dependencies": {
