@@ -46,7 +46,7 @@ export const tools: Tool[] = [
     title: 'Password Generator',
     href: '/password-generator',
     description: 'Generate strong random passwords locally in your browser, with simple length and character options.',
-    status: 'planned',
+    status: 'live',
   },
   {
     title: 'Random Picker',
