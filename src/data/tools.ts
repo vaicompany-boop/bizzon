@@ -66,4 +66,22 @@ export const tools: Tool[] = [
     description: 'Add or subtract days from a date, or count days between two dates in your browser.',
     status: 'live',
   },
+  {
+    title: 'Percentage Calculator',
+    href: '/percentage-calculator',
+    description: 'Calculate percentages, increases, decreases, and simple discount math quickly.',
+    status: 'planned',
+  },
+  {
+    title: 'Filename Cleaner',
+    href: '/filename-cleaner',
+    description: 'Turn messy filenames into clean, readable, web-friendly names before uploading or sharing.',
+    status: 'planned',
+  },
+  {
+    title: 'Invoice Helper',
+    href: '/invoice-helper',
+    description: 'Draft simple invoice line totals, tax amounts, and copyable invoice notes without an account.',
+    status: 'planned',
+  },
 ];

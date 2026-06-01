@@ -27,14 +27,17 @@ const homeRequired = [
   'Random Picker',
   'Unit Converter Mini',
   'Date Calculator',
+  'Percentage Calculator',
+  'Filename Cleaner',
+  'Invoice Helper',
   'Explore all tools',
-  'Text tools live now',
+  '10 tools live now',
   'No login. No upload. No clutter.',
 ];
 
 const toolsRequired = [
   '10 live tools',
-  'Live text tools',
+  'Live tools',
   'Coming next',
   'Use this if you need to',
   '/word-counter',
@@ -51,6 +54,9 @@ const toolsRequired = [
   'Random Picker',
   'Unit Converter Mini',
   'Date Calculator',
+  'Percentage Calculator',
+  'Filename Cleaner',
+  'Invoice Helper',
 ];
 
 for (const needle of homeRequired) {

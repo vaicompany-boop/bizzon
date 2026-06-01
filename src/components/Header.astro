@@ -2,18 +2,19 @@
 const navItems = [
   { href: '/', label: 'Home' },
   { href: '/tools', label: 'Tools' },
-  { href: '/word-counter', label: 'Word Counter' },
-  { href: '/case-converter', label: 'Case Converter' },
+  { href: '/text-cleaner', label: 'Text Cleaner' },
+  { href: '/password-generator', label: 'Password Generator' },
+  { href: '/date-calculator', label: 'Date Calculator' },
 ];
 ---
 
-<header class="border-b border-slate-200/80 bg-white/85 backdrop-blur">
-  <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+<header class="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
     <a href="/" class="flex items-center gap-3 font-semibold text-slate-950" aria-label="Bizzon home">
       <span class="grid size-10 place-items-center rounded-2xl bg-blue-600 text-lg font-black text-white shadow-sm">B</span>
       <span class="text-xl tracking-tight">Bizzon</span>
     </a>
-    <nav class="hidden items-center gap-6 text-sm font-medium text-slate-600 sm:flex" aria-label="Main navigation">
+    <nav class="hidden items-center gap-5 text-sm font-medium text-slate-600 lg:flex" aria-label="Main navigation">
       {navItems.map((item) => (
         <a class="transition hover:text-blue-700" href={item.href}>{item.label}</a>
       ))}
@@ -22,4 +23,9 @@ const navItems = [
       Open tools
     </a>
   </div>
+  <nav class="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 pb-3 text-sm font-semibold text-slate-600 lg:hidden" aria-label="Mobile navigation">
+    {navItems.map((item) => (
+      <a class="shrink-0 rounded-full border border-slate-200 bg-white px-3 py-1.5 transition hover:border-blue-200 hover:text-blue-700" href={item.href}>{item.label}</a>
+    ))}
+  </nav>
 </header>
