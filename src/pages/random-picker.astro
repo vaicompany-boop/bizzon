@@ -1,0 +1,32 @@
+---
+import RandomPicker from '../components/RandomPicker.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Random Picker — Pick a random item from a list | Bizzon"
+  description="Free browser-based Random Picker by Bizzon. Paste a list and pick one or multiple random items locally in your browser."
+  canonicalPath="/random-picker"
+  heading="Random Picker"
+  intro="Paste a list and pick a random item, winner, name, task, meal, or option. Choose one item, multiple items, or shuffle the whole list."
+>
+  <RandomPicker />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Pick one or many</h2>
+      <p class="mt-3 text-slate-600">Choose one random item, draw several winners, allow duplicates when needed, or shuffle a full list into a random order.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Private by default</h2>
+      <p class="mt-3 text-slate-600">Your list stays in your browser. Bizzon does not upload, save, or process your names, ideas, or choices on a server.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Useful for decisions</h2>
+      <p class="mt-3 text-slate-600">Pick winners, chores, meals, tasks, teams, names, ideas, destinations, or anything else from a simple line-by-line list.</p>
+    </div>
+  </section>
+  <section class="mt-10 rounded-[2rem] border border-slate-200 bg-blue-50 p-6 md:p-8">
+    <h2 class="text-2xl font-black text-slate-950">Related tools</h2>
+    <p class="mt-4 text-slate-700">Need to generate a password? Try the <a class="font-bold text-blue-700" href="/password-generator">Password Generator</a>. Need to clean a messy copied list first? Use the <a class="font-bold text-blue-700" href="/text-cleaner">Text Cleaner</a>. Need counts? Open the <a class="font-bold text-blue-700" href="/character-counter">Character Counter</a>.</p>
+  </section>
+</ToolLayout>

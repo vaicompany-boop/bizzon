@@ -15,6 +15,7 @@
     "test:slug-generator": "npm run build && node scripts/verify-slug-generator.mjs",
     "test:meta-checker": "npm run build && node scripts/verify-meta-checker.mjs",
     "test:password-generator": "npm run build && node scripts/verify-password-generator.mjs",
+    "test:random-picker": "npm run build && node scripts/verify-random-picker.mjs",
     "astro": "astro"
   },
   "dependencies": {

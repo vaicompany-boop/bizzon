@@ -52,7 +52,7 @@ export const tools: Tool[] = [
     title: 'Random Picker',
     href: '/random-picker',
     description: 'Paste a list and pick a random item, winner, name, or option in your browser.',
-    status: 'planned',
+    status: 'live',
   },
   {
     title: 'Unit Converter Mini',
