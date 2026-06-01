@@ -15,19 +15,23 @@ const home = readFileSync(pages.home, 'utf8');
 const tools = readFileSync(pages.tools, 'utf8');
 
 const homeRequired = [
-  '4 live browser tools',
+  '6 live browser tools',
   'All tools run locally in your browser',
   'Word Counter',
   'Case Converter',
   'Character Counter',
   'Text Cleaner',
+  'Slug Generator',
+  'Meta Title &amp; Description Checker',
+  'Password Generator',
+  'Random Picker',
   'Explore all tools',
   'Text tools live now',
   'No login. No upload. No clutter.',
 ];
 
 const toolsRequired = [
-  '4 live tools',
+  '6 live tools',
   'Live text tools',
   'Coming next',
   'Use this if you need to',
@@ -35,7 +39,11 @@ const toolsRequired = [
   '/case-converter',
   '/character-counter',
   '/text-cleaner',
-  'Slug Generator',
+  '/slug-generator',
+  '/meta-title-description-checker',
+  'Password Generator',
+  'Random Picker',
+  'Unit Converter Mini',
 ];
 
 for (const needle of homeRequired) {

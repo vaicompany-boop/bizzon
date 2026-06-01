@@ -4,19 +4,22 @@ import ToolCard from '../components/ToolCard.astro';
 import { tools } from '../data/tools';
 const liveTools = tools.filter((tool) => tool.status === 'live');
 const plannedTools = tools.filter((tool) => tool.status === 'planned');
+const liveToolCount = liveTools.length;
 const useCases = [
   { title: 'Need writing stats?', text: 'Use this if you need to count words, characters, lines, paragraphs, or reading time before publishing.', href: '/word-counter', cta: 'Open Word Counter' },
   { title: 'Need a character limit?', text: 'Use this if you need to fit a post, bio, title, description, or form field into a specific limit.', href: '/character-counter', cta: 'Open Character Counter' },
   { title: 'Need clean pasted text?', text: 'Use this if you need to remove extra spaces, empty lines, tabs, smart quotes, or messy formatting.', href: '/text-cleaner', cta: 'Open Text Cleaner' },
   { title: 'Need a different text case?', text: 'Use this if you need to convert text to title case, sentence case, camelCase, kebab-case, or snake_case.', href: '/case-converter', cta: 'Open Case Converter' },
+  { title: 'Need a clean URL slug?', text: 'Use this if you need to turn a title, headline, filename, or phrase into a readable URL slug.', href: '/slug-generator', cta: 'Open Slug Generator' },
+  { title: 'Need SEO snippet checks?', text: 'Use this if you need to preview and measure a meta title and description before publishing.', href: '/meta-title-description-checker', cta: 'Open Meta Checker' },
 ];
 ---
 
 <BaseLayout title="Tools — Bizzon" description="Browse Bizzon's free browser-based tools for text, writing, and everyday productivity." canonicalPath="/tools">
   <section class="mx-auto max-w-6xl px-5 py-14 md:py-20">
     <div class="grid gap-8 md:grid-cols-[1fr_18rem] md:items-end">
-      <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Useful tools for small everyday text tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon has <strong>4 live tools</strong> for text counting, case conversion, character limits, and cleanup. All tools are fast, private, and browser-based.</p></div>
-      <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6"><p class="text-4xl font-black text-blue-700">4</p><p class="mt-2 font-bold text-slate-950">Live tools</p><p class="mt-2 text-sm text-slate-600">More utilities are planned, but the first text cluster is already usable.</p></div>
+      <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Useful tools for small everyday text tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon has <strong>{liveToolCount} live tools</strong> for text counting, case conversion, cleanup, URL slugs, and SEO snippets. All tools are fast, private, and browser-based.</p></div>
+      <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6"><p class="text-4xl font-black text-blue-700">{liveToolCount}</p><p class="mt-2 font-bold text-slate-950">Live tools</p><p class="mt-2 text-sm text-slate-600">The first text and publishing cluster is already usable, with more simple utilities planned.</p></div>
     </div>
 
     <section class="mt-12" aria-labelledby="live-tools-heading">
@@ -26,7 +29,7 @@ const useCases = [
 
     <section class="mt-14 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8" aria-labelledby="use-cases-heading">
       <h2 id="use-cases-heading" class="text-3xl font-black text-slate-950">Which tool should I use?</h2>
-      <div class="mt-6 grid gap-4 md:grid-cols-2">
+      <div class="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {useCases.map((item) => (
           <a class="rounded-3xl border border-slate-200 bg-slate-50 p-5 transition hover:-translate-y-1 hover:border-blue-200 hover:bg-blue-50" href={item.href}>
             <h3 class="text-lg font-bold text-slate-950">{item.title}</h3>
@@ -38,7 +41,7 @@ const useCases = [
     </section>
 
     <section class="mt-14" aria-labelledby="planned-tools-heading">
-      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Coming next</p><h2 id="planned-tools-heading" class="mt-3 text-3xl font-black text-slate-950">Planned utility roadmap.</h2></div><p class="max-w-xl text-slate-600">Next up: SEO and publishing helpers such as Slug Generator.</p></div>
+      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Coming next</p><h2 id="planned-tools-heading" class="mt-3 text-3xl font-black text-slate-950">Planned utility roadmap.</h2></div><p class="max-w-xl text-slate-600">Next up: practical everyday utilities such as a Password Generator, Random Picker, and small unit converters.</p></div>
       <div class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{plannedTools.map((tool) => <ToolCard tool={tool} />)}</div>
     </section>
   </section>

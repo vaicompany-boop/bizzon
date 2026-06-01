@@ -42,4 +42,22 @@ export const tools: Tool[] = [
     description: 'Preview and measure basic SEO title and meta description lengths in your browser.',
     status: 'live',
   },
+  {
+    title: 'Password Generator',
+    href: '/password-generator',
+    description: 'Generate strong random passwords locally in your browser, with simple length and character options.',
+    status: 'planned',
+  },
+  {
+    title: 'Random Picker',
+    href: '/random-picker',
+    description: 'Paste a list and pick a random item, winner, name, or option in your browser.',
+    status: 'planned',
+  },
+  {
+    title: 'Unit Converter Mini',
+    href: '/unit-converter',
+    description: 'Convert common everyday units quickly without an account or upload.',
+    status: 'planned',
+  },
 ];
