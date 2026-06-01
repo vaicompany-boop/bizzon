@@ -1,0 +1,32 @@
+---
+import DateCalculator from '../components/DateCalculator.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Date Calculator — Add days or count days between dates | Bizzon"
+  description="Free browser-based Date Calculator by Bizzon. Add or subtract days from a date, or count days between two dates locally in your browser."
+  canonicalPath="/date-calculator"
+  heading="Date Calculator"
+  intro="Add days, subtract days, or count the days between two dates for deadlines, trips, schedules, and planning notes."
+>
+  <DateCalculator />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Days between two dates</h2>
+      <p class="mt-3 text-slate-600">Choose a start and end date to count the calendar days between deadlines, trips, events, or milestones.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Add or subtract days</h2>
+      <p class="mt-3 text-slate-600">Start from one date and move forward or backward by a chosen number of days for quick planning.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Private by default</h2>
+      <p class="mt-3 text-slate-600">Your dates stay in your browser. Bizzon does not upload, save, or process your schedule on a server.</p>
+    </div>
+  </section>
+  <section class="mt-10 rounded-[2rem] border border-slate-200 bg-blue-50 p-6 md:p-8">
+    <h2 class="text-2xl font-black text-slate-950">Related tools</h2>
+    <p class="mt-4 text-slate-700">Need quick measurements? Try the <a class="font-bold text-blue-700" href="/unit-converter">Unit Converter Mini</a>. Need to pick between dates or choices? Use the <a class="font-bold text-blue-700" href="/random-picker">Random Picker</a>. Need text counts? Open the <a class="font-bold text-blue-700" href="/character-counter">Character Counter</a>.</p>
+  </section>
+</ToolLayout>

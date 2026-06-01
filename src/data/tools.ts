@@ -60,4 +60,10 @@ export const tools: Tool[] = [
     description: 'Convert common length, weight, and temperature units quickly in your browser.',
     status: 'live',
   },
+  {
+    title: 'Date Calculator',
+    href: '/date-calculator',
+    description: 'Add or subtract days from a date, or count days between two dates in your browser.',
+    status: 'live',
+  },
 ];

@@ -1,0 +1,174 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="date-calculator-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only utility</p>
+      <h2 id="date-calculator-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Add days or count days between dates</h2>
+      <p class="mt-2 text-slate-600">Every calculation happens locally in your browser. Use it for deadlines, trips, schedules, habits, and planning notes.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleDateCalculator" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="clearDateCalculator" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[1fr_1fr]">
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label for="dateMode" class="text-sm font-bold text-slate-700">Mode</label>
+      <select id="dateMode" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+        <option value="between">Days between two dates</option>
+        <option value="add">Add or subtract days</option>
+      </select>
+      <p id="dateModeHint" class="mt-3 text-sm text-slate-600">Count the calendar days between a start date and an end date.</p>
+    </div>
+
+    <div class="rounded-3xl bg-slate-950 p-5 text-white">
+      <div class="flex items-center justify-between gap-3">
+        <label for="dateResult" class="text-sm font-bold text-slate-300">Result</label>
+        <button id="copyDateResult" type="button" class="rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-blue-300 hover:text-white">Copy</button>
+      </div>
+      <textarea id="dateResult" readonly class="mt-2 min-h-32 w-full resize-y rounded-2xl border border-slate-700 bg-slate-900 p-4 font-mono text-lg text-white outline-none" placeholder="Result appears here"></textarea>
+      <p id="dateStatus" class="mt-2 min-h-5 text-sm font-semibold text-blue-200" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div id="betweenPanel" class="mt-5 grid gap-5 md:grid-cols-2">
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label for="startDate" class="text-sm font-bold text-slate-700">Start date</label>
+      <input id="startDate" type="date" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+    </div>
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label for="endDate" class="text-sm font-bold text-slate-700">End date</label>
+      <input id="endDate" type="date" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+    </div>
+  </div>
+
+  <div id="addPanel" class="mt-5 hidden grid gap-5 md:grid-cols-3">
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label for="baseDate" class="text-sm font-bold text-slate-700">Base date</label>
+      <input id="baseDate" type="date" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+    </div>
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label for="dayAmount" class="text-sm font-bold text-slate-700">Number of days</label>
+      <input id="dayAmount" type="number" step="1" min="0" value="30" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+    </div>
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label for="dateDirection" class="text-sm font-bold text-slate-700">Direction</label>
+      <select id="dateDirection" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+        <option value="add">Add days</option>
+        <option value="subtract">Subtract days</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 md:grid-cols-3" aria-live="polite">
+    <div class="rounded-3xl bg-blue-600 p-5 text-white"><p class="text-sm font-semibold text-blue-100">Current mode</p><p id="currentDateMode" class="mt-2 text-2xl font-black">Days between</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Calendar logic</p><p id="calendarNote" class="mt-2 text-lg font-black text-slate-950">Uses local calendar dates</p></div>
+    <div class="rounded-3xl bg-amber-100 p-5"><p class="text-sm font-semibold text-amber-700">Output</p><p class="mt-2 text-lg font-black text-slate-950">Plain English result</p></div>
+  </div>
+</section>
+
+<script>
+  const mode = document.getElementById('dateMode') as HTMLSelectElement | null;
+  const modeHint = document.getElementById('dateModeHint');
+  const betweenPanel = document.getElementById('betweenPanel');
+  const addPanel = document.getElementById('addPanel');
+  const startDate = document.getElementById('startDate') as HTMLInputElement | null;
+  const endDate = document.getElementById('endDate') as HTMLInputElement | null;
+  const baseDate = document.getElementById('baseDate') as HTMLInputElement | null;
+  const dayAmount = document.getElementById('dayAmount') as HTMLInputElement | null;
+  const direction = document.getElementById('dateDirection') as HTMLSelectElement | null;
+  const result = document.getElementById('dateResult') as HTMLTextAreaElement | null;
+  const status = document.getElementById('dateStatus');
+  const currentMode = document.getElementById('currentDateMode');
+  const calendarNote = document.getElementById('calendarNote');
+  const copyButton = document.getElementById('copyDateResult');
+  const clearButton = document.getElementById('clearDateCalculator');
+  const sampleButton = document.getElementById('sampleDateCalculator');
+  const dayMs = 24 * 60 * 60 * 1000;
+
+  function parseLocalDate(value: string) {
+    if (!value) return null;
+    const [year, month, day] = value.split('-').map(Number);
+    if (!year || !month || !day) return null;
+    return new Date(year, month - 1, day);
+  }
+
+  function formatDate(date: Date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  function setStatus(message = '') {
+    if (status) status.textContent = message;
+  }
+
+  function calculateBetween() {
+    if (!startDate || !endDate || !result) return;
+    const start = parseLocalDate(startDate.value);
+    const end = parseLocalDate(endDate.value);
+    if (!start || !end) { result.value = ''; setStatus('Choose both dates.'); return; }
+    const days = Math.round((end.getTime() - start.getTime()) / dayMs);
+    const absolute = Math.abs(days);
+    result.value = `${absolute} day${absolute === 1 ? '' : 's'} between ${formatDate(start)} and ${formatDate(end)}${days < 0 ? ' (end date is before start date)' : ''}.`;
+    setStatus('Calculated days between dates.');
+  }
+
+  function calculateAdd() {
+    if (!baseDate || !dayAmount || !direction || !result) return;
+    const base = parseLocalDate(baseDate.value);
+    const days = Math.max(0, Math.floor(Number(dayAmount.value || 0)));
+    if (!base) { result.value = ''; setStatus('Choose a base date.'); return; }
+    const multiplier = direction.value === 'subtract' ? -1 : 1;
+    const output = new Date(base.getFullYear(), base.getMonth(), base.getDate() + days * multiplier);
+    result.value = `${formatDate(base)} ${direction.value === 'subtract' ? 'minus' : 'plus'} ${days} day${days === 1 ? '' : 's'} = ${formatDate(output)}.`;
+    setStatus('Calculated date offset.');
+  }
+
+  function calculate() {
+    if (mode?.value === 'add') calculateAdd(); else calculateBetween();
+  }
+
+  function updateMode() {
+    const isAdd = mode?.value === 'add';
+    betweenPanel?.classList.toggle('hidden', Boolean(isAdd));
+    addPanel?.classList.toggle('hidden', !isAdd);
+    if (modeHint) modeHint.textContent = isAdd ? 'Add or subtract a number of calendar days from one date.' : 'Count the calendar days between a start date and an end date.';
+    if (currentMode) currentMode.textContent = isAdd ? 'Add/subtract days' : 'Days between';
+    if (calendarNote) calendarNote.textContent = isAdd ? 'Adds calendar days' : 'Difference in calendar days';
+    calculate();
+  }
+
+  mode?.addEventListener('change', updateMode);
+  [startDate, endDate, baseDate, dayAmount, direction].forEach((element) => element?.addEventListener('input', calculate));
+  direction?.addEventListener('change', calculate);
+  sampleButton?.addEventListener('click', () => {
+    if (!mode || !startDate || !endDate || !baseDate || !dayAmount || !direction) return;
+    mode.value = 'between';
+    startDate.value = '2026-06-01';
+    endDate.value = '2026-06-15';
+    baseDate.value = '2026-06-01';
+    dayAmount.value = '30';
+    direction.value = 'add';
+    updateMode();
+  });
+  clearButton?.addEventListener('click', () => {
+    [startDate, endDate, baseDate, dayAmount].forEach((element) => { if (element) element.value = element === dayAmount ? '30' : ''; });
+    if (result) result.value = '';
+    setStatus();
+  });
+  copyButton?.addEventListener('click', async () => {
+    if (!result) return;
+    try {
+      await navigator.clipboard.writeText(result.value);
+      setStatus(result.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    } catch {
+      result.select();
+      document.execCommand('copy');
+      setStatus(result.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    }
+  });
+
+  updateMode();
+</script>

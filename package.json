@@ -17,6 +17,7 @@
     "test:password-generator": "npm run build && node scripts/verify-password-generator.mjs",
     "test:random-picker": "npm run build && node scripts/verify-random-picker.mjs",
     "test:unit-converter": "npm run build && node scripts/verify-unit-converter.mjs",
+    "test:date-calculator": "npm run build && node scripts/verify-date-calculator.mjs",
     "astro": "astro"
   },
   "dependencies": {
