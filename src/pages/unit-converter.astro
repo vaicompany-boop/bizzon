@@ -1,0 +1,32 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import UnitConverter from '../components/UnitConverter.astro';
+---
+
+<ToolLayout
+  title="Unit Converter Mini — Length, weight, temperature | Bizzon"
+  description="Free browser-based Unit Converter Mini by Bizzon. Convert common length, weight, and temperature units locally in your browser."
+  canonicalPath="/unit-converter"
+  heading="Unit Converter Mini"
+  intro="Convert common everyday units without opening a heavy calculator app. Start with length, weight, and temperature, all locally in your browser."
+>
+  <UnitConverter />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Length</h2>
+      <p class="mt-3 text-slate-600">Convert meters, kilometers, centimeters, millimeters, feet, inches, and miles for quick everyday checks.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Weight</h2>
+      <p class="mt-3 text-slate-600">Convert kilograms, grams, milligrams, pounds, and ounces for shopping, cooking, shipping, and notes.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Temperature</h2>
+      <p class="mt-3 text-slate-600">Convert Celsius, Fahrenheit, and Kelvin with simple formulas and rounded results.</p>
+    </div>
+  </section>
+  <section class="mt-10 rounded-[2rem] border border-slate-200 bg-blue-50 p-6 md:p-8">
+    <h2 class="text-2xl font-black text-slate-950">Related tools</h2>
+    <p class="mt-4 text-slate-700">Need to pick between choices? Try the <a class="font-bold text-blue-700" href="/random-picker">Random Picker</a>. Need a password? Use the <a class="font-bold text-blue-700" href="/password-generator">Password Generator</a>. Need counts for text? Open the <a class="font-bold text-blue-700" href="/character-counter">Character Counter</a>.</p>
+  </section>
+</ToolLayout>

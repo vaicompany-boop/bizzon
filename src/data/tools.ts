@@ -57,7 +57,7 @@ export const tools: Tool[] = [
   {
     title: 'Unit Converter Mini',
     href: '/unit-converter',
-    description: 'Convert common everyday units quickly without an account or upload.',
-    status: 'planned',
+    description: 'Convert common length, weight, and temperature units quickly in your browser.',
+    status: 'live',
   },
 ];

@@ -14,14 +14,15 @@ const useCases = [
   { title: 'Need SEO snippet checks?', text: 'Use this if you need to preview and measure a meta title and description before publishing.', href: '/meta-title-description-checker', cta: 'Open Meta Checker' },
   { title: 'Need a strong password?', text: 'Use this if you need to generate a unique random password locally in your browser.', href: '/password-generator', cta: 'Open Password Generator' },
   { title: 'Need to pick from a list?', text: 'Use this if you need to choose a random winner, task, meal, name, or option from a list.', href: '/random-picker', cta: 'Open Random Picker' },
+  { title: 'Need a quick unit conversion?', text: 'Use this if you need to convert length, weight, or temperature without a heavy calculator app.', href: '/unit-converter', cta: 'Open Unit Converter' },
 ];
 ---
 
 <BaseLayout title="Tools — Bizzon" description="Browse Bizzon's free browser-based tools for text, writing, and everyday productivity." canonicalPath="/tools">
   <section class="mx-auto max-w-6xl px-5 py-14 md:py-20">
     <div class="grid gap-8 md:grid-cols-[1fr_18rem] md:items-end">
-      <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Useful tools for small everyday tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon has <strong>{liveToolCount} live tools</strong> for text counting, case conversion, cleanup, URL slugs, SEO snippets, passwords, and random picks. All tools are fast, private, and browser-based.</p></div>
-      <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6"><p class="text-4xl font-black text-blue-700">{liveToolCount}</p><p class="mt-2 font-bold text-slate-950">Live tools</p><p class="mt-2 text-sm text-slate-600">The first text, publishing, password, and decision utility cluster is already usable, with more simple utilities planned.</p></div>
+      <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Useful tools for small everyday tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon has <strong>{liveToolCount} live tools</strong> for text counting, case conversion, cleanup, URL slugs, SEO snippets, passwords, random picks, and unit conversions. All tools are fast, private, and browser-based.</p></div>
+      <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6"><p class="text-4xl font-black text-blue-700">{liveToolCount}</p><p class="mt-2 font-bold text-slate-950">Live tools</p><p class="mt-2 text-sm text-slate-600">The first text, publishing, password, decision, and converter utility cluster is already usable, with more simple utilities planned.</p></div>
     </div>
 
     <section class="mt-12" aria-labelledby="live-tools-heading">
@@ -43,7 +44,7 @@ const useCases = [
     </section>
 
     <section class="mt-14" aria-labelledby="planned-tools-heading">
-      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Coming next</p><h2 id="planned-tools-heading" class="mt-3 text-3xl font-black text-slate-950">Planned utility roadmap.</h2></div><p class="max-w-xl text-slate-600">Next up: practical everyday utilities such as small unit converters, invoice helpers, and simple calculators.</p></div>
+      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Coming next</p><h2 id="planned-tools-heading" class="mt-3 text-3xl font-black text-slate-950">Planned utility roadmap.</h2></div><p class="max-w-xl text-slate-600">Next up: practical everyday utilities such as invoice helpers, simple calculators, and date tools.</p></div>
       <div class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{plannedTools.map((tool) => <ToolCard tool={tool} />)}</div>
     </section>
   </section>

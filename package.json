@@ -16,6 +16,7 @@
     "test:meta-checker": "npm run build && node scripts/verify-meta-checker.mjs",
     "test:password-generator": "npm run build && node scripts/verify-password-generator.mjs",
     "test:random-picker": "npm run build && node scripts/verify-random-picker.mjs",
+    "test:unit-converter": "npm run build && node scripts/verify-unit-converter.mjs",
     "astro": "astro"
   },
   "dependencies": {
