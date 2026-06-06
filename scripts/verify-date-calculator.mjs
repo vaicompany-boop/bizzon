@@ -39,7 +39,7 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('14 live')) throw new Error(`Expected ${name} page to show 14 live tools`);
+  if (!page.includes('15 live')) throw new Error(`Expected ${name} page to show 15 live tools`);
   if (!page.includes('/date-calculator')) throw new Error(`Expected ${name} page to link to /date-calculator`);
   if (!page.includes('Date Calculator')) throw new Error(`Expected ${name} page to include Date Calculator`);
 }

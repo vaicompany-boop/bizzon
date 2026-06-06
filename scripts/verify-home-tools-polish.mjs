@@ -15,7 +15,7 @@ const home = readFileSync(pages.home, 'utf8');
 const tools = readFileSync(pages.tools, 'utf8');
 
 const homeRequired = [
-  '14 live browser tools',
+  '15 live browser tools',
   'All tools run locally in your browser',
   'Word Counter',
   'Case Converter',
@@ -31,14 +31,15 @@ const homeRequired = [
   'Filename Cleaner',
   'Tip Calculator',
   'VAT / Sales Tax Calculator',
+  'QR Code Generator',
   'Invoice Helper',
   'Explore all tools',
-  '14 tools live now',
+  '15 tools live now',
   'No login. No upload. No clutter.',
 ];
 
 const toolsRequired = [
-  '14 live tools',
+  '15 live tools',
   'Live tools',
   'Coming next',
   'Use this if you need to',
@@ -60,6 +61,7 @@ const toolsRequired = [
   'Filename Cleaner',
   'Tip Calculator',
   'VAT / Sales Tax Calculator',
+  'QR Code Generator',
   'Invoice Helper',
 ];
 

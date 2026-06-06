@@ -1,0 +1,191 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="qr-code-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only utility</p>
+      <h2 id="qr-code-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Generate a QR code</h2>
+      <p class="mt-2 text-slate-600">Paste a link, short text, email, phone number, or Wi‑Fi details and create a downloadable QR code in your browser.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleQr" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="clearQr" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[1fr_1fr]">
+    <div class="grid gap-5">
+      <div class="rounded-3xl bg-slate-50 p-5">
+        <label for="qrContent" class="text-sm font-bold text-slate-700">Content</label>
+        <textarea id="qrContent" class="mt-2 min-h-44 w-full resize-y rounded-2xl border border-slate-200 bg-white p-4 font-mono text-base text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">https://bizzon.app/tools</textarea>
+        <p class="mt-3 text-sm text-slate-500">Works best with short links or text. Very long content makes dense QR codes that are harder to scan.</p>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2">
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="qrSize" class="text-sm font-bold text-slate-700">Image size</label>
+          <select id="qrSize" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+            <option value="256">256 × 256 px</option>
+            <option value="384" selected>384 × 384 px</option>
+            <option value="512">512 × 512 px</option>
+            <option value="768">768 × 768 px</option>
+          </select>
+        </div>
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="qrErrorLevel" class="text-sm font-bold text-slate-700">Error correction</label>
+          <select id="qrErrorLevel" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+            <option value="L">Low</option>
+            <option value="M" selected>Medium</option>
+            <option value="Q">Quartile</option>
+            <option value="H">High</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2">
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="qrForeground" class="text-sm font-bold text-slate-700">Foreground color</label>
+          <input id="qrForeground" type="color" value="#0f172a" class="mt-2 h-12 w-full cursor-pointer rounded-2xl border border-slate-200 bg-white p-1" />
+        </div>
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="qrBackground" class="text-sm font-bold text-slate-700">Background color</label>
+          <input id="qrBackground" type="color" value="#ffffff" class="mt-2 h-12 w-full cursor-pointer rounded-2xl border border-slate-200 bg-white p-1" />
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button id="downloadQr" type="button" class="rounded-full bg-blue-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-700">Download PNG</button>
+        <button id="copyQrText" type="button" class="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-800 transition hover:border-blue-300 hover:text-blue-700">Copy text</button>
+      </div>
+    </div>
+
+    <div class="rounded-3xl bg-slate-950 p-5 text-white">
+      <div class="flex items-center justify-between gap-3">
+        <p class="text-sm font-bold text-slate-300">Preview</p>
+        <p id="qrStatus" class="min-h-5 text-sm font-semibold text-blue-200" aria-live="polite"></p>
+      </div>
+      <div class="mt-4 grid min-h-96 place-items-center rounded-2xl border border-slate-700 bg-white p-5">
+        <canvas id="qrCanvas" width="384" height="384" class="max-w-full rounded-xl bg-white"></canvas>
+      </div>
+      <p id="qrStats" class="mt-4 rounded-2xl bg-slate-900 p-4 text-sm text-slate-300">Characters: 24 · Size: 384px · Error correction: Medium</p>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-live="polite">
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Output</p><p class="mt-2 text-2xl font-black text-slate-950">PNG QR</p></div>
+    <div class="rounded-3xl bg-blue-600 p-5 text-white"><p class="text-sm font-semibold text-blue-100">Best for</p><p class="mt-2 text-2xl font-black">Links</p></div>
+    <div class="rounded-3xl bg-emerald-100 p-5"><p class="text-sm font-semibold text-emerald-700">No upload</p><p class="mt-2 text-2xl font-black text-slate-950">Local</p></div>
+    <div class="rounded-3xl bg-amber-100 p-5"><p class="text-sm font-semibold text-amber-700">Privacy</p><p class="mt-2 text-lg font-black text-slate-950">Runs in browser</p></div>
+  </div>
+</section>
+
+<script>
+  import QRCode from 'qrcode';
+
+  const contentInput = document.getElementById('qrContent') as HTMLTextAreaElement | null;
+  const sizeInput = document.getElementById('qrSize') as HTMLSelectElement | null;
+  const errorInput = document.getElementById('qrErrorLevel') as HTMLSelectElement | null;
+  const foregroundInput = document.getElementById('qrForeground') as HTMLInputElement | null;
+  const backgroundInput = document.getElementById('qrBackground') as HTMLInputElement | null;
+  const canvas = document.getElementById('qrCanvas') as HTMLCanvasElement | null;
+  const status = document.getElementById('qrStatus');
+  const stats = document.getElementById('qrStats');
+  const sampleButton = document.getElementById('sampleQr');
+  const clearButton = document.getElementById('clearQr');
+  const downloadButton = document.getElementById('downloadQr');
+  const copyTextButton = document.getElementById('copyQrText');
+
+  const errorLabels: Record<string, string> = {
+    L: 'Low',
+    M: 'Medium',
+    Q: 'Quartile',
+    H: 'High',
+  };
+
+  function setStatus(message = '') {
+    if (status) status.textContent = message;
+  }
+
+  function updateStats(text: string) {
+    if (!stats || !sizeInput || !errorInput) return;
+    stats.textContent = `Characters: ${text.length} · Size: ${sizeInput.value}px · Error correction: ${errorLabels[errorInput.value] || 'Medium'}`;
+  }
+
+  async function renderQr() {
+    if (!contentInput || !sizeInput || !errorInput || !foregroundInput || !backgroundInput || !canvas) return;
+    const text = contentInput.value.trim();
+    const size = Number(sizeInput.value || 384);
+    canvas.width = size;
+    canvas.height = size;
+
+    if (!text) {
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, size, size);
+      }
+      updateStats('');
+      setStatus('Add text to generate a QR code.');
+      return;
+    }
+
+    try {
+      await QRCode.toCanvas(canvas, text, {
+        width: size,
+        margin: 2,
+        errorCorrectionLevel: errorInput.value as 'L' | 'M' | 'Q' | 'H',
+        color: {
+          dark: foregroundInput.value,
+          light: backgroundInput.value,
+        },
+      });
+      updateStats(text);
+      setStatus('QR code ready.');
+    } catch {
+      setStatus('Could not generate QR code. Try shorter text.');
+    }
+  }
+
+  [contentInput, sizeInput, errorInput, foregroundInput, backgroundInput].forEach((element) => element?.addEventListener('input', renderQr));
+  [sizeInput, errorInput].forEach((element) => element?.addEventListener('change', renderQr));
+
+  sampleButton?.addEventListener('click', () => {
+    if (!contentInput || !sizeInput || !errorInput || !foregroundInput || !backgroundInput) return;
+    contentInput.value = 'https://bizzon.app/tools';
+    sizeInput.value = '384';
+    errorInput.value = 'M';
+    foregroundInput.value = '#0f172a';
+    backgroundInput.value = '#ffffff';
+    renderQr();
+  });
+
+  clearButton?.addEventListener('click', () => {
+    if (!contentInput) return;
+    contentInput.value = '';
+    renderQr();
+  });
+
+  downloadButton?.addEventListener('click', () => {
+    if (!canvas || !contentInput?.value.trim()) {
+      setStatus('Nothing to download yet.');
+      return;
+    }
+    const link = document.createElement('a');
+    link.download = 'bizzon-qr-code.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    setStatus('PNG download started.');
+  });
+
+  copyTextButton?.addEventListener('click', async () => {
+    const text = contentInput?.value || '';
+    try {
+      await navigator.clipboard.writeText(text);
+      setStatus(text ? 'QR text copied.' : 'Nothing to copy yet.');
+    } catch {
+      contentInput?.select();
+      document.execCommand('copy');
+      setStatus(text ? 'QR text copied.' : 'Nothing to copy yet.');
+    }
+  });
+
+  renderQr();
+</script>

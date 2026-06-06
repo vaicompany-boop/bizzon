@@ -42,7 +42,7 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('14 live')) throw new Error(`Expected ${name} page to show 14 live tools`);
+  if (!page.includes('15 live')) throw new Error(`Expected ${name} page to show 15 live tools`);
   if (!page.includes('/unit-converter')) throw new Error(`Expected ${name} page to link to /unit-converter`);
   if (!page.includes('Unit Converter Mini')) throw new Error(`Expected ${name} page to include Unit Converter Mini`);
 }

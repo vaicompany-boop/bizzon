@@ -94,7 +94,7 @@ export const tools: Tool[] = [
     title: 'QR Code Generator',
     href: '/qr-code-generator',
     description: 'Create QR codes for links, text, contact details, and simple sharing tasks.',
-    status: 'planned',
+    status: 'live',
   },
   {
     title: 'Invoice Helper',
