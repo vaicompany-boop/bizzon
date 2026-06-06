@@ -28,5 +28,28 @@ const canonical = new URL(canonicalPath, Astro.site ?? 'https://bizzon.app').toS
   <body>
     <div class="flex min-h-screen flex-col"><Header /><main class="flex-1"><slot /></main><Footer /></div>
     <Analytics />
+    <script is:inline>
+      (() => {
+        if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+        const payload = {
+          path: window.location.pathname,
+          title: document.title,
+          referrer: document.referrer,
+          lang: navigator.language || '',
+          tz: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+        };
+        const body = JSON.stringify(payload);
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon('/api/track', new Blob([body], { type: 'application/json' }));
+          return;
+        }
+        fetch('/api/track', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body,
+          keepalive: true,
+        }).catch(() => {});
+      })();
+    </script>
   </body>
 </html>
