@@ -18,14 +18,15 @@ const useCases = [
   { title: 'Need date math?', text: 'Use this if you need to add days, subtract days, or count days between two dates.', href: '/date-calculator', cta: 'Open Date Calculator' },
   { title: 'Need percentage math?', text: 'Use this if you need to calculate discounts, increases, decreases, or percentage change quickly.', href: '/percentage-calculator', cta: 'Open Percentage Calculator' },
   { title: 'Need clean filenames?', text: 'Use this if you need to rename uploads, product images, archives, or shared files into readable web-friendly names.', href: '/filename-cleaner', cta: 'Open Filename Cleaner' },
+  { title: 'Need to split a bill?', text: 'Use this if you need to calculate a tip, split a restaurant bill, or get a clean per-person total.', href: '/tip-calculator', cta: 'Open Tip Calculator' },
 ];
 ---
 
-<BaseLayout title="Tools — Bizzon" description="Browse Bizzon's free browser-based tools for text, SEO, passwords, random picking, unit conversion, date math, percentage math, filename cleanup, and everyday productivity." canonicalPath="/tools">
+<BaseLayout title="Tools — Bizzon" description="Browse Bizzon's free browser-based tools for text, SEO, passwords, random picking, unit conversion, date math, percentage math, filename cleanup, tip calculation, and everyday productivity." canonicalPath="/tools">
   <section class="mx-auto max-w-6xl px-5 py-14 md:py-20">
     <div class="grid gap-8 md:grid-cols-[1fr_18rem] md:items-end">
-      <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Useful tools for small everyday tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon has <strong>{liveToolCount} live tools</strong> for text counting, case conversion, cleanup, URL slugs, SEO snippets, passwords, random picks, unit conversions, date math, percentage math, and filename cleanup. All tools are fast, private, and browser-based.</p></div>
-      <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6"><p class="text-4xl font-black text-blue-700">{liveToolCount}</p><p class="mt-2 font-bold text-slate-950">Live tools</p><p class="mt-2 text-sm text-slate-600">The toolbox now covers text, publishing, password, decision, converter, date, percentage, and filename utilities.</p></div>
+      <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Useful tools for small everyday tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon has <strong>{liveToolCount} live tools</strong> for text counting, case conversion, cleanup, URL slugs, SEO snippets, passwords, random picks, unit conversions, date math, percentage math, filename cleanup, and tip calculation. All tools are fast, private, and browser-based.</p></div>
+      <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6"><p class="text-4xl font-black text-blue-700">{liveToolCount}</p><p class="mt-2 font-bold text-slate-950">Live tools</p><p class="mt-2 text-sm text-slate-600">The toolbox now covers text, publishing, password, decision, converter, date, percentage, filename, and bill-splitting utilities.</p></div>
     </div>
 
     <section class="mt-12" aria-labelledby="live-tools-heading">
@@ -47,7 +48,7 @@ const useCases = [
     </section>
 
     <section class="mt-14" aria-labelledby="planned-tools-heading">
-      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Coming next</p><h2 id="planned-tools-heading" class="mt-3 text-3xl font-black text-slate-950">Planned utility roadmap.</h2></div><p class="max-w-xl text-slate-600">Next up: practical utilities such as tip math, VAT/sales tax estimates, QR codes, and lightweight invoice helpers.</p></div>
+      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Coming next</p><h2 id="planned-tools-heading" class="mt-3 text-3xl font-black text-slate-950">Planned utility roadmap.</h2></div><p class="max-w-xl text-slate-600">Next up: practical utilities such as VAT/sales tax estimates, QR codes, and lightweight invoice helpers.</p></div>
       <div class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{plannedTools.map((tool) => <ToolCard tool={tool} />)}</div>
     </section>
   </section>

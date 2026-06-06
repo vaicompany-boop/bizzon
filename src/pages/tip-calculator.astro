@@ -1,0 +1,32 @@
+---
+import TipCalculator from '../components/TipCalculator.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Tip Calculator — Split bills and calculate tips | Bizzon"
+  description="Free browser-based Tip Calculator by Bizzon. Calculate tip amounts, total with tip, and per-person split locally in your browser."
+  canonicalPath="/tip-calculator"
+  heading="Tip Calculator"
+  intro="Calculate a tip, split a bill between people, and copy a clear total without opening a spreadsheet."
+>
+  <TipCalculator />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Quick tip math</h2>
+      <p class="mt-3 text-slate-600">Enter a bill amount and tip percentage, or use quick buttons for common tip levels like 10%, 15%, 18%, and 20%.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Split the total</h2>
+      <p class="mt-3 text-slate-600">Split the bill between multiple people and optionally round the total or per-person amount up for easier payment.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Private by default</h2>
+      <p class="mt-3 text-slate-600">Your bill amount stays in your browser. Bizzon does not upload, save, or process your calculation on a server.</p>
+    </div>
+  </section>
+  <section class="mt-10 rounded-[2rem] border border-slate-200 bg-blue-50 p-6 md:p-8">
+    <h2 class="text-2xl font-black text-slate-950">Related tools</h2>
+    <p class="mt-4 text-slate-700">Need discounts or percentage change? Try the <a class="font-bold text-blue-700" href="/percentage-calculator">Percentage Calculator</a>. Need VAT or tax math next? Watch the <a class="font-bold text-blue-700" href="/tools">Bizzon tools roadmap</a>. Need quick unit conversions? Open the <a class="font-bold text-blue-700" href="/unit-converter">Unit Converter Mini</a>.</p>
+  </section>
+</ToolLayout>

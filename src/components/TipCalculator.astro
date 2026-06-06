@@ -1,0 +1,190 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="tip-calculator-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only utility</p>
+      <h2 id="tip-calculator-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Calculate tips and split bills</h2>
+      <p class="mt-2 text-slate-600">Enter the bill, choose a tip percentage, split between people, and get a clear per-person total.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleTip" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="clearTip" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[1fr_1fr]">
+    <div class="grid gap-5">
+      <div class="rounded-3xl bg-slate-50 p-5">
+        <label for="billAmount" class="text-sm font-bold text-slate-700">Bill amount</label>
+        <input id="billAmount" type="number" inputmode="decimal" step="0.01" min="0" value="84.50" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xl font-black text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+      </div>
+      <div class="grid gap-5 md:grid-cols-2">
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="tipPercent" class="text-sm font-bold text-slate-700">Tip percent</label>
+          <input id="tipPercent" type="number" inputmode="decimal" step="0.5" min="0" value="15" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+          <div class="mt-3 flex flex-wrap gap-2" aria-label="Quick tip percentages">
+            <button data-tip="10" type="button" class="quick-tip rounded-full bg-white px-3 py-1.5 text-sm font-bold text-slate-700 ring-1 ring-slate-200 transition hover:text-blue-700 hover:ring-blue-300">10%</button>
+            <button data-tip="15" type="button" class="quick-tip rounded-full bg-blue-600 px-3 py-1.5 text-sm font-bold text-white transition hover:bg-blue-700">15%</button>
+            <button data-tip="18" type="button" class="quick-tip rounded-full bg-white px-3 py-1.5 text-sm font-bold text-slate-700 ring-1 ring-slate-200 transition hover:text-blue-700 hover:ring-blue-300">18%</button>
+            <button data-tip="20" type="button" class="quick-tip rounded-full bg-white px-3 py-1.5 text-sm font-bold text-slate-700 ring-1 ring-slate-200 transition hover:text-blue-700 hover:ring-blue-300">20%</button>
+          </div>
+        </div>
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="peopleCount" class="text-sm font-bold text-slate-700">Split between people</label>
+          <input id="peopleCount" type="number" inputmode="numeric" step="1" min="1" value="2" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+          <p class="mt-3 text-sm text-slate-500">Use 1 if one person pays the full bill.</p>
+        </div>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2">
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="currencySymbol" class="text-sm font-bold text-slate-700">Currency symbol</label>
+          <select id="currencySymbol" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+            <option value="$">$ Dollar</option>
+            <option value="€">€ Euro</option>
+            <option value="£">£ Pound</option>
+            <option value="KM">KM Mark</option>
+          </select>
+        </div>
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="roundMode" class="text-sm font-bold text-slate-700">Rounding</label>
+          <select id="roundMode" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+            <option value="none">No rounding</option>
+            <option value="person">Round per person up</option>
+            <option value="total">Round total up</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-3xl bg-slate-950 p-5 text-white">
+      <div class="flex items-center justify-between gap-3">
+        <label for="tipResult" class="text-sm font-bold text-slate-300">Result</label>
+        <button id="copyTipResult" type="button" class="rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-blue-300 hover:text-white">Copy</button>
+      </div>
+      <textarea id="tipResult" readonly class="mt-2 min-h-72 w-full resize-y rounded-2xl border border-slate-700 bg-slate-900 p-4 font-mono text-base text-white outline-none" placeholder="Tip calculation appears here"></textarea>
+      <p id="tipStatus" class="mt-2 min-h-5 text-sm font-semibold text-blue-200" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-live="polite">
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Tip amount</p><p id="tipAmountDisplay" class="mt-2 text-3xl font-black text-slate-950">$12.68</p></div>
+    <div class="rounded-3xl bg-blue-600 p-5 text-white"><p class="text-sm font-semibold text-blue-100">Total with tip</p><p id="totalDisplay" class="mt-2 text-3xl font-black">$97.18</p></div>
+    <div class="rounded-3xl bg-emerald-100 p-5"><p class="text-sm font-semibold text-emerald-700">Per person</p><p id="perPersonDisplay" class="mt-2 text-3xl font-black text-slate-950">$48.59</p></div>
+    <div class="rounded-3xl bg-amber-100 p-5"><p class="text-sm font-semibold text-amber-700">Privacy</p><p class="mt-2 text-lg font-black text-slate-950">Runs in browser</p></div>
+  </div>
+</section>
+
+<script>
+  const billInput = document.getElementById('billAmount') as HTMLInputElement | null;
+  const tipInput = document.getElementById('tipPercent') as HTMLInputElement | null;
+  const peopleInput = document.getElementById('peopleCount') as HTMLInputElement | null;
+  const currencyInput = document.getElementById('currencySymbol') as HTMLSelectElement | null;
+  const roundInput = document.getElementById('roundMode') as HTMLSelectElement | null;
+  const result = document.getElementById('tipResult') as HTMLTextAreaElement | null;
+  const status = document.getElementById('tipStatus');
+  const tipDisplay = document.getElementById('tipAmountDisplay');
+  const totalDisplay = document.getElementById('totalDisplay');
+  const perPersonDisplay = document.getElementById('perPersonDisplay');
+  const sampleButton = document.getElementById('sampleTip');
+  const clearButton = document.getElementById('clearTip');
+  const copyButton = document.getElementById('copyTipResult');
+  const quickTipButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.quick-tip'));
+
+  function money(value: number) {
+    const symbol = currencyInput?.value || '$';
+    const formatted = Number.isFinite(value) ? value.toFixed(2) : '0.00';
+    return symbol === 'KM' ? `${formatted} KM` : `${symbol}${formatted}`;
+  }
+
+  function setStatus(message = '') {
+    if (status) status.textContent = message;
+  }
+
+  function updateQuickButtons() {
+    const active = Number(tipInput?.value || 0);
+    quickTipButtons.forEach((button) => {
+      const isActive = Number(button.dataset.tip) === active;
+      button.classList.toggle('bg-blue-600', isActive);
+      button.classList.toggle('text-white', isActive);
+      button.classList.toggle('bg-white', !isActive);
+      button.classList.toggle('text-slate-700', !isActive);
+      button.classList.toggle('ring-1', !isActive);
+      button.classList.toggle('ring-slate-200', !isActive);
+    });
+  }
+
+  function calculate() {
+    if (!billInput || !tipInput || !peopleInput || !roundInput || !result) return;
+    const bill = Math.max(0, Number(billInput.value || 0));
+    const tipPercent = Math.max(0, Number(tipInput.value || 0));
+    const people = Math.max(1, Math.floor(Number(peopleInput.value || 1)));
+    const roundMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
+    const tipAmount = roundMoney(bill * (tipPercent / 100));
+    let total = roundMoney(bill + tipAmount);
+    let perPerson = roundMoney(total / people);
+
+    if (roundInput.value === 'person') {
+      perPerson = Math.ceil(perPerson);
+      total = perPerson * people;
+    }
+
+    if (roundInput.value === 'total') {
+      total = Math.ceil(total);
+      perPerson = total / people;
+    }
+
+    const effectiveExtra = Math.max(0, total - bill);
+    if (tipDisplay) tipDisplay.textContent = money(effectiveExtra);
+    if (totalDisplay) totalDisplay.textContent = money(total);
+    if (perPersonDisplay) perPersonDisplay.textContent = money(perPerson);
+
+    result.value = [
+      `Bill: ${money(bill)}`,
+      `Tip: ${tipPercent.toFixed(tipPercent % 1 === 0 ? 0 : 1)}% = ${money(tipAmount)}`,
+      `Total with tip: ${money(total)}`,
+      `Split between: ${people} ${people === 1 ? 'person' : 'people'}`,
+      `Each person pays: ${money(perPerson)}`,
+    ].join('\n');
+    setStatus('Calculated tip and split.');
+    updateQuickButtons();
+  }
+
+  [billInput, tipInput, peopleInput, currencyInput, roundInput].forEach((element) => element?.addEventListener('input', calculate));
+  [currencyInput, roundInput].forEach((element) => element?.addEventListener('change', calculate));
+  quickTipButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (!tipInput) return;
+      tipInput.value = button.dataset.tip || '15';
+      calculate();
+    });
+  });
+  sampleButton?.addEventListener('click', () => {
+    if (!billInput || !tipInput || !peopleInput || !currencyInput || !roundInput) return;
+    billInput.value = '84.50';
+    tipInput.value = '15';
+    peopleInput.value = '2';
+    currencyInput.value = '$';
+    roundInput.value = 'none';
+    calculate();
+  });
+  clearButton?.addEventListener('click', () => {
+    if (!billInput || !tipInput || !peopleInput || !result) return;
+    billInput.value = '';
+    tipInput.value = '15';
+    peopleInput.value = '1';
+    result.value = '';
+    calculate();
+  });
+  copyButton?.addEventListener('click', async () => {
+    if (!result) return;
+    try {
+      await navigator.clipboard.writeText(result.value);
+      setStatus(result.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    } catch {
+      result.select();
+      document.execCommand('copy');
+      setStatus(result.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    }
+  });
+
+  calculate();
+</script>

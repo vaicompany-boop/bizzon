@@ -20,6 +20,7 @@
     "test:date-calculator": "npm run build && node scripts/verify-date-calculator.mjs",
     "test:percentage-calculator": "npm run build && node scripts/verify-percentage-calculator.mjs",
     "test:filename-cleaner": "npm run build && node scripts/verify-filename-cleaner.mjs",
+    "test:tip-calculator": "npm run build && node scripts/verify-tip-calculator.mjs",
     "astro": "astro"
   },
   "dependencies": {

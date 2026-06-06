@@ -82,7 +82,7 @@ export const tools: Tool[] = [
     title: 'Tip Calculator',
     href: '/tip-calculator',
     description: 'Calculate tips, split bills, and per-person totals quickly without an account.',
-    status: 'planned',
+    status: 'live',
   },
   {
     title: 'VAT / Sales Tax Calculator',
