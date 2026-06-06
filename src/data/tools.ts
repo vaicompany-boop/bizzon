@@ -76,7 +76,7 @@ export const tools: Tool[] = [
     title: 'Filename Cleaner',
     href: '/filename-cleaner',
     description: 'Turn messy filenames into clean, readable, web-friendly names before uploading or sharing.',
-    status: 'planned',
+    status: 'live',
   },
   {
     title: 'Tip Calculator',

@@ -19,6 +19,7 @@
     "test:unit-converter": "npm run build && node scripts/verify-unit-converter.mjs",
     "test:date-calculator": "npm run build && node scripts/verify-date-calculator.mjs",
     "test:percentage-calculator": "npm run build && node scripts/verify-percentage-calculator.mjs",
+    "test:filename-cleaner": "npm run build && node scripts/verify-filename-cleaner.mjs",
     "astro": "astro"
   },
   "dependencies": {

@@ -1,0 +1,147 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="filename-cleaner-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only utility</p>
+      <h2 id="filename-cleaner-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Clean messy filenames in bulk</h2>
+      <p class="mt-2 text-slate-600">Paste one filename per line and turn cluttered names into clean, readable, web-friendly filenames.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleFilenames" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="clearFilenames" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <label for="filenameInput" class="text-sm font-bold text-slate-700">Messy filenames</label>
+      <textarea id="filenameInput" class="mt-2 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 font-mono text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100" placeholder="My Final File (Copy).PDF&#10;summer photo 01!!.jpg&#10;invoice draft #2.docx" spellcheck="false"></textarea>
+    </div>
+    <div>
+      <div class="flex items-center justify-between gap-3">
+        <label for="filenameOutput" class="text-sm font-bold text-slate-700">Clean filenames</label>
+        <button id="copyFilenames" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy output</button>
+      </div>
+      <textarea id="filenameOutput" readonly class="mt-2 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-950 p-5 font-mono text-base text-white outline-none placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-100" placeholder="Cleaned filenames appear here..."></textarea>
+      <p id="filenameStatus" class="mt-2 min-h-5 text-sm font-semibold text-blue-700" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4" aria-label="Filename cleaning options">
+    <label class="flex items-start gap-3 rounded-2xl bg-slate-50 p-4 font-semibold text-slate-800"><input id="filenameLowercase" type="checkbox" checked class="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" /> Lowercase names</label>
+    <label class="flex items-start gap-3 rounded-2xl bg-slate-50 p-4 font-semibold text-slate-800"><input id="filenameKeepExtension" type="checkbox" checked class="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" /> Keep file extensions</label>
+    <label class="flex items-start gap-3 rounded-2xl bg-slate-50 p-4 font-semibold text-slate-800"><input id="filenameRemoveAccents" type="checkbox" checked class="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" /> Remove accents</label>
+    <label class="flex items-start gap-3 rounded-2xl bg-slate-50 p-4 font-semibold text-slate-800"><input id="filenameUnique" type="checkbox" checked class="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" /> Make duplicates unique</label>
+  </div>
+
+  <div class="mt-5 grid gap-5 md:grid-cols-[1fr_1fr]">
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label for="filenameSeparator" class="text-sm font-bold text-slate-700">Word separator</label>
+      <select id="filenameSeparator" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+        <option value="-">Hyphen: clean-file-name</option>
+        <option value="_">Underscore: clean_file_name</option>
+      </select>
+    </div>
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label for="filenameFallback" class="text-sm font-bold text-slate-700">Fallback name for empty lines</label>
+      <input id="filenameFallback" value="file" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-3" aria-live="polite">
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Input lines</p><p id="filenameInputCount" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-blue-600 p-5 text-white shadow-sm"><p class="text-sm font-semibold text-blue-100">Cleaned filenames</p><p id="filenameOutputCount" class="mt-2 text-4xl font-black">0</p></div>
+    <div class="rounded-3xl bg-emerald-100 p-5"><p class="text-sm font-semibold text-emerald-700">Privacy</p><p class="mt-2 text-lg font-black text-slate-950">Runs in browser</p></div>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('filenameInput') as HTMLTextAreaElement | null;
+  const output = document.getElementById('filenameOutput') as HTMLTextAreaElement | null;
+  const separator = document.getElementById('filenameSeparator') as HTMLSelectElement | null;
+  const fallback = document.getElementById('filenameFallback') as HTMLInputElement | null;
+  const lowercase = document.getElementById('filenameLowercase') as HTMLInputElement | null;
+  const keepExtension = document.getElementById('filenameKeepExtension') as HTMLInputElement | null;
+  const removeAccents = document.getElementById('filenameRemoveAccents') as HTMLInputElement | null;
+  const unique = document.getElementById('filenameUnique') as HTMLInputElement | null;
+  const status = document.getElementById('filenameStatus');
+  const inputCount = document.getElementById('filenameInputCount');
+  const outputCount = document.getElementById('filenameOutputCount');
+  const sampleButton = document.getElementById('sampleFilenames');
+  const clearButton = document.getElementById('clearFilenames');
+  const copyButton = document.getElementById('copyFilenames');
+  const sample = `My Final File (Copy).PDF\nsummer photo 01!!.jpg\nRačun za Klijenta #2.docx\nProduct   Image   FINAL.PNG\narchive backup.zip`;
+
+  function splitExtension(name: string) {
+    const trimmed = name.trim();
+    const dotIndex = trimmed.lastIndexOf('.');
+    if (!keepExtension?.checked || dotIndex <= 0 || dotIndex === trimmed.length - 1) return { base: trimmed, ext: '' };
+    return { base: trimmed.slice(0, dotIndex), ext: trimmed.slice(dotIndex + 1) };
+  }
+
+  function normalizePart(value: string) {
+    let text = value.trim();
+    if (removeAccents?.checked) text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (lowercase?.checked) text = text.toLowerCase();
+    const sep = separator?.value === '_' ? '_' : '-';
+    text = text
+      .replace(/&/g, ' and ')
+      .replace(/[^a-zA-Z0-9]+/g, sep)
+      .replace(new RegExp(`${sep}+`, 'g'), sep)
+      .replace(new RegExp(`^${sep}|${sep}$`, 'g'), '');
+    return text || (fallback?.value.trim() || 'file');
+  }
+
+  function cleanOne(raw: string) {
+    const parts = splitExtension(raw);
+    const base = normalizePart(parts.base);
+    const ext = parts.ext ? normalizePart(parts.ext).replace(/[-_]/g, '') : '';
+    return ext ? `${base}.${ext}` : base;
+  }
+
+  function makeUnique(names: string[]) {
+    if (!unique?.checked) return names;
+    const seen = new Map<string, number>();
+    return names.map((name) => {
+      const count = seen.get(name) ?? 0;
+      seen.set(name, count + 1);
+      if (count === 0) return name;
+      const dotIndex = name.lastIndexOf('.');
+      const sep = separator?.value === '_' ? '_' : '-';
+      if (dotIndex > 0) return `${name.slice(0, dotIndex)}${sep}${count + 1}${name.slice(dotIndex)}`;
+      return `${name}${sep}${count + 1}`;
+    });
+  }
+
+  function setStatus(message = '') {
+    if (status) status.textContent = message;
+  }
+
+  function render() {
+    if (!input || !output) return;
+    const rawLines = input.value.split(/\r\n|\r|\n/);
+    const nonEmpty = rawLines.map((line) => line.trim()).filter(Boolean);
+    const cleaned = makeUnique(nonEmpty.map(cleanOne));
+    output.value = cleaned.join('\n');
+    if (inputCount) inputCount.textContent = String(nonEmpty.length);
+    if (outputCount) outputCount.textContent = String(cleaned.length);
+    setStatus();
+  }
+
+  [input, separator, fallback, lowercase, keepExtension, removeAccents, unique].forEach((element) => element?.addEventListener('input', render));
+  [separator, lowercase, keepExtension, removeAccents, unique].forEach((element) => element?.addEventListener('change', render));
+  sampleButton?.addEventListener('click', () => { if (!input) return; input.value = sample; render(); input.focus(); });
+  clearButton?.addEventListener('click', () => { if (!input || !output) return; input.value = ''; output.value = ''; render(); input.focus(); });
+  copyButton?.addEventListener('click', async () => {
+    if (!output) return;
+    try {
+      await navigator.clipboard.writeText(output.value);
+      setStatus(output.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    } catch {
+      output.select();
+      document.execCommand('copy');
+      setStatus(output.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    }
+  });
+
+  render();
+</script>
