@@ -1,0 +1,32 @@
+---
+import VatSalesTaxCalculator from '../components/VatSalesTaxCalculator.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="VAT / Sales Tax Calculator — Add or remove tax | Bizzon"
+  description="Free browser-based VAT and Sales Tax Calculator by Bizzon. Add tax to a net price or remove tax from a gross price locally in your browser."
+  canonicalPath="/vat-sales-tax-calculator"
+  heading="VAT / Sales Tax Calculator"
+  intro="Add VAT or sales tax to a price, remove tax from a final price, and copy a clear net, tax, and gross breakdown."
+>
+  <VatSalesTaxCalculator />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Add tax to a price</h2>
+      <p class="mt-3 text-slate-600">Use add-tax mode when you know the net price before VAT or sales tax and need the final gross total.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Remove tax from a total</h2>
+      <p class="mt-3 text-slate-600">Use remove-tax mode when you know the gross price and need to estimate the net amount and included tax.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Private by default</h2>
+      <p class="mt-3 text-slate-600">Your prices and tax calculations stay in your browser. Bizzon does not upload or save the numbers.</p>
+    </div>
+  </section>
+  <section class="mt-10 rounded-[2rem] border border-slate-200 bg-blue-50 p-6 md:p-8">
+    <h2 class="text-2xl font-black text-slate-950">Related tools</h2>
+    <p class="mt-4 text-slate-700">Need discounts or percentage change? Try the <a class="font-bold text-blue-700" href="/percentage-calculator">Percentage Calculator</a>. Splitting a restaurant bill? Use the <a class="font-bold text-blue-700" href="/tip-calculator">Tip Calculator</a>. Planning invoice totals? Watch the <a class="font-bold text-blue-700" href="/tools">Bizzon tools roadmap</a>.</p>
+  </section>
+</ToolLayout>

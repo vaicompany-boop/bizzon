@@ -40,12 +40,12 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('11 live')) throw new Error(`Expected ${name} page to show 11 live tools`);
+  if (!page.includes('14 live')) throw new Error(`Expected ${name} page to show 14 live tools`);
   if (!page.includes('/percentage-calculator')) throw new Error(`Expected ${name} page to link to /percentage-calculator`);
   if (!page.includes('Percentage Calculator')) throw new Error(`Expected ${name} page to include Percentage Calculator`);
 }
 
-for (const planned of ['Filename Cleaner', 'Tip Calculator', 'VAT / Sales Tax Calculator', 'QR Code Generator']) {
+for (const planned of ['QR Code Generator', 'Invoice Helper']) {
   if (!tools.includes(planned)) throw new Error(`Expected tools page roadmap to include ${planned}`);
 }
 

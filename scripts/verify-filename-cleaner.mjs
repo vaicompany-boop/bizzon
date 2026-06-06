@@ -40,12 +40,12 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('12 live')) throw new Error(`Expected ${name} page to show 12 live tools`);
+  if (!page.includes('14 live')) throw new Error(`Expected ${name} page to show 14 live tools`);
   if (!page.includes('/filename-cleaner')) throw new Error(`Expected ${name} page to link to /filename-cleaner`);
   if (!page.includes('Filename Cleaner')) throw new Error(`Expected ${name} page to include Filename Cleaner`);
 }
 
-for (const planned of ['Tip Calculator', 'VAT / Sales Tax Calculator', 'QR Code Generator']) {
+for (const planned of ['QR Code Generator', 'Invoice Helper']) {
   if (!tools.includes(planned)) throw new Error(`Expected tools page roadmap to include ${planned}`);
 }
 

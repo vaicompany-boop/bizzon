@@ -88,7 +88,7 @@ export const tools: Tool[] = [
     title: 'VAT / Sales Tax Calculator',
     href: '/vat-sales-tax-calculator',
     description: 'Add or remove VAT and sales tax percentages for quick price estimates.',
-    status: 'planned',
+    status: 'live',
   },
   {
     title: 'QR Code Generator',

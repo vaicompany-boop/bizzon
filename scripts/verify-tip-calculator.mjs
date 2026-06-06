@@ -38,12 +38,12 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('13 live')) throw new Error(`Expected ${name} page to show 13 live tools`);
+  if (!page.includes('14 live')) throw new Error(`Expected ${name} page to show 14 live tools`);
   if (!page.includes('/tip-calculator')) throw new Error(`Expected ${name} page to link to /tip-calculator`);
   if (!page.includes('Tip Calculator')) throw new Error(`Expected ${name} page to include Tip Calculator`);
 }
 
-for (const planned of ['VAT / Sales Tax Calculator', 'QR Code Generator', 'Invoice Helper']) {
+for (const planned of ['QR Code Generator', 'Invoice Helper']) {
   if (!tools.includes(planned)) throw new Error(`Expected tools page roadmap to include ${planned}`);
 }
 
