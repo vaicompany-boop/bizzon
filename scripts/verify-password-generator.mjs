@@ -38,7 +38,7 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('7 live')) throw new Error(`Expected ${name} page to show 7 live tools`);
+  if (!page.includes('10 live')) throw new Error(`Expected ${name} page to show 10 live tools`);
   if (!page.includes('/password-generator')) throw new Error(`Expected ${name} page to link to /password-generator`);
   if (!page.includes('Password Generator')) throw new Error(`Expected ${name} page to include Password Generator`);
 }
