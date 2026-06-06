@@ -69,13 +69,31 @@ export const tools: Tool[] = [
   {
     title: 'Percentage Calculator',
     href: '/percentage-calculator',
-    description: 'Calculate percentages, increases, decreases, and simple discount math quickly.',
-    status: 'planned',
+    description: 'Calculate percentages, increases, decreases, discounts, and percentage change quickly.',
+    status: 'live',
   },
   {
     title: 'Filename Cleaner',
     href: '/filename-cleaner',
     description: 'Turn messy filenames into clean, readable, web-friendly names before uploading or sharing.',
+    status: 'planned',
+  },
+  {
+    title: 'Tip Calculator',
+    href: '/tip-calculator',
+    description: 'Calculate tips, split bills, and per-person totals quickly without an account.',
+    status: 'planned',
+  },
+  {
+    title: 'VAT / Sales Tax Calculator',
+    href: '/vat-sales-tax-calculator',
+    description: 'Add or remove VAT and sales tax percentages for quick price estimates.',
+    status: 'planned',
+  },
+  {
+    title: 'QR Code Generator',
+    href: '/qr-code-generator',
+    description: 'Create QR codes for links, text, contact details, and simple sharing tasks.',
     status: 'planned',
   },
   {

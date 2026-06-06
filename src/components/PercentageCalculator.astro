@@ -1,0 +1,207 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="percentage-calculator-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only utility</p>
+      <h2 id="percentage-calculator-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Calculate percentages, discounts, and changes</h2>
+      <p class="mt-2 text-slate-600">Quick percentage math for prices, discounts, increases, decreases, school work, invoices, and everyday decisions.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="samplePercentage" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="clearPercentage" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[1fr_1fr]">
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label for="percentageMode" class="text-sm font-bold text-slate-700">Calculation type</label>
+      <select id="percentageMode" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+        <option value="partOf">What is X% of Y?</option>
+        <option value="percentOf">X is what percent of Y?</option>
+        <option value="change">Percentage change</option>
+        <option value="increase">Increase by X%</option>
+        <option value="decrease">Decrease / discount by X%</option>
+      </select>
+      <p id="percentageModeHint" class="mt-3 text-sm text-slate-600">Find the part value when you know the percentage and the total.</p>
+    </div>
+
+    <div class="rounded-3xl bg-slate-950 p-5 text-white">
+      <div class="flex items-center justify-between gap-3">
+        <label for="percentageResult" class="text-sm font-bold text-slate-300">Result</label>
+        <button id="copyPercentageResult" type="button" class="rounded-full border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-blue-300 hover:text-white">Copy</button>
+      </div>
+      <textarea id="percentageResult" readonly class="mt-2 min-h-32 w-full resize-y rounded-2xl border border-slate-700 bg-slate-900 p-4 font-mono text-lg text-white outline-none" placeholder="Result appears here"></textarea>
+      <p id="percentageStatus" class="mt-2 min-h-5 text-sm font-semibold text-blue-200" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="mt-5 grid gap-5 md:grid-cols-2">
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label id="percentageA-label" for="percentageA" class="text-sm font-bold text-slate-700">Percentage</label>
+      <input id="percentageA" type="number" inputmode="decimal" step="any" value="20" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+    </div>
+    <div class="rounded-3xl bg-slate-50 p-5">
+      <label id="percentageB-label" for="percentageB" class="text-sm font-bold text-slate-700">Total value</label>
+      <input id="percentageB" type="number" inputmode="decimal" step="any" value="150" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 md:grid-cols-3" aria-live="polite">
+    <div class="rounded-3xl bg-blue-600 p-5 text-white"><p class="text-sm font-semibold text-blue-100">Current mode</p><p id="currentPercentageMode" class="mt-2 text-2xl font-black">Percent of total</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Formula</p><p id="percentageFormula" class="mt-2 text-lg font-black text-slate-950">X ÷ 100 × Y</p></div>
+    <div class="rounded-3xl bg-emerald-100 p-5"><p class="text-sm font-semibold text-emerald-700">Output</p><p class="mt-2 text-lg font-black text-slate-950">Copyable result</p></div>
+  </div>
+</section>
+
+<script>
+  const mode = document.getElementById('percentageMode') as HTMLSelectElement | null;
+  const inputA = document.getElementById('percentageA') as HTMLInputElement | null;
+  const inputB = document.getElementById('percentageB') as HTMLInputElement | null;
+  const labelA = document.getElementById('percentageA-label');
+  const labelB = document.getElementById('percentageB-label');
+  const result = document.getElementById('percentageResult') as HTMLTextAreaElement | null;
+  const status = document.getElementById('percentageStatus');
+  const hint = document.getElementById('percentageModeHint');
+  const currentMode = document.getElementById('currentPercentageMode');
+  const formula = document.getElementById('percentageFormula');
+  const copyButton = document.getElementById('copyPercentageResult');
+  const clearButton = document.getElementById('clearPercentage');
+  const sampleButton = document.getElementById('samplePercentage');
+
+  const config = {
+    partOf: {
+      labels: ['Percentage', 'Total value'],
+      hint: 'Find the part value when you know the percentage and the total.',
+      current: 'Percent of total',
+      formula: 'X ÷ 100 × Y',
+      sample: [20, 150],
+    },
+    percentOf: {
+      labels: ['Part value', 'Total value'],
+      hint: 'Find what percentage one number is of another number.',
+      current: 'Part to percent',
+      formula: 'X ÷ Y × 100',
+      sample: [30, 150],
+    },
+    change: {
+      labels: ['Old value', 'New value'],
+      hint: 'Find the percentage increase or decrease from an old value to a new value.',
+      current: 'Percentage change',
+      formula: '(New − Old) ÷ Old × 100',
+      sample: [80, 100],
+    },
+    increase: {
+      labels: ['Original value', 'Increase percent'],
+      hint: 'Add a percentage increase to a number.',
+      current: 'Increase by percent',
+      formula: 'Value × (1 + X ÷ 100)',
+      sample: [100, 15],
+    },
+    decrease: {
+      labels: ['Original value', 'Decrease percent'],
+      hint: 'Subtract a percentage from a number. Useful for discounts.',
+      current: 'Decrease / discount',
+      formula: 'Value × (1 − X ÷ 100)',
+      sample: [100, 20],
+    },
+  } as const;
+
+  function formatNumber(value: number) {
+    if (!Number.isFinite(value)) return 'Invalid number';
+    return new Intl.NumberFormat('en', { maximumFractionDigits: 6 }).format(Number(value.toFixed(6)));
+  }
+
+  function setStatus(message = '') {
+    if (status) status.textContent = message;
+  }
+
+  function getNumbers() {
+    return [Number(inputA?.value ?? 0), Number(inputB?.value ?? 0)];
+  }
+
+  function calculate() {
+    if (!mode || !result) return;
+    const activeMode = mode.value as keyof typeof config;
+    const [a, b] = getNumbers();
+    let output = '';
+
+    if ([a, b].some((value) => Number.isNaN(value))) {
+      result.value = '';
+      setStatus('Enter valid numbers.');
+      return;
+    }
+
+    if (activeMode === 'partOf') {
+      const value = (a / 100) * b;
+      output = `${formatNumber(a)}% of ${formatNumber(b)} = ${formatNumber(value)}.`;
+    }
+
+    if (activeMode === 'percentOf') {
+      if (b === 0) { result.value = ''; setStatus('Total value cannot be zero.'); return; }
+      const value = (a / b) * 100;
+      output = `${formatNumber(a)} is ${formatNumber(value)}% of ${formatNumber(b)}.`;
+    }
+
+    if (activeMode === 'change') {
+      if (a === 0) { result.value = ''; setStatus('Old value cannot be zero.'); return; }
+      const change = ((b - a) / a) * 100;
+      const direction = change >= 0 ? 'increase' : 'decrease';
+      output = `${formatNumber(a)} to ${formatNumber(b)} = ${formatNumber(Math.abs(change))}% ${direction}.`;
+    }
+
+    if (activeMode === 'increase') {
+      const value = a * (1 + b / 100);
+      output = `${formatNumber(a)} increased by ${formatNumber(b)}% = ${formatNumber(value)}.`;
+    }
+
+    if (activeMode === 'decrease') {
+      const value = a * (1 - b / 100);
+      output = `${formatNumber(a)} decreased by ${formatNumber(b)}% = ${formatNumber(value)}.`;
+    }
+
+    result.value = output;
+    setStatus('Calculated percentage result.');
+  }
+
+  function updateMode() {
+    if (!mode) return;
+    const active = config[mode.value as keyof typeof config];
+    if (labelA) labelA.textContent = active.labels[0];
+    if (labelB) labelB.textContent = active.labels[1];
+    if (hint) hint.textContent = active.hint;
+    if (currentMode) currentMode.textContent = active.current;
+    if (formula) formula.textContent = active.formula;
+    calculate();
+  }
+
+  mode?.addEventListener('change', updateMode);
+  [inputA, inputB].forEach((element) => element?.addEventListener('input', calculate));
+
+  sampleButton?.addEventListener('click', () => {
+    if (!mode || !inputA || !inputB) return;
+    const active = config[mode.value as keyof typeof config];
+    inputA.value = String(active.sample[0]);
+    inputB.value = String(active.sample[1]);
+    calculate();
+  });
+
+  clearButton?.addEventListener('click', () => {
+    if (inputA) inputA.value = '';
+    if (inputB) inputB.value = '';
+    if (result) result.value = '';
+    setStatus();
+  });
+
+  copyButton?.addEventListener('click', async () => {
+    if (!result) return;
+    try {
+      await navigator.clipboard.writeText(result.value);
+      setStatus(result.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    } catch {
+      result.select();
+      document.execCommand('copy');
+      setStatus(result.value ? 'Copied to clipboard.' : 'Nothing to copy yet.');
+    }
+  });
+
+  updateMode();
+</script>

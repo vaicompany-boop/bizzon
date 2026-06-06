@@ -7,12 +7,12 @@ const plannedTools = tools.filter((tool) => tool.status === 'planned').slice(0, 
 const liveToolCount = liveTools.length;
 ---
 
-<BaseLayout title="Bizzon — simple browser tools that just work" description="Bizzon is a collection of fast, private, browser-based tools for text, SEO, passwords, random picks, conversions, and date math." canonicalPath="/">
+<BaseLayout title="Bizzon — simple browser tools that just work" description="Bizzon is a collection of fast, private, browser-based tools for text, SEO, passwords, random picks, conversions, date math, percentage math, and everyday tasks." canonicalPath="/">
   <section class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-[1.05fr_0.95fr] md:py-24">
     <div>
       <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">No login. No upload. No clutter.</p>
       <h1 class="mt-5 text-5xl font-black leading-tight tracking-tight text-slate-950 md:text-7xl">Simple browser tools for everyday tasks.</h1>
-      <p class="mt-6 max-w-2xl text-lg text-slate-600 md:text-xl">Bizzon now has <strong>{liveToolCount} live browser tools</strong> for counting, converting, cleaning, preparing text for publishing, generating passwords, making random picks, converting everyday units, and calculating dates. Open a tool, use it instantly, and move on.</p>
+      <p class="mt-6 max-w-2xl text-lg text-slate-600 md:text-xl">Bizzon now has <strong>{liveToolCount} live browser tools</strong> for counting, converting, cleaning, preparing text for publishing, generating passwords, making random picks, converting everyday units, calculating dates, and doing percentage math. Open a tool, use it instantly, and move on.</p>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
         <a class="rounded-full bg-blue-600 px-6 py-3 text-center font-bold text-white shadow-sm transition hover:bg-blue-700 hover:text-white" href="/tools">Explore all tools</a>
         <a class="rounded-full border border-slate-300 bg-white px-6 py-3 text-center font-bold text-slate-800 transition hover:border-blue-300 hover:text-blue-700" href="/text-cleaner">Try Text Cleaner</a>
@@ -26,18 +26,18 @@ const liveToolCount = liveTools.length;
     <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
       <div class="flex items-center justify-between gap-4">
         <div>
-          <p class="text-sm font-semibold text-slate-500">10 tools live now</p>
+          <p class="text-sm font-semibold text-slate-500">{liveToolCount} tools live now</p>
           <h2 class="mt-1 text-2xl font-black text-slate-950">Pick the job you need.</h2>
         </div>
         <span class="rounded-full bg-blue-50 px-4 py-2 text-sm font-bold text-blue-700">{liveToolCount} live</span>
       </div>
       <div class="mt-5 max-h-[34rem] space-y-4 overflow-y-auto pr-1">{liveTools.map((tool) => <ToolCard tool={tool} />)}</div>
-      <p class="mt-6 rounded-2xl bg-blue-50 p-4 text-sm text-blue-900">All tools run locally in your browser. Bizzon does not upload or store your pasted text, lists, passwords, dates, or conversions.</p>
+      <p class="mt-6 rounded-2xl bg-blue-50 p-4 text-sm text-blue-900">All tools run locally in your browser. Bizzon does not upload or store your pasted text, lists, passwords, dates, conversions, or percentage calculations.</p>
     </div>
   </section>
   <section class="bg-white/70 py-14">
     <div class="mx-auto max-w-6xl px-5">
-      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">MVP milestone</p><h2 class="mt-3 text-3xl font-black text-slate-950 md:text-4xl">10 useful tools are live.</h2><p class="mt-3 max-w-2xl text-slate-600">Bizzon now has a coherent first toolbox. The next step is not more clutter — it is a careful expansion with practical utilities that stay fast, private, and easy to understand.</p></div><a class="font-bold text-blue-700" href="/tools">See the tool roadmap →</a></div>
+      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">MVP expansion</p><h2 class="mt-3 text-3xl font-black text-slate-950 md:text-4xl">A careful utility roadmap is planned.</h2><p class="mt-3 max-w-2xl text-slate-600">Bizzon now has a coherent toolbox. The next expansion stays practical: filename cleanup, tips, VAT/sales tax, QR codes, and lightweight invoice helpers.</p></div><a class="font-bold text-blue-700" href="/tools">See the tool roadmap →</a></div>
       <div class="mt-8 grid gap-5 md:grid-cols-3">{plannedTools.map((tool) => <ToolCard tool={tool} />)}</div>
     </div>
   </section>
