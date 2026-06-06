@@ -102,4 +102,16 @@ export const tools: Tool[] = [
     description: 'Draft simple invoice line totals, tax amounts, and copyable invoice notes without an account.',
     status: 'planned',
   },
+  {
+    title: 'Loan Calculator',
+    href: '/loan-calculator',
+    description: 'Estimate monthly payments, total interest, and repayment totals for simple loan scenarios.',
+    status: 'planned',
+  },
+  {
+    title: 'Business Name Generator',
+    href: '/business-name-generator',
+    description: 'Brainstorm practical business, project, and domain-name ideas from a few keywords.',
+    status: 'planned',
+  },
 ];

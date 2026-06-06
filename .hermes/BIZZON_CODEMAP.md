@@ -8,7 +8,7 @@ Generated from Graphify + direct repo inspection. Use this as the quick onboardi
 - Deployment: Vercel.
 - Tool registry: `src/data/tools.ts`.
 - Live tools currently in registry: 15.
-- Planned tool currently in registry: `Invoice Helper`.
+- Planned tools currently in registry: `Invoice Helper`, `Loan Calculator`, `Business Name Generator`.
 - Graphify code graph: `graphify-out/graph.json`.
 - Graphify report: `graphify-out/GRAPH_REPORT.md`.
 - Graphify visual map: `graphify-out/graph.html`.

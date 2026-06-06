@@ -33,6 +33,8 @@ const homeRequired = [
   'VAT / Sales Tax Calculator',
   'QR Code Generator',
   'Invoice Helper',
+  'Loan Calculator',
+  'Business Name Generator',
   'Explore all tools',
   '15 tools live now',
   'No login. No upload. No clutter.',
@@ -41,6 +43,10 @@ const homeRequired = [
 const toolsRequired = [
   '15 live tools',
   'Live tools',
+  'Browse by category',
+  'Text and publishing',
+  'Decisions and security',
+  'Calculators and conversions',
   'Coming next',
   'Use this if you need to',
   '/word-counter',
@@ -63,6 +69,8 @@ const toolsRequired = [
   'VAT / Sales Tax Calculator',
   'QR Code Generator',
   'Invoice Helper',
+  'Loan Calculator',
+  'Business Name Generator',
 ];
 
 for (const needle of homeRequired) {
