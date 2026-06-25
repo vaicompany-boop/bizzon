@@ -1,6 +1,7 @@
 ---
 import TextCleaner from '../components/TextCleaner.astro';
 import ToolLayout from '../layouts/ToolLayout.astro';
+import ToolSeoSections from '../components/ToolSeoSections.astro';
 ---
 
 <ToolLayout
@@ -29,4 +30,5 @@ import ToolLayout from '../layouts/ToolLayout.astro';
     <h2 class="text-2xl font-black text-slate-950">Related text tools</h2>
     <p class="mt-4 text-slate-700">Need counts after cleaning? Try the <a class="font-bold text-blue-700" href="/word-counter">Word Counter</a> or <a class="font-bold text-blue-700" href="/character-counter">Character Counter</a>. Need format changes? Use the <a class="font-bold text-blue-700" href="/case-converter">Case Converter</a>.</p>
   </section>
+  <ToolSeoSections slug="text-cleaner" />
 </ToolLayout>

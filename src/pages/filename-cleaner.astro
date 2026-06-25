@@ -1,6 +1,7 @@
 ---
 import FilenameCleaner from '../components/FilenameCleaner.astro';
 import ToolLayout from '../layouts/ToolLayout.astro';
+import ToolSeoSections from '../components/ToolSeoSections.astro';
 ---
 
 <ToolLayout
@@ -29,4 +30,5 @@ import ToolLayout from '../layouts/ToolLayout.astro';
     <h2 class="text-2xl font-black text-slate-950">Related tools</h2>
     <p class="mt-4 text-slate-700">Need clean URL slugs? Try the <a class="font-bold text-blue-700" href="/slug-generator">Slug Generator</a>. Need to remove messy copy-paste formatting? Use the <a class="font-bold text-blue-700" href="/text-cleaner">Text Cleaner</a>. Need quick percentage math? Open the <a class="font-bold text-blue-700" href="/percentage-calculator">Percentage Calculator</a>.</p>
   </section>
+  <ToolSeoSections slug="filename-cleaner" />
 </ToolLayout>
