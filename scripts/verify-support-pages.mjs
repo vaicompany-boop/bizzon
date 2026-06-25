@@ -27,6 +27,31 @@ const pages = [
     title: 'Private Browser Tools',
     mustLink: ['/tools', '/password-generator', '/qr-code-generator', '/random-picker'],
   },
+  {
+    slug: 'how-to-clean-pasted-text',
+    title: 'How to Clean Pasted Text',
+    mustLink: ['/text-cleaner', '/word-counter', '/character-counter', '/case-converter'],
+  },
+  {
+    slug: 'word-count-vs-character-count',
+    title: 'Word Count vs Character Count',
+    mustLink: ['/word-counter', '/character-counter', '/meta-title-description-checker'],
+  },
+  {
+    slug: 'how-to-make-a-url-slug',
+    title: 'How to Make a URL Slug',
+    mustLink: ['/slug-generator', '/case-converter', '/filename-cleaner', '/meta-title-description-checker'],
+  },
+  {
+    slug: 'vat-vs-sales-tax-calculator-guide',
+    title: 'VAT vs Sales Tax Calculator Guide',
+    mustLink: ['/vat-sales-tax-calculator', '/percentage-calculator', '/tip-calculator'],
+  },
+  {
+    slug: 'how-to-create-qr-codes',
+    title: 'How to Create QR Codes',
+    mustLink: ['/qr-code-generator', '/slug-generator', '/meta-title-description-checker', '/tools'],
+  },
 ];
 
 const failures = [];
