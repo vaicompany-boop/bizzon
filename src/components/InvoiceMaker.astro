@@ -9,6 +9,7 @@
       <button id="sampleInvoice" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
       <button id="saveInvoiceTemplate" type="button" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">Save template</button>
       <button id="loadInvoiceTemplate" type="button" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">Load template</button>
+      <button id="emailInvoiceDraft" type="button" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">Email draft</button>
       <button id="clearInvoice" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Clear</button>
       <button id="downloadInvoicePdf" type="button" data-pdf-engine="jsPDF" class="rounded-full bg-blue-600 px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700">Download PDF</button>
     </div>
@@ -16,7 +17,7 @@
 
   <div class="mt-6 rounded-3xl border border-blue-100 bg-blue-50 p-5">
     <h3 class="text-lg font-black text-slate-950">Pro options</h3>
-    <p class="mt-1 text-sm text-blue-900">Add a logo, choose a PDF style, set payment terms, apply discount, and save a reusable browser-only template with localStorage.</p>
+    <p class="mt-1 text-sm text-blue-900">Add a logo, choose a PDF style, set payment terms, apply discount, select language, choose VAT / tax mode, add a signature, configure recurring invoice notes, and save a reusable browser-only template with localStorage.</p>
     <div class="mt-4 grid gap-4 md:grid-cols-4">
       <div>
         <label for="invoiceLogo" class="text-sm font-bold text-slate-700">Logo upload</label>
@@ -50,6 +51,37 @@
             <option value="fixed">Fixed</option>
           </select>
         </div>
+      </div>
+    </div>
+    <div class="mt-4 grid gap-4 md:grid-cols-4">
+      <div>
+        <label for="invoiceLanguage" class="text-sm font-bold text-slate-700">Language</label>
+        <select id="invoiceLanguage" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+          <option value="en">English</option>
+          <option value="de">Deutsch</option>
+          <option value="bs">Bosanski</option>
+        </select>
+      </div>
+      <div>
+        <label for="taxMode" class="text-sm font-bold text-slate-700">VAT / tax mode</label>
+        <select id="taxMode" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+          <option value="standard">Standard tax</option>
+          <option value="reverse">Reverse charge</option>
+          <option value="exempt">Tax exempt</option>
+        </select>
+      </div>
+      <div>
+        <label for="signatureName" class="text-sm font-bold text-slate-700">Signature</label>
+        <input id="signatureName" placeholder="Name shown under signature line" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+      </div>
+      <div>
+        <label for="recurringPreset" class="text-sm font-bold text-slate-700">Recurring invoice</label>
+        <select id="recurringPreset" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+          <option value="none">One-time invoice</option>
+          <option value="monthly">Monthly recurring</option>
+          <option value="quarterly">Quarterly recurring</option>
+          <option value="yearly">Yearly recurring</option>
+        </select>
       </div>
     </div>
   </div>
@@ -169,6 +201,10 @@ client@example.com</textarea>
     discountType: string;
     discountValue: string;
     paymentTerms: string;
+    invoiceLanguage: string;
+    taxMode: string;
+    signatureName: string;
+    recurringPreset: string;
     invoiceStyle: string;
     notes: string;
     logoDataUrl: string;
@@ -191,6 +227,10 @@ client@example.com</textarea>
     discountType: document.getElementById('invoiceDiscountType') as HTMLSelectElement | null,
     discountValue: document.getElementById('invoiceDiscountValue') as HTMLInputElement | null,
     paymentTerms: document.getElementById('paymentTerms') as HTMLSelectElement | null,
+    invoiceLanguage: document.getElementById('invoiceLanguage') as HTMLSelectElement | null,
+    taxMode: document.getElementById('taxMode') as HTMLSelectElement | null,
+    signatureName: document.getElementById('signatureName') as HTMLInputElement | null,
+    recurringPreset: document.getElementById('recurringPreset') as HTMLSelectElement | null,
     invoiceStyle: document.getElementById('invoiceStyle') as HTMLSelectElement | null,
     logo: document.getElementById('invoiceLogo') as HTMLInputElement | null,
     logoPreview: document.getElementById('logoPreview'),
@@ -203,6 +243,7 @@ client@example.com</textarea>
     save: document.getElementById('saveInvoiceTemplate'),
     load: document.getElementById('loadInvoiceTemplate'),
     clear: document.getElementById('clearInvoice'),
+    email: document.getElementById('emailInvoiceDraft'),
     download: document.getElementById('downloadInvoicePdf'),
   };
 
@@ -251,9 +292,34 @@ client@example.com</textarea>
     const discountInput = Math.max(0, Number(ids.discountValue?.value || 0));
     const discount = ids.discountType?.value === 'fixed' ? Math.min(subtotal, discountInput) : Math.min(subtotal, subtotal * (discountInput / 100));
     const taxableSubtotal = Math.max(0, subtotal - discount);
-    const rate = Math.max(0, Number(ids.taxRate?.value || 0));
+    const taxMode = ids.taxMode?.value || 'standard';
+    const rate = taxMode === 'standard' ? Math.max(0, Number(ids.taxRate?.value || 0)) : 0;
     const tax = taxableSubtotal * (rate / 100);
-    return { items, subtotal, discount, taxableSubtotal, rate, tax, total: taxableSubtotal + tax };
+    return { items, subtotal, discount, taxableSubtotal, rate, tax, total: taxableSubtotal + tax, taxMode };
+  }
+
+  const labels = {
+    en: { invoice: 'Invoice', date: 'Date', due: 'Due', terms: 'Terms', from: 'From', billTo: 'Bill to', description: 'Description', qty: 'Qty', unit: 'Unit', total: 'Total', subtotal: 'Subtotal', discount: 'Discount', taxableSubtotal: 'Taxable subtotal', tax: 'Tax', notes: 'Notes', signature: 'Signature', reverseCharge: 'Reverse charge', taxExempt: 'Tax exempt', recurring: 'Recurring invoice' },
+    de: { invoice: 'Rechnung', date: 'Datum', due: 'Fällig', terms: 'Zahlungsziel', from: 'Von', billTo: 'Rechnung an', description: 'Beschreibung', qty: 'Menge', unit: 'Preis', total: 'Summe', subtotal: 'Zwischensumme', discount: 'Rabatt', taxableSubtotal: 'Steuerbasis', tax: 'MwSt.', notes: 'Notizen', signature: 'Unterschrift', reverseCharge: 'Reverse Charge', taxExempt: 'Steuerbefreit', recurring: 'Wiederkehrende Rechnung' },
+    bs: { invoice: 'Faktura', date: 'Datum', due: 'Rok plaćanja', terms: 'Uslovi plaćanja', from: 'Od', billTo: 'Za klijenta', description: 'Opis', qty: 'Kol.', unit: 'Cijena', total: 'Ukupno', subtotal: 'Međuzbir', discount: 'Popust', taxableSubtotal: 'Osnovica', tax: 'Porez', notes: 'Napomene', signature: 'Potpis', reverseCharge: 'Reverse charge', taxExempt: 'Oslobođeno poreza', recurring: 'Ponavljajuća faktura' },
+  } as const;
+
+  function t() {
+    return labels[(ids.invoiceLanguage?.value || 'en') as keyof typeof labels] || labels.en;
+  }
+
+  function taxModeNote() {
+    const l = t();
+    if (ids.taxMode?.value === 'reverse') return l.reverseCharge;
+    if (ids.taxMode?.value === 'exempt') return l.taxExempt;
+    return '';
+  }
+
+  function recurringNote() {
+    const value = ids.recurringPreset?.value || 'none';
+    if (value === 'none') return '';
+    const label = ids.recurringPreset?.selectedOptions?.[0]?.textContent || value;
+    return `${t().recurring}: ${label}`;
   }
 
   function updateLogoPreview() {
@@ -307,6 +373,10 @@ client@example.com</textarea>
       discountType: ids.discountType?.value || 'percent',
       discountValue: ids.discountValue?.value || '0',
       paymentTerms: ids.paymentTerms?.value || 'custom',
+      invoiceLanguage: ids.invoiceLanguage?.value || 'en',
+      taxMode: ids.taxMode?.value || 'standard',
+      signatureName: ids.signatureName?.value || '',
+      recurringPreset: ids.recurringPreset?.value || 'none',
       invoiceStyle: ids.invoiceStyle?.value || 'modern',
       notes: ids.notes?.value || '',
       logoDataUrl,
@@ -327,6 +397,10 @@ client@example.com</textarea>
     if (ids.discountType) ids.discountType.value = template.discountType || 'percent';
     if (ids.discountValue) ids.discountValue.value = template.discountValue || '0';
     if (ids.paymentTerms) ids.paymentTerms.value = template.paymentTerms || 'custom';
+    if (ids.invoiceLanguage) ids.invoiceLanguage.value = template.invoiceLanguage || 'en';
+    if (ids.taxMode) ids.taxMode.value = template.taxMode || 'standard';
+    if (ids.signatureName) ids.signatureName.value = template.signatureName || '';
+    if (ids.recurringPreset) ids.recurringPreset.value = template.recurringPreset || 'none';
     if (ids.invoiceStyle) ids.invoiceStyle.value = template.invoiceStyle || 'modern';
     if (ids.notes) ids.notes.value = template.notes || '';
     logoDataUrl = template.logoDataUrl || '';
@@ -367,10 +441,14 @@ client@example.com</textarea>
     if (!ids.preview) return;
     updateLineTotals();
     const result = totals();
+    const l = t();
     const style = ids.invoiceStyle?.value || 'modern';
     const accentClass = style === 'classic' ? 'text-slate-950' : style === 'minimal' ? 'text-slate-600' : 'text-blue-700';
     const logoHtml = logoDataUrl ? `<img src="${logoDataUrl}" alt="Invoice logo" class="max-h-16 max-w-40 object-contain" />` : '';
-    const discountLabel = ids.discountType?.value === 'fixed' ? 'Discount' : `Discount (${Number(ids.discountValue?.value || 0)}%)`;
+    const discountLabel = ids.discountType?.value === 'fixed' ? l.discount : `${l.discount} (${Number(ids.discountValue?.value || 0)}%)`;
+    const taxNote = taxModeNote();
+    const recurring = recurringNote();
+    const signature = ids.signatureName?.value || '';
     const itemHtml = result.items.map((item) => `
       <tr class="border-t border-slate-200">
         <td class="py-2 pr-3">${escapeHtml(item.description || 'Item')}</td>
@@ -382,16 +460,19 @@ client@example.com</textarea>
 
     ids.preview.innerHTML = `
       <div class="flex items-start justify-between gap-4">
-        <div>${logoHtml}<p class="mt-3 text-sm font-bold uppercase tracking-[0.2em] ${accentClass}">Invoice</p><h4 class="mt-2 text-2xl font-black text-slate-950">${escapeHtml(ids.invoiceNumber?.value || 'INV-001')}</h4></div>
-        <div class="text-right text-sm text-slate-600"><p>Date: ${escapeHtml(ids.invoiceDate?.value || '')}</p><p>Due: ${escapeHtml(ids.invoiceDueDate?.value || '')}</p><p>Terms: ${escapeHtml(ids.paymentTerms?.selectedOptions?.[0]?.textContent || '')}</p></div>
+        <div>${logoHtml}<p class="mt-3 text-sm font-bold uppercase tracking-[0.2em] ${accentClass}">${l.invoice}</p><h4 class="mt-2 text-2xl font-black text-slate-950">${escapeHtml(ids.invoiceNumber?.value || 'INV-001')}</h4></div>
+        <div class="text-right text-sm text-slate-600"><p>${l.date}: ${escapeHtml(ids.invoiceDate?.value || '')}</p><p>${l.due}: ${escapeHtml(ids.invoiceDueDate?.value || '')}</p><p>${l.terms}: ${escapeHtml(ids.paymentTerms?.selectedOptions?.[0]?.textContent || '')}</p></div>
       </div>
       <div class="mt-6 grid gap-4 md:grid-cols-2">
-        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">From</p><p class="mt-2 font-black text-slate-950">${escapeHtml(ids.sellerName?.value || '')}</p><p class="mt-1 whitespace-pre-line text-sm text-slate-600">${escapeHtml(ids.sellerDetails?.value || '')}</p></div>
-        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Bill to</p><p class="mt-2 font-black text-slate-950">${escapeHtml(ids.clientName?.value || '')}</p><p class="mt-1 whitespace-pre-line text-sm text-slate-600">${escapeHtml(ids.clientDetails?.value || '')}</p></div>
+        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">${l.from}</p><p class="mt-2 font-black text-slate-950">${escapeHtml(ids.sellerName?.value || '')}</p><p class="mt-1 whitespace-pre-line text-sm text-slate-600">${escapeHtml(ids.sellerDetails?.value || '')}</p></div>
+        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">${l.billTo}</p><p class="mt-2 font-black text-slate-950">${escapeHtml(ids.clientName?.value || '')}</p><p class="mt-1 whitespace-pre-line text-sm text-slate-600">${escapeHtml(ids.clientDetails?.value || '')}</p></div>
       </div>
-      <div class="mt-6 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-slate-500"><th class="pb-2 pr-3 text-left">Description</th><th class="pb-2 pr-3 text-right">Qty</th><th class="pb-2 pr-3 text-right">Unit</th><th class="pb-2 text-right">Total</th></tr></thead><tbody>${itemHtml}</tbody></table></div>
-      <div class="mt-6 ml-auto grid max-w-xs gap-2 text-sm"><div class="flex justify-between"><span>Subtotal</span><strong>${money(result.subtotal)}</strong></div><div class="flex justify-between"><span>${discountLabel}</span><strong>-${money(result.discount)}</strong></div><div class="flex justify-between"><span>Taxable subtotal</span><strong>${money(result.taxableSubtotal)}</strong></div><div class="flex justify-between"><span>Tax (${result.rate}%)</span><strong>${money(result.tax)}</strong></div><div class="flex justify-between border-t border-slate-200 pt-3 text-lg"><span>Total</span><strong>${money(result.total)}</strong></div></div>
+      <div class="mt-6 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-slate-500"><th class="pb-2 pr-3 text-left">${l.description}</th><th class="pb-2 pr-3 text-right">${l.qty}</th><th class="pb-2 pr-3 text-right">${l.unit}</th><th class="pb-2 text-right">${l.total}</th></tr></thead><tbody>${itemHtml}</tbody></table></div>
+      <div class="mt-6 ml-auto grid max-w-xs gap-2 text-sm"><div class="flex justify-between"><span>${l.subtotal}</span><strong>${money(result.subtotal)}</strong></div><div class="flex justify-between"><span>${discountLabel}</span><strong>-${money(result.discount)}</strong></div><div class="flex justify-between"><span>${l.taxableSubtotal}</span><strong>${money(result.taxableSubtotal)}</strong></div><div class="flex justify-between"><span>${l.tax} (${result.rate}%)</span><strong>${money(result.tax)}</strong></div><div class="flex justify-between border-t border-slate-200 pt-3 text-lg"><span>${l.total}</span><strong>${money(result.total)}</strong></div></div>
+      ${taxNote ? `<p class="mt-4 rounded-2xl bg-amber-50 p-3 text-sm font-semibold text-amber-900">${escapeHtml(taxNote)}</p>` : ''}
+      ${recurring ? `<p class="mt-3 rounded-2xl bg-blue-50 p-3 text-sm font-semibold text-blue-900">${escapeHtml(recurring)}</p>` : ''}
       <p class="mt-6 whitespace-pre-line rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">${escapeHtml(ids.notes?.value || '')}</p>
+      ${signature ? `<div class="mt-8 max-w-xs"><div class="border-t border-slate-300 pt-2 text-sm font-semibold text-slate-700">${l.signature}: ${escapeHtml(signature)}</div></div>` : ''}
     `;
   }
 
@@ -494,14 +575,24 @@ client@example.com</textarea>
     resetPdfColor(doc);
 
     const notes = ids.notes?.value || '';
-    if (notes.trim()) {
+    const extraNotes = [taxModeNote(), recurringNote()].filter(Boolean).join('\n');
+    const finalNotes = [notes, extraNotes].filter((part) => part.trim()).join('\n\n');
+    if (finalNotes.trim()) {
       y += 14;
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
-      doc.text('Notes', 14, y);
+      doc.text(t().notes, 14, y);
       y += 6;
       doc.setFont('helvetica', 'normal');
-      addText(doc, notes, 14, y, 180);
+      y = addText(doc, finalNotes, 14, y, 180);
+    }
+
+    if (ids.signatureName?.value.trim()) {
+      y += 18;
+      if (y > 270) { doc.addPage(); y = 30; }
+      doc.line(14, y, 84, y);
+      y += 6;
+      doc.text(`${t().signature}: ${ids.signatureName.value.trim()}`, 14, y);
     }
 
     const safeNumber = (ids.invoiceNumber?.value || 'invoice').replace(/[^a-z0-9-_]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'invoice';
@@ -523,6 +614,10 @@ client@example.com</textarea>
       discountType: 'percent',
       discountValue: '5',
       paymentTerms: '14',
+      invoiceLanguage: 'en',
+      taxMode: 'standard',
+      signatureName: 'Bizzon Studio',
+      recurringPreset: 'monthly',
       invoiceStyle: 'modern',
       notes: 'Payment due within 14 days. Thank you for your business.',
       logoDataUrl: '',
@@ -547,6 +642,10 @@ client@example.com</textarea>
       discountType: 'percent',
       discountValue: '0',
       paymentTerms: '14',
+      invoiceLanguage: 'en',
+      taxMode: 'standard',
+      signatureName: '',
+      recurringPreset: 'none',
       invoiceStyle: 'modern',
       notes: '',
       logoDataUrl: '',
@@ -569,9 +668,27 @@ client@example.com</textarea>
     reader.readAsDataURL(file);
   }
 
-  [ids.invoiceNumber, ids.invoiceDate, ids.invoiceDueDate, ids.sellerName, ids.sellerDetails, ids.clientName, ids.clientDetails, ids.currency, ids.taxRate, ids.discountType, ids.discountValue, ids.paymentTerms, ids.invoiceStyle, ids.notes]
+  function emailDraft() {
+    const result = totals();
+    const subject = `Invoice ${ids.invoiceNumber?.value || ''}`.trim();
+    const body = [
+      `Hello,`,
+      '',
+      `Please find invoice ${ids.invoiceNumber?.value || ''} for ${money(result.total)}.`,
+      `${t().date}: ${ids.invoiceDate?.value || ''}`,
+      `${t().due}: ${ids.invoiceDueDate?.value || ''}`,
+      taxModeNote(),
+      recurringNote(),
+      '',
+      ids.notes?.value || '',
+    ].filter((line) => line !== '').join('\n');
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setStatus('Email draft opened. Attach the downloaded PDF before sending.');
+  }
+
+  [ids.invoiceNumber, ids.invoiceDate, ids.invoiceDueDate, ids.sellerName, ids.sellerDetails, ids.clientName, ids.clientDetails, ids.currency, ids.taxRate, ids.discountType, ids.discountValue, ids.paymentTerms, ids.invoiceLanguage, ids.taxMode, ids.signatureName, ids.recurringPreset, ids.invoiceStyle, ids.notes]
     .forEach((element) => element?.addEventListener('input', update));
-  [ids.currency, ids.discountType, ids.paymentTerms, ids.invoiceStyle].forEach((element) => element?.addEventListener('change', update));
+  [ids.currency, ids.discountType, ids.paymentTerms, ids.invoiceLanguage, ids.taxMode, ids.recurringPreset, ids.invoiceStyle].forEach((element) => element?.addEventListener('change', update));
   ids.paymentTerms?.addEventListener('change', updateDueDateFromTerms);
   ids.invoiceDate?.addEventListener('change', updateDueDateFromTerms);
   ids.logo?.addEventListener('change', handleLogoUpload);
@@ -580,6 +697,7 @@ client@example.com</textarea>
   ids.save?.addEventListener('click', saveTemplate);
   ids.load?.addEventListener('click', loadTemplate);
   ids.clear?.addEventListener('click', clear);
+  ids.email?.addEventListener('click', emailDraft);
   ids.download?.addEventListener('click', downloadPdf);
 
   if (ids.invoiceDate) ids.invoiceDate.value = today();
