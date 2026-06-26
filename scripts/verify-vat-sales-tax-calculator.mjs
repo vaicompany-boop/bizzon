@@ -37,7 +37,7 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('15 live')) throw new Error(`Expected ${name} page to show 15 live tools`);
+  if (!page.includes('16 live')) throw new Error(`Expected ${name} page to show 16 live tools`);
   if (!page.includes('/vat-sales-tax-calculator')) throw new Error(`Expected ${name} page to link to /vat-sales-tax-calculator`);
   if (!page.includes('VAT / Sales Tax Calculator')) throw new Error(`Expected ${name} page to include VAT / Sales Tax Calculator`);
 }

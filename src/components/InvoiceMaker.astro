@@ -1,0 +1,363 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="invoice-maker-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only utility</p>
+      <h2 id="invoice-maker-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Create and download invoices as PDF</h2>
+      <p class="mt-2 text-slate-600">Enter your business details, client details, invoice items, tax, and notes. The invoice is prepared in your browser and downloaded as a PDF.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleInvoice" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="clearInvoice" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Clear</button>
+      <button id="downloadInvoicePdf" type="button" data-pdf-engine="jsPDF" class="rounded-full bg-blue-600 px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700">Download PDF</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+    <div class="grid gap-5">
+      <div class="grid gap-5 md:grid-cols-3">
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="invoiceNumber" class="text-sm font-bold text-slate-700">Invoice number</label>
+          <input id="invoiceNumber" value="INV-001" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+        </div>
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="invoiceDate" class="text-sm font-bold text-slate-700">Invoice date</label>
+          <input id="invoiceDate" type="date" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+        </div>
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="invoiceDueDate" class="text-sm font-bold text-slate-700">Due date</label>
+          <input id="invoiceDueDate" type="date" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+        </div>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2">
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <h3 class="text-lg font-black text-slate-950">Your details</h3>
+          <label for="sellerName" class="mt-4 block text-sm font-bold text-slate-700">Business / freelancer name</label>
+          <input id="sellerName" value="Your Business Name" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+          <label for="sellerDetails" class="mt-4 block text-sm font-bold text-slate-700">Address, email, tax ID, payment details</label>
+          <textarea id="sellerDetails" rows="5" class="mt-2 w-full resize-y rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">Street 1
+City, Country
+email@example.com
+IBAN / payment details</textarea>
+        </div>
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <h3 class="text-lg font-black text-slate-950">Client details</h3>
+          <label for="clientName" class="mt-4 block text-sm font-bold text-slate-700">Client name</label>
+          <input id="clientName" value="Client Company" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+          <label for="clientDetails" class="mt-4 block text-sm font-bold text-slate-700">Client address and notes</label>
+          <textarea id="clientDetails" rows="5" class="mt-2 w-full resize-y rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">Client street 2
+Client city, country
+client@example.com</textarea>
+        </div>
+      </div>
+
+      <div class="rounded-3xl bg-slate-50 p-5">
+        <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h3 class="text-lg font-black text-slate-950">Invoice items</h3>
+            <p class="mt-1 text-sm text-slate-600">Add services or products with quantity and unit price. The preview shows Subtotal, Tax, and Total automatically.</p>
+          </div>
+          <button id="addInvoiceItem" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Add item</button>
+        </div>
+        <div class="mt-4 overflow-x-auto">
+          <table class="min-w-full text-left text-sm">
+            <thead class="text-slate-600">
+              <tr>
+                <th class="pb-2 pr-3">Description</th>
+                <th class="pb-2 pr-3">Qty</th>
+                <th class="pb-2 pr-3">Unit price</th>
+                <th class="pb-2 pr-3">Line total</th>
+                <th class="pb-2">Remove</th>
+              </tr>
+            </thead>
+            <tbody id="invoiceItems" class="align-top"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-3">
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="invoiceCurrency" class="text-sm font-bold text-slate-700">Currency</label>
+          <select id="invoiceCurrency" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+            <option value="€">€ Euro</option>
+            <option value="$">$ Dollar</option>
+            <option value="£">£ Pound</option>
+            <option value="KM">KM Mark</option>
+          </select>
+        </div>
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="invoiceTaxRate" class="text-sm font-bold text-slate-700">Tax rate</label>
+          <input id="invoiceTaxRate" type="number" inputmode="decimal" min="0" step="0.1" value="19" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+        </div>
+        <div class="rounded-3xl bg-slate-50 p-5">
+          <label for="invoiceNotes" class="text-sm font-bold text-slate-700">Notes</label>
+          <textarea id="invoiceNotes" rows="4" class="mt-2 w-full resize-y rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">Thank you for your business.</textarea>
+        </div>
+      </div>
+      <p id="invoiceStatus" class="min-h-5 text-sm font-semibold text-blue-700" aria-live="polite"></p>
+    </div>
+
+    <aside class="rounded-[2rem] border border-slate-200 bg-slate-50 p-5 md:p-6">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Live preview</p>
+          <h3 class="mt-2 text-2xl font-black text-slate-950">Invoice preview</h3>
+        </div>
+        <p class="rounded-full bg-white px-3 py-1.5 text-sm font-bold text-slate-700 ring-1 ring-slate-200">PDF-ready</p>
+      </div>
+      <div id="invoicePreview" class="mt-5 rounded-3xl bg-white p-6 text-slate-800 shadow-sm ring-1 ring-slate-200"></div>
+    </aside>
+  </div>
+</section>
+
+<script>
+  import { jsPDF } from 'jspdf';
+
+  type InvoiceItem = { description: string; quantity: number; unitPrice: number };
+
+  const ids = {
+    invoiceNumber: document.getElementById('invoiceNumber') as HTMLInputElement | null,
+    invoiceDate: document.getElementById('invoiceDate') as HTMLInputElement | null,
+    invoiceDueDate: document.getElementById('invoiceDueDate') as HTMLInputElement | null,
+    sellerName: document.getElementById('sellerName') as HTMLInputElement | null,
+    sellerDetails: document.getElementById('sellerDetails') as HTMLTextAreaElement | null,
+    clientName: document.getElementById('clientName') as HTMLInputElement | null,
+    clientDetails: document.getElementById('clientDetails') as HTMLTextAreaElement | null,
+    currency: document.getElementById('invoiceCurrency') as HTMLSelectElement | null,
+    taxRate: document.getElementById('invoiceTaxRate') as HTMLInputElement | null,
+    notes: document.getElementById('invoiceNotes') as HTMLTextAreaElement | null,
+    items: document.getElementById('invoiceItems') as HTMLTableSectionElement | null,
+    preview: document.getElementById('invoicePreview'),
+    status: document.getElementById('invoiceStatus'),
+    add: document.getElementById('addInvoiceItem'),
+    sample: document.getElementById('sampleInvoice'),
+    clear: document.getElementById('clearInvoice'),
+    download: document.getElementById('downloadInvoicePdf'),
+  };
+
+  function today(offsetDays = 0) {
+    const date = new Date();
+    date.setDate(date.getDate() + offsetDays);
+    return date.toISOString().slice(0, 10);
+  }
+
+  function escapeHtml(value: string) {
+    return value.replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char] || char));
+  }
+
+  function money(value: number) {
+    const symbol = ids.currency?.value || '€';
+    const formatted = Number.isFinite(value) ? value.toFixed(2) : '0.00';
+    return symbol === 'KM' ? `${formatted} KM` : `${symbol}${formatted}`;
+  }
+
+  function setStatus(message = '') {
+    if (ids.status) ids.status.textContent = message;
+  }
+
+  function itemRows() {
+    return Array.from(ids.items?.querySelectorAll('tr') || []);
+  }
+
+  function getItems(): InvoiceItem[] {
+    return itemRows().map((row) => {
+      const description = (row.querySelector('.invoice-item-description') as HTMLInputElement | null)?.value || '';
+      const quantity = Math.max(0, Number((row.querySelector('.invoice-item-quantity') as HTMLInputElement | null)?.value || 0));
+      const unitPrice = Math.max(0, Number((row.querySelector('.invoice-item-price') as HTMLInputElement | null)?.value || 0));
+      return { description, quantity, unitPrice };
+    }).filter((item) => item.description.trim() || item.quantity || item.unitPrice);
+  }
+
+  function totals() {
+    const items = getItems();
+    const subtotal = items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
+    const rate = Math.max(0, Number(ids.taxRate?.value || 0));
+    const tax = subtotal * (rate / 100);
+    return { items, subtotal, rate, tax, total: subtotal + tax };
+  }
+
+  function addItem(item: InvoiceItem = { description: '', quantity: 1, unitPrice: 0 }) {
+    if (!ids.items) return;
+    const row = document.createElement('tr');
+    row.className = 'invoice-row border-t border-slate-200';
+    row.innerHTML = `
+      <td class="py-3 pr-3"><input class="invoice-item-description w-64 rounded-2xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-blue-400" value="${escapeHtml(item.description)}" placeholder="Service or product" /></td>
+      <td class="py-3 pr-3"><input class="invoice-item-quantity w-20 rounded-2xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-blue-400" type="number" min="0" step="0.01" value="${item.quantity}" /></td>
+      <td class="py-3 pr-3"><input class="invoice-item-price w-28 rounded-2xl border border-slate-200 bg-white px-3 py-2 outline-none focus:border-blue-400" type="number" min="0" step="0.01" value="${item.unitPrice}" /></td>
+      <td class="line-total py-3 pr-3 font-bold text-slate-950">${money(item.quantity * item.unitPrice)}</td>
+      <td class="py-3"><button type="button" class="remove-invoice-item rounded-full border border-slate-300 px-3 py-1.5 text-xs font-bold text-slate-600 hover:border-red-300 hover:text-red-700">Remove</button></td>
+    `;
+    row.querySelectorAll('input').forEach((input) => input.addEventListener('input', update));
+    row.querySelector('.remove-invoice-item')?.addEventListener('click', () => {
+      row.remove();
+      if (!itemRows().length) addItem({ description: 'Consulting service', quantity: 1, unitPrice: 100 });
+      update();
+    });
+    ids.items.appendChild(row);
+    update();
+  }
+
+  function updateLineTotals() {
+    itemRows().forEach((row) => {
+      const quantity = Math.max(0, Number((row.querySelector('.invoice-item-quantity') as HTMLInputElement | null)?.value || 0));
+      const unitPrice = Math.max(0, Number((row.querySelector('.invoice-item-price') as HTMLInputElement | null)?.value || 0));
+      const lineTotal = row.querySelector('.line-total');
+      if (lineTotal) lineTotal.textContent = money(quantity * unitPrice);
+    });
+  }
+
+  function update() {
+    if (!ids.preview) return;
+    updateLineTotals();
+    const result = totals();
+    const itemHtml = result.items.map((item) => `
+      <tr class="border-t border-slate-200">
+        <td class="py-2 pr-3">${escapeHtml(item.description || 'Item')}</td>
+        <td class="py-2 pr-3 text-right">${item.quantity}</td>
+        <td class="py-2 pr-3 text-right">${money(item.unitPrice)}</td>
+        <td class="py-2 text-right font-bold">${money(item.quantity * item.unitPrice)}</td>
+      </tr>
+    `).join('');
+
+    ids.preview.innerHTML = `
+      <div class="flex items-start justify-between gap-4">
+        <div><p class="text-sm font-bold uppercase tracking-[0.2em] text-blue-700">Invoice</p><h4 class="mt-2 text-2xl font-black text-slate-950">${escapeHtml(ids.invoiceNumber?.value || 'INV-001')}</h4></div>
+        <div class="text-right text-sm text-slate-600"><p>Date: ${escapeHtml(ids.invoiceDate?.value || '')}</p><p>Due: ${escapeHtml(ids.invoiceDueDate?.value || '')}</p></div>
+      </div>
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">From</p><p class="mt-2 font-black text-slate-950">${escapeHtml(ids.sellerName?.value || '')}</p><p class="mt-1 whitespace-pre-line text-sm text-slate-600">${escapeHtml(ids.sellerDetails?.value || '')}</p></div>
+        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Bill to</p><p class="mt-2 font-black text-slate-950">${escapeHtml(ids.clientName?.value || '')}</p><p class="mt-1 whitespace-pre-line text-sm text-slate-600">${escapeHtml(ids.clientDetails?.value || '')}</p></div>
+      </div>
+      <div class="mt-6 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-slate-500"><th class="pb-2 pr-3 text-left">Description</th><th class="pb-2 pr-3 text-right">Qty</th><th class="pb-2 pr-3 text-right">Unit</th><th class="pb-2 text-right">Total</th></tr></thead><tbody>${itemHtml}</tbody></table></div>
+      <div class="mt-6 ml-auto grid max-w-xs gap-2 text-sm"><div class="flex justify-between"><span>Subtotal</span><strong>${money(result.subtotal)}</strong></div><div class="flex justify-between"><span>Tax (${result.rate}%)</span><strong>${money(result.tax)}</strong></div><div class="flex justify-between border-t border-slate-200 pt-3 text-lg"><span>Total</span><strong>${money(result.total)}</strong></div></div>
+      <p class="mt-6 whitespace-pre-line rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">${escapeHtml(ids.notes?.value || '')}</p>
+    `;
+  }
+
+  function addText(doc: jsPDF, text: string, x: number, y: number, maxWidth = 80, lineHeight = 5) {
+    const lines = doc.splitTextToSize(text || '', maxWidth);
+    doc.text(lines, x, y);
+    return y + lines.length * lineHeight;
+  }
+
+  function downloadPdf() {
+    const result = totals();
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    let y = 18;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.text('INVOICE', 14, y);
+    doc.setFontSize(11);
+    doc.text(ids.invoiceNumber?.value || 'INV-001', 150, y);
+    y += 10;
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Date: ${ids.invoiceDate?.value || ''}`, 150, y);
+    y += 6;
+    doc.text(`Due: ${ids.invoiceDueDate?.value || ''}`, 150, y);
+    y += 12;
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('From', 14, y);
+    doc.text('Bill to', 110, y);
+    y += 6;
+    doc.setFont('helvetica', 'normal');
+    const sellerBlock = `${ids.sellerName?.value || ''}\n${ids.sellerDetails?.value || ''}`;
+    const clientBlock = `${ids.clientName?.value || ''}\n${ids.clientDetails?.value || ''}`;
+    const sellerY = addText(doc, sellerBlock, 14, y, 80);
+    const clientY = addText(doc, clientBlock, 110, y, 80);
+    y = Math.max(sellerY, clientY) + 8;
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Description', 14, y);
+    doc.text('Qty', 118, y, { align: 'right' });
+    doc.text('Unit', 150, y, { align: 'right' });
+    doc.text('Total', 196, y, { align: 'right' });
+    y += 3;
+    doc.line(14, y, 196, y);
+    y += 7;
+    doc.setFont('helvetica', 'normal');
+
+    result.items.forEach((item) => {
+      if (y > 260) { doc.addPage(); y = 20; }
+      const descriptionLines = doc.splitTextToSize(item.description || 'Item', 88);
+      doc.text(descriptionLines, 14, y);
+      doc.text(String(item.quantity), 118, y, { align: 'right' });
+      doc.text(money(item.unitPrice), 150, y, { align: 'right' });
+      doc.text(money(item.quantity * item.unitPrice), 196, y, { align: 'right' });
+      y += Math.max(7, descriptionLines.length * 5);
+    });
+
+    y += 5;
+    doc.line(120, y, 196, y);
+    y += 7;
+    doc.setFont('helvetica', 'bold');
+    doc.text('Subtotal', 140, y);
+    doc.text(money(result.subtotal), 196, y, { align: 'right' });
+    y += 7;
+    doc.text(`Tax (${result.rate}%)`, 140, y);
+    doc.text(money(result.tax), 196, y, { align: 'right' });
+    y += 8;
+    doc.setFontSize(14);
+    doc.text('Total', 140, y);
+    doc.text(money(result.total), 196, y, { align: 'right' });
+
+    const notes = ids.notes?.value || '';
+    if (notes.trim()) {
+      y += 14;
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Notes', 14, y);
+      y += 6;
+      doc.setFont('helvetica', 'normal');
+      addText(doc, notes, 14, y, 180);
+    }
+
+    const safeNumber = (ids.invoiceNumber?.value || 'invoice').replace(/[^a-z0-9-_]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'invoice';
+    doc.save(`${safeNumber}.pdf`);
+    setStatus('PDF downloaded.');
+  }
+
+  function sample() {
+    if (ids.invoiceNumber) ids.invoiceNumber.value = 'INV-2026-001';
+    if (ids.invoiceDate) ids.invoiceDate.value = today();
+    if (ids.invoiceDueDate) ids.invoiceDueDate.value = today(14);
+    if (ids.sellerName) ids.sellerName.value = 'Bizzon Studio';
+    if (ids.sellerDetails) ids.sellerDetails.value = 'Example Street 1\n46446 Emmerich am Rhein\nhello@example.com\nIBAN: DE00 0000 0000 0000 0000 00';
+    if (ids.clientName) ids.clientName.value = 'Client Company GmbH';
+    if (ids.clientDetails) ids.clientDetails.value = 'Client Street 2\nBerlin, Germany\nclient@example.com';
+    if (ids.currency) ids.currency.value = '€';
+    if (ids.taxRate) ids.taxRate.value = '19';
+    if (ids.notes) ids.notes.value = 'Payment due within 14 days. Thank you for your business.';
+    if (ids.items) ids.items.innerHTML = '';
+    addItem({ description: 'Website update package', quantity: 1, unitPrice: 450 });
+    addItem({ description: 'Monthly support', quantity: 2, unitPrice: 75 });
+    update();
+  }
+
+  function clear() {
+    if (ids.invoiceNumber) ids.invoiceNumber.value = 'INV-001';
+    if (ids.invoiceDate) ids.invoiceDate.value = today();
+    if (ids.invoiceDueDate) ids.invoiceDueDate.value = today(14);
+    if (ids.sellerName) ids.sellerName.value = '';
+    if (ids.sellerDetails) ids.sellerDetails.value = '';
+    if (ids.clientName) ids.clientName.value = '';
+    if (ids.clientDetails) ids.clientDetails.value = '';
+    if (ids.taxRate) ids.taxRate.value = '0';
+    if (ids.notes) ids.notes.value = '';
+    if (ids.items) ids.items.innerHTML = '';
+    addItem({ description: 'Service', quantity: 1, unitPrice: 0 });
+    setStatus('Invoice cleared.');
+  }
+
+  [ids.invoiceNumber, ids.invoiceDate, ids.invoiceDueDate, ids.sellerName, ids.sellerDetails, ids.clientName, ids.clientDetails, ids.currency, ids.taxRate, ids.notes]
+    .forEach((element) => element?.addEventListener('input', update));
+  ids.currency?.addEventListener('change', update);
+  ids.add?.addEventListener('click', () => addItem({ description: 'New item', quantity: 1, unitPrice: 0 }));
+  ids.sample?.addEventListener('click', sample);
+  ids.clear?.addEventListener('click', clear);
+  ids.download?.addEventListener('click', downloadPdf);
+
+  if (ids.invoiceDate) ids.invoiceDate.value = today();
+  if (ids.invoiceDueDate) ids.invoiceDueDate.value = today(14);
+  sample();
+</script>

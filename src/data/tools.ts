@@ -97,10 +97,10 @@ export const tools: Tool[] = [
     status: 'live',
   },
   {
-    title: 'Invoice Helper',
-    href: '/invoice-helper',
-    description: 'Draft simple invoice line totals, tax amounts, and copyable invoice notes without an account.',
-    status: 'planned',
+    title: 'Invoice Maker',
+    href: '/invoice-maker',
+    description: 'Create invoices with business details, client details, line items, tax, totals, notes, and a downloadable PDF.',
+    status: 'live',
   },
   {
     title: 'Loan Calculator',

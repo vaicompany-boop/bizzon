@@ -40,7 +40,7 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('15 live')) throw new Error(`Expected ${name} page to show 15 live tools`);
+  if (!page.includes('16 live')) throw new Error(`Expected ${name} page to show 16 live tools`);
   if (!page.includes('/percentage-calculator')) throw new Error(`Expected ${name} page to link to /percentage-calculator`);
   if (!page.includes('Percentage Calculator')) throw new Error(`Expected ${name} page to include Percentage Calculator`);
 }

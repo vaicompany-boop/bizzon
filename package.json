@@ -29,6 +29,7 @@
     "test:tip-calculator": "npm run build && node scripts/verify-tip-calculator.mjs",
     "test:vat-sales-tax-calculator": "npm run build && node scripts/verify-vat-sales-tax-calculator.mjs",
     "test:qr-code-generator": "npm run build && node scripts/verify-qr-code-generator.mjs",
+    "test:invoice-maker": "npm run build && node scripts/verify-invoice-maker.mjs",
     "astro": "astro"
   },
   "dependencies": {
@@ -37,6 +38,7 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.4.0",
     "astro": "^6.4.2",
+    "jspdf": "^4.2.1",
     "qrcode": "^1.5.4",
     "tailwindcss": "^4.3.0"
   }

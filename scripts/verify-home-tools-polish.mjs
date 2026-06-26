@@ -15,7 +15,7 @@ const home = readFileSync(pages.home, 'utf8');
 const tools = readFileSync(pages.tools, 'utf8');
 
 const homeRequired = [
-  '15 live browser tools',
+  '16 live browser tools',
   'All tools run locally in your browser',
   'Word Counter',
   'Case Converter',
@@ -32,21 +32,21 @@ const homeRequired = [
   'Tip Calculator',
   'VAT / Sales Tax Calculator',
   'QR Code Generator',
-  'Invoice Helper',
+  'Invoice Maker',
   'Loan Calculator',
   'Business Name Generator',
   'Explore all tools',
-  '15 tools live now',
+  '16 tools live now',
   'No login. No upload. No clutter.',
 ];
 
 const toolsRequired = [
-  '15 live tools',
+  '16 live tools',
   'Live tools',
   'Browse by category',
   'Text and publishing',
   'Decisions and security',
-  'Calculators and conversions',
+  'Calculators and invoices',
   'Coming next',
   'Use this if you need to',
   '/word-counter',
@@ -68,7 +68,7 @@ const toolsRequired = [
   'Tip Calculator',
   'VAT / Sales Tax Calculator',
   'QR Code Generator',
-  'Invoice Helper',
+  'Invoice Maker',
   'Loan Calculator',
   'Business Name Generator',
 ];

@@ -17,6 +17,7 @@ const routes = [
   'tip-calculator',
   'vat-sales-tax-calculator',
   'qr-code-generator',
+  'invoice-maker',
 ];
 
 const requiredSnippets = [

@@ -22,19 +22,20 @@ const useCases = [
   { title: 'Need to split a bill?', text: 'Use this if you need to calculate a tip, split a restaurant bill, or get a clean per-person total.', href: '/tip-calculator', cta: 'Open Tip Calculator' },
   { title: 'Need VAT or sales tax?', text: 'Use this if you need to add tax to a net price or remove included tax from a final price.', href: '/vat-sales-tax-calculator', cta: 'Open VAT Calculator' },
   { title: 'Need a QR code?', text: 'Use this if you need to turn a link, short text, or sharing detail into a downloadable QR code.', href: '/qr-code-generator', cta: 'Open QR Generator' },
+  { title: 'Need to make an invoice?', text: 'Use this if you need to create an invoice with your business details, client details, line items, tax totals, and a PDF download.', href: '/invoice-maker', cta: 'Open Invoice Maker' },
 ];
 
 const toolGroups = [
   { label: 'Text and publishing', links: liveTools.filter((tool) => ['/word-counter', '/character-counter', '/text-cleaner', '/case-converter', '/slug-generator', '/meta-title-description-checker'].includes(tool.href)) },
   { label: 'Decisions and security', links: liveTools.filter((tool) => ['/password-generator', '/random-picker', '/qr-code-generator'].includes(tool.href)) },
-  { label: 'Calculators and conversions', links: liveTools.filter((tool) => ['/unit-converter', '/date-calculator', '/percentage-calculator', '/filename-cleaner', '/tip-calculator', '/vat-sales-tax-calculator'].includes(tool.href)) },
+  { label: 'Calculators and invoices', links: liveTools.filter((tool) => ['/unit-converter', '/date-calculator', '/percentage-calculator', '/filename-cleaner', '/tip-calculator', '/vat-sales-tax-calculator', '/invoice-maker'].includes(tool.href)) },
 ];
 ---
 
-<BaseLayout title="Tools — Bizzon" description="Browse Bizzon's free browser-based tools for text, SEO, passwords, random picking, unit conversion, date math, percentage math, filename cleanup, tip calculation, VAT or sales tax, QR codes, and everyday productivity." canonicalPath="/tools">
+<BaseLayout title="Tools — Bizzon" description="Browse Bizzon's free browser-based tools for text, SEO, invoices, passwords, random picking, unit conversion, date math, percentage math, filename cleanup, tip calculation, VAT or sales tax, QR codes, and everyday productivity." canonicalPath="/tools">
   <section class="mx-auto max-w-6xl px-5 py-14 md:py-20">
     <div class="grid gap-8 md:grid-cols-[1fr_18rem] md:items-end">
-      <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Useful tools for small everyday tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon has <strong>{liveToolCount} live tools</strong> for text and publishing, passwords and random choices, conversions, date and percentage math, filenames, bill splitting, VAT or sales tax estimates, and QR codes. All tools are fast, private, and browser-based.</p></div>
+      <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Useful tools for small everyday tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon has <strong>{liveToolCount} live tools</strong> for text and publishing, invoices, passwords and random choices, conversions, date and percentage math, filenames, bill splitting, VAT or sales tax estimates, and QR codes. All tools are fast, private, and browser-based.</p></div>
       <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6"><p class="text-4xl font-black text-blue-700">{liveToolCount}</p><p class="mt-2 font-bold text-slate-950">Live tools</p><p class="mt-2 text-sm text-slate-600">The toolbox now covers text, publishing, security, decisions, conversions, date math, bill-splitting, tax, and QR utilities.</p></div>
     </div>
 
@@ -90,7 +91,7 @@ const toolGroups = [
     </section>
 
     <section class="mt-14" aria-labelledby="planned-tools-heading">
-      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Coming next</p><h2 id="planned-tools-heading" class="mt-3 text-3xl font-black text-slate-950">Planned utility roadmap.</h2></div><p class="max-w-xl text-slate-600">Next up: practical utilities such as invoice helpers, loan estimates, and small business naming tools.</p></div>
+      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Coming next</p><h2 id="planned-tools-heading" class="mt-3 text-3xl font-black text-slate-950">Planned utility roadmap.</h2></div><p class="max-w-xl text-slate-600">Next up: practical utilities such as loan estimates, small business naming tools, and more document helpers.</p></div>
       <div class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{plannedTools.map((tool) => <ToolCard tool={tool} />)}</div>
     </section>
   </section>

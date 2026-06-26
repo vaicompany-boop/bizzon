@@ -280,4 +280,22 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'VAT / Sales Tax Calculator', href: '/vat-sales-tax-calculator', reason: 'for small business calculations' },
     ],
   },
+  'invoice-maker': {
+    slug: 'invoice-maker',
+    toolName: 'Invoice Maker',
+    primaryKeyword: 'free online invoice maker',
+    summary: 'Use this free online invoice maker to create a simple invoice with business details, client details, line items, tax, totals, notes, and a downloadable PDF.',
+    steps: ['Enter the invoice number, date, due date, your business details, and client details.', 'Add invoice line items with quantity, unit price, currency, and tax rate.', 'Preview the invoice and download a PDF for sending to your client.'],
+    useCases: ['Create simple invoices for freelance work, small services, consulting, design, repairs, and local business tasks.', 'Calculate line totals, subtotal, tax, and final amount without opening a spreadsheet.', 'Download a clean PDF invoice that can be emailed or archived after review.'],
+    faqs: [
+      { question: 'Does the Invoice Maker upload my invoice details?', answer: 'No. Invoice editing and PDF creation happen in your browser. Bizzon does not upload or store your invoice data.' },
+      { question: 'Can I add tax to the invoice?', answer: 'Yes. Enter a tax rate and the tool calculates subtotal, tax, and total. For official tax requirements, verify local rules before sending.' },
+      { question: 'Can I download the invoice as a PDF?', answer: 'Yes. Use the Download PDF button to generate a PDF file from the invoice details in your browser.' },
+    ],
+    related: [
+      { label: 'VAT / Sales Tax Calculator', href: '/vat-sales-tax-calculator', reason: 'to check tax amounts' },
+      { label: 'Percentage Calculator', href: '/percentage-calculator', reason: 'for discounts and markups' },
+      { label: 'Date Calculator', href: '/date-calculator', reason: 'for due date planning' },
+    ],
+  },
 };
