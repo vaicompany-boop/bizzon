@@ -7,8 +7,12 @@
     </div>
     <div class="flex flex-wrap gap-3">
       <button id="sampleInvoice" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="autoInvoiceNumber" type="button" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">Auto number</button>
       <button id="saveInvoiceTemplate" type="button" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">Save template</button>
       <button id="loadInvoiceTemplate" type="button" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">Load template</button>
+      <button id="downloadInvoiceJson" type="button" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">Download JSON backup</button>
+      <button id="importInvoiceJson" type="button" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">Import JSON backup</button>
+      <input id="importInvoiceFile" type="file" accept="application/json,.json" class="hidden" />
       <button id="emailInvoiceDraft" type="button" class="rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-100">Email draft</button>
       <button id="clearInvoice" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Clear</button>
       <button id="downloadInvoicePdf" type="button" data-pdf-engine="jsPDF" class="rounded-full bg-blue-600 px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700">Download PDF</button>
@@ -118,10 +122,11 @@ IBAN / payment details</textarea>
           <h3 class="text-lg font-black text-slate-950">Client details</h3>
           <label for="clientName" class="mt-4 block text-sm font-bold text-slate-700">Client name</label>
           <input id="clientName" value="Client Company" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+          <label for="clientEmail" class="mt-4 block text-sm font-bold text-slate-700">Client email</label>
+          <input id="clientEmail" type="email" value="client@example.com" placeholder="client@example.com" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
           <label for="clientDetails" class="mt-4 block text-sm font-bold text-slate-700">Client address and notes</label>
           <textarea id="clientDetails" rows="5" class="mt-2 w-full resize-y rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">Client street 2
-Client city, country
-client@example.com</textarea>
+Client city, country</textarea>
         </div>
       </div>
 
@@ -195,6 +200,7 @@ client@example.com</textarea>
     sellerName: string;
     sellerDetails: string;
     clientName: string;
+    clientEmail: string;
     clientDetails: string;
     currency: string;
     taxRate: string;
@@ -212,6 +218,7 @@ client@example.com</textarea>
   };
 
   const STORAGE_KEY = 'bizzonInvoiceMakerTemplate';
+  const COUNTER_KEY = 'bizzonInvoiceMakerCounter';
   let logoDataUrl = '';
 
   const ids = {
@@ -221,6 +228,7 @@ client@example.com</textarea>
     sellerName: document.getElementById('sellerName') as HTMLInputElement | null,
     sellerDetails: document.getElementById('sellerDetails') as HTMLTextAreaElement | null,
     clientName: document.getElementById('clientName') as HTMLInputElement | null,
+    clientEmail: document.getElementById('clientEmail') as HTMLInputElement | null,
     clientDetails: document.getElementById('clientDetails') as HTMLTextAreaElement | null,
     currency: document.getElementById('invoiceCurrency') as HTMLSelectElement | null,
     taxRate: document.getElementById('invoiceTaxRate') as HTMLInputElement | null,
@@ -240,8 +248,12 @@ client@example.com</textarea>
     status: document.getElementById('invoiceStatus'),
     add: document.getElementById('addInvoiceItem'),
     sample: document.getElementById('sampleInvoice'),
+    autoNumber: document.getElementById('autoInvoiceNumber'),
     save: document.getElementById('saveInvoiceTemplate'),
     load: document.getElementById('loadInvoiceTemplate'),
+    exportJson: document.getElementById('downloadInvoiceJson'),
+    importJson: document.getElementById('importInvoiceJson'),
+    importFile: document.getElementById('importInvoiceFile') as HTMLInputElement | null,
     clear: document.getElementById('clearInvoice'),
     email: document.getElementById('emailInvoiceDraft'),
     download: document.getElementById('downloadInvoicePdf'),
@@ -367,6 +379,7 @@ client@example.com</textarea>
       sellerName: ids.sellerName?.value || '',
       sellerDetails: ids.sellerDetails?.value || '',
       clientName: ids.clientName?.value || '',
+      clientEmail: ids.clientEmail?.value || '',
       clientDetails: ids.clientDetails?.value || '',
       currency: ids.currency?.value || '€',
       taxRate: ids.taxRate?.value || '0',
@@ -391,6 +404,7 @@ client@example.com</textarea>
     if (ids.sellerName) ids.sellerName.value = template.sellerName || '';
     if (ids.sellerDetails) ids.sellerDetails.value = template.sellerDetails || '';
     if (ids.clientName) ids.clientName.value = template.clientName || '';
+    if (ids.clientEmail) ids.clientEmail.value = template.clientEmail || '';
     if (ids.clientDetails) ids.clientDetails.value = template.clientDetails || '';
     if (ids.currency) ids.currency.value = template.currency || '€';
     if (ids.taxRate) ids.taxRate.value = template.taxRate || '0';
@@ -430,6 +444,55 @@ client@example.com</textarea>
     }
   }
 
+  function nextInvoiceNumber() {
+    const datePart = (ids.invoiceDate?.value || today()).replaceAll('-', '');
+    let next = 1;
+    try {
+      next = Number(localStorage.getItem(COUNTER_KEY) || '0') + 1;
+      localStorage.setItem(COUNTER_KEY, String(next));
+    } catch {
+      next = Math.max(1, Math.floor(Date.now() / 1000) % 10000);
+    }
+    if (ids.invoiceNumber) ids.invoiceNumber.value = `INV-${datePart}-${String(next).padStart(3, '0')}`;
+    update();
+    setStatus('Auto invoice number generated.');
+  }
+
+  function downloadJsonBackup() {
+    const blob = new Blob([JSON.stringify(getTemplate(), null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const safeNumber = (ids.invoiceNumber?.value || 'invoice').replace(/[^a-z0-9-_]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'invoice';
+    link.href = url;
+    link.download = `${safeNumber}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setStatus('JSON backup downloaded.');
+  }
+
+  function importJsonBackup() {
+    ids.importFile?.click();
+  }
+
+  function handleJsonImport() {
+    const file = ids.importFile?.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        applyTemplate(JSON.parse(String(reader.result || '{}')));
+        setStatus('JSON backup imported.');
+      } catch {
+        setStatus('Could not import JSON backup.');
+      } finally {
+        if (ids.importFile) ids.importFile.value = '';
+      }
+    };
+    reader.readAsText(file);
+  }
+
   function updateDueDateFromTerms() {
     const terms = ids.paymentTerms?.value || 'custom';
     if (terms === 'custom' || !ids.invoiceDueDate) return;
@@ -465,7 +528,7 @@ client@example.com</textarea>
       </div>
       <div class="mt-6 grid gap-4 md:grid-cols-2">
         <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">${l.from}</p><p class="mt-2 font-black text-slate-950">${escapeHtml(ids.sellerName?.value || '')}</p><p class="mt-1 whitespace-pre-line text-sm text-slate-600">${escapeHtml(ids.sellerDetails?.value || '')}</p></div>
-        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">${l.billTo}</p><p class="mt-2 font-black text-slate-950">${escapeHtml(ids.clientName?.value || '')}</p><p class="mt-1 whitespace-pre-line text-sm text-slate-600">${escapeHtml(ids.clientDetails?.value || '')}</p></div>
+        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">${l.billTo}</p><p class="mt-2 font-black text-slate-950">${escapeHtml(ids.clientName?.value || '')}</p>${ids.clientEmail?.value ? `<p class="mt-1 text-sm font-semibold text-blue-700">${escapeHtml(ids.clientEmail.value)}</p>` : ''}<p class="mt-1 whitespace-pre-line text-sm text-slate-600">${escapeHtml(ids.clientDetails?.value || '')}</p></div>
       </div>
       <div class="mt-6 overflow-x-auto"><table class="w-full text-sm"><thead><tr class="text-slate-500"><th class="pb-2 pr-3 text-left">${l.description}</th><th class="pb-2 pr-3 text-right">${l.qty}</th><th class="pb-2 pr-3 text-right">${l.unit}</th><th class="pb-2 text-right">${l.total}</th></tr></thead><tbody>${itemHtml}</tbody></table></div>
       <div class="mt-6 ml-auto grid max-w-xs gap-2 text-sm"><div class="flex justify-between"><span>${l.subtotal}</span><strong>${money(result.subtotal)}</strong></div><div class="flex justify-between"><span>${discountLabel}</span><strong>-${money(result.discount)}</strong></div><div class="flex justify-between"><span>${l.taxableSubtotal}</span><strong>${money(result.taxableSubtotal)}</strong></div><div class="flex justify-between"><span>${l.tax} (${result.rate}%)</span><strong>${money(result.tax)}</strong></div><div class="flex justify-between border-t border-slate-200 pt-3 text-lg"><span>${l.total}</span><strong>${money(result.total)}</strong></div></div>
@@ -511,35 +574,35 @@ client@example.com</textarea>
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(24);
     setPdfAccent(doc);
-    doc.text('INVOICE', logoDataUrl ? 52 : 14, y);
+    doc.text(t().invoice.toUpperCase(), logoDataUrl ? 52 : 14, y);
     resetPdfColor(doc);
     doc.setFontSize(11);
     doc.text(ids.invoiceNumber?.value || 'INV-001', 150, y);
     y += 10;
     doc.setFont('helvetica', 'normal');
-    doc.text(`Date: ${ids.invoiceDate?.value || ''}`, 150, y);
+    doc.text(`${t().date}: ${ids.invoiceDate?.value || ''}`, 150, y);
     y += 6;
-    doc.text(`Due: ${ids.invoiceDueDate?.value || ''}`, 150, y);
+    doc.text(`${t().due}: ${ids.invoiceDueDate?.value || ''}`, 150, y);
     y += 6;
-    doc.text(`Terms: ${ids.paymentTerms?.selectedOptions?.[0]?.textContent || ''}`, 150, y);
+    doc.text(`${t().terms}: ${ids.paymentTerms?.selectedOptions?.[0]?.textContent || ''}`, 150, y);
     y += 14;
 
     doc.setFont('helvetica', 'bold');
-    doc.text('From', 14, y);
-    doc.text('Bill to', 110, y);
+    doc.text(t().from, 14, y);
+    doc.text(t().billTo, 110, y);
     y += 6;
     doc.setFont('helvetica', 'normal');
     const sellerBlock = `${ids.sellerName?.value || ''}\n${ids.sellerDetails?.value || ''}`;
-    const clientBlock = `${ids.clientName?.value || ''}\n${ids.clientDetails?.value || ''}`;
+    const clientBlock = `${ids.clientName?.value || ''}\n${ids.clientEmail?.value || ''}\n${ids.clientDetails?.value || ''}`;
     const sellerY = addText(doc, sellerBlock, 14, y, 80);
     const clientY = addText(doc, clientBlock, 110, y, 80);
     y = Math.max(sellerY, clientY) + 8;
 
     doc.setFont('helvetica', 'bold');
-    doc.text('Description', 14, y);
-    doc.text('Qty', 118, y, { align: 'right' });
-    doc.text('Unit', 150, y, { align: 'right' });
-    doc.text('Total', 196, y, { align: 'right' });
+    doc.text(t().description, 14, y);
+    doc.text(t().qty, 118, y, { align: 'right' });
+    doc.text(t().unit, 150, y, { align: 'right' });
+    doc.text(t().total, 196, y, { align: 'right' });
     y += 3;
     doc.line(14, y, 196, y);
     y += 7;
@@ -559,17 +622,17 @@ client@example.com</textarea>
     doc.line(120, y, 196, y);
     y += 7;
     doc.setFont('helvetica', 'bold');
-    doc.text('Subtotal', 132, y);
+    doc.text(t().subtotal, 132, y);
     doc.text(money(result.subtotal), 196, y, { align: 'right' });
     y += 7;
-    doc.text('Discount', 132, y);
+    doc.text(t().discount, 132, y);
     doc.text(`-${money(result.discount)}`, 196, y, { align: 'right' });
     y += 7;
-    doc.text(`Tax (${result.rate}%)`, 132, y);
+    doc.text(`${t().tax} (${result.rate}%)`, 132, y);
     doc.text(money(result.tax), 196, y, { align: 'right' });
     y += 8;
     doc.setFontSize(14);
-    doc.text('Total', 132, y);
+    doc.text(t().total, 132, y);
     setPdfAccent(doc);
     doc.text(money(result.total), 196, y, { align: 'right' });
     resetPdfColor(doc);
@@ -608,7 +671,8 @@ client@example.com</textarea>
       sellerName: 'Bizzon Studio',
       sellerDetails: 'Example Street 1\n46446 Emmerich am Rhein\nhello@example.com\nVAT ID: DE123456789\nIBAN: DE00 0000 0000 0000 0000 00',
       clientName: 'Client Company GmbH',
-      clientDetails: 'Client Street 2\nBerlin, Germany\nclient@example.com',
+      clientEmail: 'client@example.com',
+      clientDetails: 'Client Street 2\nBerlin, Germany',
       currency: '€',
       taxRate: '19',
       discountType: 'percent',
@@ -636,6 +700,7 @@ client@example.com</textarea>
       sellerName: '',
       sellerDetails: '',
       clientName: '',
+      clientEmail: '',
       clientDetails: '',
       currency: '€',
       taxRate: '0',
@@ -670,11 +735,18 @@ client@example.com</textarea>
 
   function emailDraft() {
     const result = totals();
-    const subject = `Invoice ${ids.invoiceNumber?.value || ''}`.trim();
+    const lang = ids.invoiceLanguage?.value || 'en';
+    const copy = {
+      en: { hello: 'Hello,', intro: 'Please find invoice', for: 'for', attach: 'Attach the downloaded PDF before sending.' },
+      de: { hello: 'Hallo,', intro: 'anbei erhalten Sie die Rechnung', for: 'über', attach: 'Bitte hängen Sie das heruntergeladene PDF vor dem Versand an.' },
+      bs: { hello: 'Poštovani,', intro: 'u prilogu je faktura', for: 'u iznosu', attach: 'Prije slanja priložite preuzeti PDF.' },
+    } as const;
+    const c = copy[lang as keyof typeof copy] || copy.en;
+    const subject = `${t().invoice} ${ids.invoiceNumber?.value || ''}`.trim();
     const body = [
-      `Hello,`,
+      c.hello,
       '',
-      `Please find invoice ${ids.invoiceNumber?.value || ''} for ${money(result.total)}.`,
+      `${c.intro} ${ids.invoiceNumber?.value || ''} ${c.for} ${money(result.total)}.`,
       `${t().date}: ${ids.invoiceDate?.value || ''}`,
       `${t().due}: ${ids.invoiceDueDate?.value || ''}`,
       taxModeNote(),
@@ -682,11 +754,12 @@ client@example.com</textarea>
       '',
       ids.notes?.value || '',
     ].filter((line) => line !== '').join('\n');
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setStatus('Email draft opened. Attach the downloaded PDF before sending.');
+    const recipient = ids.clientEmail?.value.trim() || '';
+    window.location.href = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setStatus(`Email draft opened. ${c.attach}`);
   }
 
-  [ids.invoiceNumber, ids.invoiceDate, ids.invoiceDueDate, ids.sellerName, ids.sellerDetails, ids.clientName, ids.clientDetails, ids.currency, ids.taxRate, ids.discountType, ids.discountValue, ids.paymentTerms, ids.invoiceLanguage, ids.taxMode, ids.signatureName, ids.recurringPreset, ids.invoiceStyle, ids.notes]
+  [ids.invoiceNumber, ids.invoiceDate, ids.invoiceDueDate, ids.sellerName, ids.sellerDetails, ids.clientName, ids.clientEmail, ids.clientDetails, ids.currency, ids.taxRate, ids.discountType, ids.discountValue, ids.paymentTerms, ids.invoiceLanguage, ids.taxMode, ids.signatureName, ids.recurringPreset, ids.invoiceStyle, ids.notes]
     .forEach((element) => element?.addEventListener('input', update));
   [ids.currency, ids.discountType, ids.paymentTerms, ids.invoiceLanguage, ids.taxMode, ids.recurringPreset, ids.invoiceStyle].forEach((element) => element?.addEventListener('change', update));
   ids.paymentTerms?.addEventListener('change', updateDueDateFromTerms);
@@ -694,8 +767,12 @@ client@example.com</textarea>
   ids.logo?.addEventListener('change', handleLogoUpload);
   ids.add?.addEventListener('click', () => addItem({ description: 'New item', quantity: 1, unitPrice: 0 }));
   ids.sample?.addEventListener('click', sample);
+  ids.autoNumber?.addEventListener('click', nextInvoiceNumber);
   ids.save?.addEventListener('click', saveTemplate);
   ids.load?.addEventListener('click', loadTemplate);
+  ids.exportJson?.addEventListener('click', downloadJsonBackup);
+  ids.importJson?.addEventListener('click', importJsonBackup);
+  ids.importFile?.addEventListener('change', handleJsonImport);
   ids.clear?.addEventListener('click', clear);
   ids.email?.addEventListener('click', emailDraft);
   ids.download?.addEventListener('click', downloadPdf);
