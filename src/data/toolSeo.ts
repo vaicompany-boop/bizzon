@@ -284,8 +284,8 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
     slug: 'invoice-maker',
     toolName: 'Invoice Maker',
     primaryKeyword: 'free online invoice maker',
-    summary: 'Use this free online invoice maker to create a simple invoice with business details, client details, line items, tax, totals, notes, and a downloadable PDF.',
-    steps: ['Enter the invoice number, date, due date, your business details, and client details.', 'Add invoice line items with quantity, unit price, currency, and tax rate.', 'Preview the invoice and download a PDF for sending to your client.'],
+    summary: 'Use this free online invoice maker to create a polished invoice with business details, client details, logo, line items, discounts, tax, payment terms, totals, notes, reusable templates, and a downloadable PDF.',
+    steps: ['Enter the invoice number, date, due date, payment terms, your business details, and client details.', 'Add invoice line items with quantity, unit price, currency, discount, and tax rate.', 'Choose a PDF style, optionally upload a logo, save a browser-only template, preview the invoice, and download a PDF for sending to your client.'],
     useCases: ['Create simple invoices for freelance work, small services, consulting, design, repairs, and local business tasks.', 'Calculate line totals, subtotal, tax, and final amount without opening a spreadsheet.', 'Download a clean PDF invoice that can be emailed or archived after review.'],
     faqs: [
       { question: 'Does the Invoice Maker upload my invoice details?', answer: 'No. Invoice editing and PDF creation happen in your browser. Bizzon does not upload or store your invoice data.' },
