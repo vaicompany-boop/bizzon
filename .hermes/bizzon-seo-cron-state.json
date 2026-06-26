@@ -1,0 +1,7 @@
+{
+  "plan": ".hermes/plans/2026-06-26-bizzon-10-day-seo-execution-plan.md",
+  "nextDay": 1,
+  "completedDays": [],
+  "startedAt": "2026-06-27T10:00:00Z",
+  "timezoneIntent": "Run daily at 12:00 Europe/Berlin; server cron is UTC, so scheduled at 10:00 UTC during CEST."
+}
