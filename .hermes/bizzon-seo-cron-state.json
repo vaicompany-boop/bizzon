@@ -1,7 +1,15 @@
 {
   "plan": ".hermes/plans/2026-06-26-bizzon-10-day-seo-execution-plan.md",
-  "nextDay": 1,
-  "completedDays": [],
+  "nextDay": 2,
+  "completedDays": [
+    {
+      "day": 1,
+      "status": "completed",
+      "completedAt": "2026-06-27T10:06:03Z",
+      "summary": "Added scripts/gsc-bizzon-status.mjs and npm run gsc:status to list GSC properties, read sitemap status, fetch sitemap URLs, and run URL Inspection API checks for all 27 sitemap URLs. Baseline: sitemap submitted 27 URLs, GSC sitemap report indexed 0; URL Inspection found 8 Submitted and indexed and 19 URL is unknown to Google.",
+      "commitSha": "fa563b20208c3a3958a8d8103b799fa7d4d63f94"
+    }
+  ],
   "startedAt": "2026-06-27T10:00:00Z",
   "timezoneIntent": "Run daily at 12:00 Europe/Berlin; server cron is UTC, so scheduled at 10:00 UTC during CEST."
 }
