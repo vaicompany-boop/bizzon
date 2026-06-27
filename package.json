@@ -30,6 +30,7 @@
     "test:vat-sales-tax-calculator": "npm run build && node scripts/verify-vat-sales-tax-calculator.mjs",
     "test:qr-code-generator": "npm run build && node scripts/verify-qr-code-generator.mjs",
     "test:invoice-maker": "npm run build && node scripts/verify-invoice-maker.mjs",
+    "gsc:status": "node scripts/gsc-bizzon-status.mjs",
     "astro": "astro"
   },
   "dependencies": {
