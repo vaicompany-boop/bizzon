@@ -7,6 +7,7 @@ export type ToolSeoEntry = {
   useCases: string[];
   faqs: { question: string; answer: string }[];
   related: { label: string; href: string; reason: string }[];
+  relatedGuides?: { label: string; href: string; reason: string }[];
 };
 
 export const toolSeoEntries: Record<string, ToolSeoEntry> = {
@@ -14,9 +15,9 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
     slug: 'word-counter',
     toolName: 'Word Counter',
     primaryKeyword: 'free online word counter',
-    summary: 'Use this free online word counter when you need fast writing statistics before publishing, submitting, or sharing text. It counts words, characters, sentences, paragraphs, and estimated reading time directly in your browser.',
-    steps: ['Paste or type your text into the counter.', 'Review the word, character, sentence, paragraph, and reading-time stats.', 'Edit the text and watch the numbers update instantly.'],
-    useCases: ['Check blog posts, articles, school assignments, and essays before submission.', 'Measure social posts, product descriptions, email drafts, and landing-page copy.', 'Estimate reading time for newsletters, scripts, tutorials, and documentation.'],
+    summary: 'Use this free online word counter when you need fast writing statistics before publishing, submitting, or sharing text. It counts words, characters, characters without spaces, sentences, paragraphs, and estimated reading time directly in your browser.',
+    steps: ['Paste or type your essay, blog draft, email, landing-page copy, or social caption into the counter.', 'Review the word, character, sentence, paragraph, and reading-time stats.', 'Edit the text and watch the numbers update instantly before you submit or publish.'],
+    useCases: ['Check blog posts, articles, school assignments, and essays before submission.', 'Measure social posts, product descriptions, email drafts, SEO snippets, and landing-page copy.', 'Estimate reading time for newsletters, scripts, tutorials, documentation, and training materials.', 'Compare word count vs character count when a platform has a hard text limit.'],
     faqs: [
       { question: 'Is the Bizzon Word Counter private?', answer: 'Yes. The text is counted in your browser, so it is not uploaded to Bizzon for processing.' },
       { question: 'Does it count characters without spaces?', answer: 'Yes. The tool shows total characters and characters without spaces, alongside words, sentences, paragraphs, and reading time.' },
@@ -26,6 +27,12 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Character Counter', href: '/character-counter', reason: 'for strict character limits' },
       { label: 'Text Cleaner', href: '/text-cleaner', reason: 'to clean pasted copy first' },
       { label: 'Meta Title & Description Checker', href: '/meta-title-description-checker', reason: 'for SEO snippet checks' },
+    ],
+    relatedGuides: [
+      { label: 'Best Free Text Tools', href: '/best-free-text-tools', reason: 'choose the right writing utility' },
+      { label: 'Word Count vs Character Count', href: '/word-count-vs-character-count', reason: 'decide which metric matters' },
+      { label: 'How to Clean Pasted Text', href: '/how-to-clean-pasted-text', reason: 'clean drafts before counting' },
+      { label: 'How to Write Meta Descriptions', href: '/how-to-write-meta-descriptions', reason: 'measure SEO snippet drafts' },
     ],
   },
   'case-converter': {
