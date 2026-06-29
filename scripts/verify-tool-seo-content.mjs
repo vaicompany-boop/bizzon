@@ -44,6 +44,17 @@ const routeSpecificSnippets = {
     'href="/best-free-text-tools"',
     'href="/meta-title-description-checker"',
   ],
+  'random-picker': [
+    'Random picker ideas for real lists',
+    'Giveaway winner picker',
+    'Classroom random name picker',
+    'Team decision and task rotation',
+    'Raffle list and lunch picker',
+    'Fair draws need clean input',
+    'href="/private-browser-tools"',
+    'href="/tools"',
+    'href="/text-cleaner"',
+  ],
 };
 
 for (const route of routes) {

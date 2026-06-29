@@ -31,6 +31,14 @@ const required = [
   'window.crypto',
   '/password-generator',
   '/text-cleaner',
+  '/private-browser-tools',
+  '/tools',
+  'Random picker ideas for real lists',
+  'Giveaway winner picker',
+  'Classroom random name picker',
+  'Team decision and task rotation',
+  'Raffle list and lunch picker',
+  'Fair draws need clean input',
 ];
 
 for (const needle of required) {
