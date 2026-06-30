@@ -38,10 +38,10 @@ jobs:
         run: npm ci
 
       - name: Pull Vercel environment
-        run: npx vercel@latest pull --yes --environment=production --token "$VERCEL_TOKEN"
+        run: npx vercel@54.18.2 pull --yes --environment=production --token "$VERCEL_TOKEN" --scope vaicompany-boops-projects
 
       - name: Build
-        run: npx vercel@latest build --prod --token "$VERCEL_TOKEN"
+        run: npx vercel@54.18.2 build --prod --token "$VERCEL_TOKEN"
 
       - name: Deploy
-        run: npx vercel@latest deploy --prebuilt --prod --token "$VERCEL_TOKEN"
+        run: npx vercel@54.18.2 deploy --prebuilt --prod --token "$VERCEL_TOKEN"
