@@ -40,15 +40,7 @@ const homeRequired = [
   'No login. No upload. No clutter.',
 ];
 
-const toolsRequired = [
-  '16 live tools',
-  'Live tools',
-  'Browse by category',
-  'Text and publishing',
-  'Decisions and security',
-  'Calculators and invoices',
-  'Coming next',
-  'Use this if you need to',
+const liveToolLinks = [
   '/word-counter',
   '/case-converter',
   '/character-counter',
@@ -59,6 +51,45 @@ const toolsRequired = [
   '/random-picker',
   '/unit-converter',
   '/date-calculator',
+  '/percentage-calculator',
+  '/filename-cleaner',
+  '/tip-calculator',
+  '/vat-sales-tax-calculator',
+  '/qr-code-generator',
+  '/invoice-maker',
+];
+
+const supportPageLinks = [
+  '/best-free-text-tools',
+  '/how-to-write-meta-descriptions',
+  '/how-to-create-clean-filenames',
+  '/quick-business-calculators',
+  '/private-browser-tools',
+  '/how-to-clean-pasted-text',
+  '/word-count-vs-character-count',
+  '/how-to-make-a-url-slug',
+  '/vat-vs-sales-tax-calculator-guide',
+  '/how-to-create-qr-codes',
+];
+
+const toolsRequired = [
+  '16 live tools',
+  'Live tools',
+  'Browse by category',
+  'Text tools',
+  'SEO/publishing tools',
+  'Privacy/security tools',
+  'Business calculators',
+  'Everyday utilities',
+  'Related guides',
+  'Coming next',
+  'Use this if you need to',
+  'Word Counter',
+  'Case Converter',
+  'Character Counter',
+  'Text Cleaner',
+  'Slug Generator',
+  'Meta Title &amp; Description Checker',
   'Password Generator',
   'Random Picker',
   'Unit Converter Mini',
@@ -79,6 +110,14 @@ for (const needle of homeRequired) {
 
 for (const needle of toolsRequired) {
   if (!tools.includes(needle)) throw new Error(`Expected tools page HTML to include: ${needle}`);
+}
+
+for (const href of liveToolLinks) {
+  if (!tools.includes(`href="${href}"`)) throw new Error(`Expected tools page to link live tool: ${href}`);
+}
+
+for (const href of supportPageLinks) {
+  if (!tools.includes(`href="${href}"`)) throw new Error(`Expected tools page to link support guide: ${href}`);
 }
 
 console.log('Homepage and tools page polish verification passed.');
