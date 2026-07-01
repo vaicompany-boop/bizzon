@@ -52,6 +52,31 @@ const pages = [
     title: 'How to Create QR Codes',
     mustLink: ['/qr-code-generator', '/slug-generator', '/meta-title-description-checker', '/tools'],
   },
+  {
+    slug: 'free-word-counter',
+    title: 'Free Word Counter',
+    mustLink: ['/word-counter', '/character-counter', '/text-cleaner', '/meta-title-description-checker'],
+  },
+  {
+    slug: 'character-limit-guide',
+    title: 'Character Limit Guide',
+    mustLink: ['/character-counter', '/word-counter', '/meta-title-description-checker', '/text-cleaner'],
+  },
+  {
+    slug: 'meta-description-length-guide',
+    title: 'Meta Description Length Guide',
+    mustLink: ['/meta-title-description-checker', '/character-counter', '/word-counter', '/slug-generator'],
+  },
+  {
+    slug: 'free-qr-code-generator',
+    title: 'Free QR Code Generator',
+    mustLink: ['/qr-code-generator', '/slug-generator', '/meta-title-description-checker', '/tools'],
+  },
+  {
+    slug: 'how-to-make-a-qr-code-for-a-link',
+    title: 'How to Make a QR Code for a Link',
+    mustLink: ['/qr-code-generator', '/slug-generator', '/meta-title-description-checker', '/tools'],
+  },
 ];
 
 const failures = [];

@@ -70,6 +70,11 @@ const supportPageLinks = [
   '/how-to-make-a-url-slug',
   '/vat-vs-sales-tax-calculator-guide',
   '/how-to-create-qr-codes',
+  '/free-word-counter',
+  '/character-limit-guide',
+  '/meta-description-length-guide',
+  '/free-qr-code-generator',
+  '/how-to-make-a-qr-code-for-a-link',
 ];
 
 const toolsRequired = [
