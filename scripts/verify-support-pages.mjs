@@ -77,6 +77,31 @@ const pages = [
     title: 'How to Make a QR Code for a Link',
     mustLink: ['/qr-code-generator', '/slug-generator', '/meta-title-description-checker', '/tools'],
   },
+  {
+    slug: 'vat-calculator-germany',
+    title: 'VAT Calculator Germany',
+    mustLink: ['/vat-sales-tax-calculator', '/percentage-calculator', '/invoice-maker', '/quick-business-calculators'],
+  },
+  {
+    slug: 'vat-calculator-eu',
+    title: 'VAT Calculator EU',
+    mustLink: ['/vat-sales-tax-calculator', '/percentage-calculator', '/unit-converter', '/vat-vs-sales-tax-calculator-guide'],
+  },
+  {
+    slug: 'percentage-increase-calculator',
+    title: 'Percentage Increase Calculator',
+    mustLink: ['/percentage-calculator', '/vat-sales-tax-calculator', '/discount-calculator', '/quick-business-calculators'],
+  },
+  {
+    slug: 'discount-calculator',
+    title: 'Discount Calculator',
+    mustLink: ['/percentage-calculator', '/vat-sales-tax-calculator', '/tip-calculator', '/percentage-increase-calculator'],
+  },
+  {
+    slug: 'tip-calculator-guide',
+    title: 'Tip Calculator Guide',
+    mustLink: ['/tip-calculator', '/percentage-calculator', '/discount-calculator', '/quick-business-calculators'],
+  },
 ];
 
 const failures = [];

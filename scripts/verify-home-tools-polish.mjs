@@ -75,6 +75,11 @@ const supportPageLinks = [
   '/meta-description-length-guide',
   '/free-qr-code-generator',
   '/how-to-make-a-qr-code-for-a-link',
+  '/vat-calculator-germany',
+  '/vat-calculator-eu',
+  '/percentage-increase-calculator',
+  '/discount-calculator',
+  '/tip-calculator-guide',
 ];
 
 const toolsRequired = [
