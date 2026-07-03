@@ -52,6 +52,10 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Text Cleaner', href: '/text-cleaner', reason: 'to remove formatting clutter' },
       { label: 'Character Counter', href: '/character-counter', reason: 'to check text length after conversion' },
     ],
+    relatedGuides: [
+      { label: 'Best Free Text Tools', href: '/best-free-text-tools', reason: 'use case conversion inside a broader writing workflow' },
+      { label: 'How to Clean Pasted Text', href: '/how-to-clean-pasted-text', reason: 'clean messy copy before changing capitalization' },
+    ],
   },
   'character-counter': {
     slug: 'character-counter',
@@ -69,6 +73,11 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Word Counter', href: '/word-counter', reason: 'for broader writing stats' },
       { label: 'Meta Title & Description Checker', href: '/meta-title-description-checker', reason: 'for SEO snippet length' },
       { label: 'Case Converter', href: '/case-converter', reason: 'to reformat text quickly' },
+    ],
+    relatedGuides: [
+      { label: 'Character Limit Guide', href: '/character-limit-guide', reason: 'decide how to edit text for strict limits' },
+      { label: 'Word Count vs Character Count', href: '/word-count-vs-character-count', reason: 'understand which metric fits the task' },
+      { label: 'Meta Description Length Guide', href: '/meta-description-length-guide', reason: 'apply character counts to SEO snippets' },
     ],
   },
   'text-cleaner': {
@@ -88,6 +97,11 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Case Converter', href: '/case-converter', reason: 'to fix capitalization' },
       { label: 'Slug Generator', href: '/slug-generator', reason: 'to create clean URLs' },
     ],
+    relatedGuides: [
+      { label: 'How to Clean Pasted Text', href: '/how-to-clean-pasted-text', reason: 'follow a practical cleanup workflow' },
+      { label: 'Best Free Text Tools', href: '/best-free-text-tools', reason: 'combine cleanup with counting and formatting tools' },
+      { label: 'Free Word Counter', href: '/free-word-counter', reason: 'measure cleaned drafts after removing clutter' },
+    ],
   },
   'slug-generator': {
     slug: 'slug-generator',
@@ -105,6 +119,11 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Meta Title & Description Checker', href: '/meta-title-description-checker', reason: 'for SEO snippets' },
       { label: 'Case Converter', href: '/case-converter', reason: 'for text formatting' },
       { label: 'Filename Cleaner', href: '/filename-cleaner', reason: 'for bulk filename cleanup' },
+    ],
+    relatedGuides: [
+      { label: 'How to Make a URL Slug', href: '/how-to-make-a-url-slug', reason: 'learn what makes a readable slug' },
+      { label: 'How to Create Clean Filenames', href: '/how-to-create-clean-filenames', reason: 'reuse slug-style cleanup for files' },
+      { label: 'Meta Description Length Guide', href: '/meta-description-length-guide', reason: 'align slugs with page snippets' },
     ],
   },
   'meta-title-description-checker': {
@@ -124,6 +143,11 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Character Counter', href: '/character-counter', reason: 'for strict text limits' },
       { label: 'Word Counter', href: '/word-counter', reason: 'for draft length checks' },
     ],
+    relatedGuides: [
+      { label: 'Meta Description Length Guide', href: '/meta-description-length-guide', reason: 'write clearer search descriptions' },
+      { label: 'How to Write Meta Descriptions', href: '/how-to-write-meta-descriptions', reason: 'draft titles and descriptions from intent' },
+      { label: 'Character Limit Guide', href: '/character-limit-guide', reason: 'tighten snippets for practical limits' },
+    ],
   },
   'password-generator': {
     slug: 'password-generator',
@@ -141,6 +165,10 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Random Picker', href: '/random-picker', reason: 'for random choices and draws' },
       { label: 'Character Counter', href: '/character-counter', reason: 'to check length limits' },
       { label: 'QR Code Generator', href: '/qr-code-generator', reason: 'for simple sharing tasks' },
+    ],
+    relatedGuides: [
+      { label: 'Private Browser Tools', href: '/private-browser-tools', reason: 'understand privacy-first browser utilities' },
+      { label: 'Free QR Code Generator', href: '/free-qr-code-generator', reason: 'share short non-secret details with QR codes when appropriate' },
     ],
   },
   'random-picker': {
@@ -182,6 +210,10 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Date Calculator', href: '/date-calculator', reason: 'for deadline math' },
       { label: 'VAT / Sales Tax Calculator', href: '/vat-sales-tax-calculator', reason: 'for price tax estimates' },
     ],
+    relatedGuides: [
+      { label: 'Quick Business Calculators', href: '/quick-business-calculators', reason: 'choose related calculators for planning tasks' },
+      { label: 'VAT Calculator EU', href: '/vat-calculator-eu', reason: 'keep unit conversions separate from VAT estimates' },
+    ],
   },
   'date-calculator': {
     slug: 'date-calculator',
@@ -199,6 +231,10 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Percentage Calculator', href: '/percentage-calculator', reason: 'for quick planning math' },
       { label: 'Random Picker', href: '/random-picker', reason: 'for choosing options' },
       { label: 'Unit Converter Mini', href: '/unit-converter', reason: 'for everyday conversions' },
+    ],
+    relatedGuides: [
+      { label: 'Quick Business Calculators', href: '/quick-business-calculators', reason: 'combine dates with other small planning checks' },
+      { label: 'Private Browser Tools', href: '/private-browser-tools', reason: 'use browser utilities without account setup' },
     ],
   },
   'percentage-calculator': {
@@ -218,6 +254,11 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Tip Calculator', href: '/tip-calculator', reason: 'for bill splitting' },
       { label: 'Unit Converter Mini', href: '/unit-converter', reason: 'for everyday conversions' },
     ],
+    relatedGuides: [
+      { label: 'Percentage Increase Calculator', href: '/percentage-increase-calculator', reason: 'measure growth from one value to another' },
+      { label: 'Discount Calculator', href: '/discount-calculator', reason: 'turn percentage-off offers into final prices' },
+      { label: 'Quick Business Calculators', href: '/quick-business-calculators', reason: 'pick the right calculator for pricing tasks' },
+    ],
   },
   'filename-cleaner': {
     slug: 'filename-cleaner',
@@ -235,6 +276,10 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Slug Generator', href: '/slug-generator', reason: 'for single URL slugs' },
       { label: 'Text Cleaner', href: '/text-cleaner', reason: 'for pasted text cleanup' },
       { label: 'Case Converter', href: '/case-converter', reason: 'for consistent text casing' },
+    ],
+    relatedGuides: [
+      { label: 'How to Create Clean Filenames', href: '/how-to-create-clean-filenames', reason: 'learn a repeatable naming workflow' },
+      { label: 'How to Make a URL Slug', href: '/how-to-make-a-url-slug', reason: 'apply URL-style cleanup rules to names' },
     ],
   },
   'tip-calculator': {
@@ -254,6 +299,10 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'VAT / Sales Tax Calculator', href: '/vat-sales-tax-calculator', reason: 'for tax math' },
       { label: 'Unit Converter Mini', href: '/unit-converter', reason: 'for everyday conversions' },
     ],
+    relatedGuides: [
+      { label: 'Tip Calculator Guide', href: '/tip-calculator-guide', reason: 'handle tips, rounding, and per-person totals' },
+      { label: 'Discount Calculator', href: '/discount-calculator', reason: 'check coupons before calculating a final split' },
+    ],
   },
   'vat-sales-tax-calculator': {
     slug: 'vat-sales-tax-calculator',
@@ -271,6 +320,11 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Percentage Calculator', href: '/percentage-calculator', reason: 'for general percentage math' },
       { label: 'Tip Calculator', href: '/tip-calculator', reason: 'for bill totals' },
       { label: 'Tools roadmap', href: '/tools', reason: 'to watch the planned invoice utility' },
+    ],
+    relatedGuides: [
+      { label: 'VAT Calculator Germany', href: '/vat-calculator-germany', reason: 'review common German VAT estimate workflows' },
+      { label: 'VAT Calculator EU', href: '/vat-calculator-eu', reason: 'handle country-specific VAT rate scenarios carefully' },
+      { label: 'VAT vs Sales Tax Calculator Guide', href: '/vat-vs-sales-tax-calculator-guide', reason: 'understand add-tax and remove-tax modes' },
     ],
   },
   'qr-code-generator': {
@@ -290,6 +344,11 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Meta Title & Description Checker', href: '/meta-title-description-checker', reason: 'for page SEO copy' },
       { label: 'VAT / Sales Tax Calculator', href: '/vat-sales-tax-calculator', reason: 'for small business calculations' },
     ],
+    relatedGuides: [
+      { label: 'Free QR Code Generator', href: '/free-qr-code-generator', reason: 'prepare QR codes for flyers and menus' },
+      { label: 'How to Make a QR Code for a Link', href: '/how-to-make-a-qr-code-for-a-link', reason: 'turn a final link into a scannable code' },
+      { label: 'How to Create QR Codes', href: '/how-to-create-qr-codes', reason: 'test QR codes before publishing' },
+    ],
   },
   'invoice-maker': {
     slug: 'invoice-maker',
@@ -307,6 +366,11 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'VAT / Sales Tax Calculator', href: '/vat-sales-tax-calculator', reason: 'to check tax amounts' },
       { label: 'Percentage Calculator', href: '/percentage-calculator', reason: 'for discounts and markups' },
       { label: 'Date Calculator', href: '/date-calculator', reason: 'for due date planning' },
+    ],
+    relatedGuides: [
+      { label: 'Quick Business Calculators', href: '/quick-business-calculators', reason: 'choose calculators for invoice-adjacent checks' },
+      { label: 'VAT Calculator Germany', href: '/vat-calculator-germany', reason: 'estimate German VAT before drafting totals' },
+      { label: 'Discount Calculator', href: '/discount-calculator', reason: 'calculate discounts before adding line items' },
     ],
   },
 };

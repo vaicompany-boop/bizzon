@@ -26,9 +26,54 @@ const requiredSnippets = [
   'Common use cases',
   'FAQ',
   'Related tools to try next',
+  'Related guides',
+  'Browse every Bizzon tool',
+  'href="/tools"',
   'application/ld+json',
   'FAQPage',
 ];
+
+const supportGuideHrefs = [
+  '/best-free-text-tools',
+  '/how-to-write-meta-descriptions',
+  '/how-to-create-clean-filenames',
+  '/quick-business-calculators',
+  '/private-browser-tools',
+  '/how-to-clean-pasted-text',
+  '/word-count-vs-character-count',
+  '/how-to-make-a-url-slug',
+  '/vat-vs-sales-tax-calculator-guide',
+  '/how-to-create-qr-codes',
+  '/free-word-counter',
+  '/character-limit-guide',
+  '/meta-description-length-guide',
+  '/free-qr-code-generator',
+  '/how-to-make-a-qr-code-for-a-link',
+  '/vat-calculator-germany',
+  '/vat-calculator-eu',
+  '/percentage-increase-calculator',
+  '/discount-calculator',
+  '/tip-calculator-guide',
+];
+
+const expectedGuideCounts = {
+  'word-counter': 4,
+  'case-converter': 2,
+  'character-counter': 3,
+  'text-cleaner': 3,
+  'slug-generator': 3,
+  'meta-title-description-checker': 3,
+  'password-generator': 2,
+  'random-picker': 2,
+  'unit-converter': 2,
+  'date-calculator': 2,
+  'percentage-calculator': 3,
+  'filename-cleaner': 2,
+  'tip-calculator': 2,
+  'vat-sales-tax-calculator': 3,
+  'qr-code-generator': 3,
+  'invoice-maker': 3,
+};
 
 const missing = [];
 const routeSpecificSnippets = {
@@ -72,6 +117,17 @@ for (const route of routes) {
   const faqCount = (html.match(/@type":"Question/g) || []).length;
   if (faqCount < 3) {
     missing.push(`${route}: expected at least 3 FAQ JSON-LD questions, found ${faqCount}`);
+  }
+
+  const relatedToolLinks = [...html.matchAll(/Related tools to try next[\s\S]*?<\/section>/g)][0]?.[0] || '';
+  const relatedToolHrefCount = (relatedToolLinks.match(/href="\/[^"#]+"/g) || []).length;
+  if (relatedToolHrefCount < 2 || relatedToolHrefCount > 4) {
+    missing.push(`${route}: expected 2-4 related tool links, found ${relatedToolHrefCount}`);
+  }
+
+  const guideLinks = supportGuideHrefs.filter((href) => html.includes(`href="${href}"`));
+  if (guideLinks.length !== expectedGuideCounts[route]) {
+    missing.push(`${route}: expected ${expectedGuideCounts[route]} support guide links, found ${guideLinks.length} (${guideLinks.join(', ')})`);
   }
 
   for (const snippet of routeSpecificSnippets[route] || []) {
