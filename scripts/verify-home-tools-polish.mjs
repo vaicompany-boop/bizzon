@@ -17,6 +17,16 @@ const tools = readFileSync(pages.tools, 'utf8');
 const homeRequired = [
   '16 live browser tools',
   'All tools run locally in your browser',
+  'Popular text tools',
+  'SEO and publishing tools',
+  'Business calculators',
+  'Private browser utilities',
+  'Start with a focused workflow',
+  'Featured guide clusters',
+  'Count and clean drafts',
+  'Prepare search snippets',
+  'Check prices and percentages',
+  'Create and share QR codes',
   'Word Counter',
   'Case Converter',
   'Character Counter',
@@ -123,10 +133,12 @@ for (const needle of toolsRequired) {
 }
 
 for (const href of liveToolLinks) {
+  if (!home.includes(`href="${href}"`)) throw new Error(`Expected homepage to link live tool: ${href}`);
   if (!tools.includes(`href="${href}"`)) throw new Error(`Expected tools page to link live tool: ${href}`);
 }
 
 for (const href of supportPageLinks) {
+  if (!home.includes(`href="${href}"`)) throw new Error(`Expected homepage to link support guide: ${href}`);
   if (!tools.includes(`href="${href}"`)) throw new Error(`Expected tools page to link support guide: ${href}`);
 }
 
