@@ -100,6 +100,20 @@ const routeSpecificSnippets = {
     'href="/tools"',
     'href="/text-cleaner"',
   ],
+  'case-converter': [
+    'Case converter examples for common tasks',
+    'Title Case for headlines',
+    'camelCase and PascalCase for code',
+    'snake_case and kebab-case for files and URLs',
+    'Clean text before converting case',
+  ],
+  'text-cleaner': [
+    'Text cleaner examples for pasted content',
+    'Clean PDF line breaks and email spacing',
+    'Prepare AI drafts and CMS copy',
+    'Normalize whitespace before counting',
+    'href="/how-to-clean-pasted-text"',
+  ],
 };
 
 for (const route of routes) {

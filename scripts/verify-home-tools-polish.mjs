@@ -48,6 +48,8 @@ const homeRequired = [
   'Explore all tools',
   '16 tools live now',
   'No login. No upload. No clutter.',
+  'Looking for a Bizzon login?',
+  'Bizzon does not need an account or dashboard login',
 ];
 
 const liveToolLinks = [

@@ -43,7 +43,7 @@ const toolGroups = [
 ];
 ---
 
-<BaseLayout title="Bizzon — simple browser tools that just work" description="Bizzon is a collection of fast, private, browser-based tools for text, SEO, invoices, passwords, random picks, conversions, date math, percentage math, filename cleanup, tip calculation, VAT, QR codes, and everyday tasks." canonicalPath="/">
+<BaseLayout title="Bizzon Free Browser Tools — no login, no upload" description="Bizzon is a no-login collection of fast, private browser tools for text cleanup, SEO snippets, invoices, passwords, random picks, conversions, date math, percentages, filenames, tips, VAT, QR codes, and everyday tasks." canonicalPath="/">
   <section class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-[1.05fr_0.95fr] md:py-24">
     <div>
       <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">No login. No upload. No clutter.</p>
@@ -69,6 +69,20 @@ const toolGroups = [
       </div>
       <div class="mt-5 max-h-[34rem] space-y-4 overflow-y-auto pr-1">{liveTools.map((tool) => <ToolCard tool={tool} />)}</div>
       <p class="mt-6 rounded-2xl bg-blue-50 p-4 text-sm text-blue-900">All tools run locally in your browser. Bizzon does not upload or store your pasted text, lists, invoice details, passwords, dates, conversions, percentage calculations, filenames, bill amounts, tax estimates, or QR content.</p>
+    </div>
+  </section>
+
+  <section class="bg-white/70 py-10">
+    <div class="mx-auto max-w-6xl px-5">
+      <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6 shadow-sm md:p-8">
+        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Account-free tools</p>
+        <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950">Looking for a Bizzon login?</h2>
+        <p class="mt-4 max-w-3xl leading-8 text-blue-950">Bizzon does not need an account or dashboard login. Open any tool, paste only the text or numbers needed for the task, copy the result, and leave when you are done. If a search brought you here for a Bizzon login, start with the tools hub instead.</p>
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+          <a class="rounded-full bg-blue-600 px-5 py-3 text-center font-bold text-white shadow-sm transition hover:bg-blue-700 hover:text-white" href="/tools">Open the tools hub</a>
+          <a class="rounded-full border border-blue-200 bg-white px-5 py-3 text-center font-bold text-blue-800 transition hover:border-blue-300 hover:text-blue-950" href="/private-browser-tools">Read about private browser tools</a>
+        </div>
+      </div>
     </div>
   </section>
 

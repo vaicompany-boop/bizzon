@@ -66,6 +66,11 @@ const pages = [
     slug: 'meta-description-length-guide',
     title: 'Meta Description Length Guide',
     mustLink: ['/meta-title-description-checker', '/character-counter', '/word-counter', '/slug-generator'],
+    mustInclude: [
+      'Meta description length examples by page type',
+      'Tool pages should name the task and the result',
+      'Local service or product pages should lead with the offer',
+    ],
   },
   {
     slug: 'free-qr-code-generator',
@@ -122,6 +127,10 @@ for (const page of pages) {
   ];
 
   for (const check of checks) {
+    if (!html.includes(check)) failures.push(`${page.slug}: missing ${check}`);
+  }
+
+  for (const check of page.mustInclude || []) {
     if (!html.includes(check)) failures.push(`${page.slug}: missing ${check}`);
   }
 

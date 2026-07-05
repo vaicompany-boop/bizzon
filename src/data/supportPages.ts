@@ -262,6 +262,7 @@ export const supportPages: SupportPage[] = [
       { heading: 'Length is a guardrail, not the whole job', body: 'Search engines may rewrite snippets, and display length can vary. A concise description with the important words near the beginning is usually safer than stuffing extra phrases.' },
       { heading: 'Preview title and description together', body: 'A meta title and description should not repeat the same sentence. Use the snippet checker to see whether the title introduces the topic and the description adds a reason to click.' },
       { heading: 'Match the URL slug to the page topic', body: 'A readable slug reinforces the same topic as the title and description. Slug Generator helps turn a working headline into a cleaner URL path.' },
+      { heading: 'Meta description length examples by page type', body: 'Tool pages should name the task and the result, such as checking a title length or cleaning pasted text. Local service or product pages should lead with the offer, location or category, and the reason to click before adding secondary details.' },
     ],
     relatedTools: [
       { label: 'Meta Title & Description Checker', href: '/meta-title-description-checker', reason: 'preview and measure search snippets' },
