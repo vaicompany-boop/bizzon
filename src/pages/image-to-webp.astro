@@ -1,0 +1,19 @@
+---
+import ImageToWebpConverter from '../components/ImageToWebpConverter.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Image to WebP Converter — Free browser tool | Bizzon"
+  description="Free browser-based Image to WebP converter by Bizzon. Choose a PNG, JPG, GIF frame, WebP, BMP, or SVG image, adjust quality, preview the output, and download a WebP file locally."
+  canonicalPath="/image-to-webp"
+  heading="Image to WebP Converter"
+  intro="Convert common image files into WebP locally in your browser with preview, quality control, and download."
+>
+  <ImageToWebpConverter />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Local image conversion</h2><p class="mt-3 text-slate-600">Pick an image and Bizzon uses your browser canvas to create a WebP file without uploading the original.</p></div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Quality slider</h2><p class="mt-3 text-slate-600">Adjust WebP quality to balance file size and visual clarity before downloading the converted image.</p></div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Preview before download</h2><p class="mt-3 text-slate-600">Compare the original preview, output preview, dimensions, file sizes, and estimated savings in one place.</p></div>
+  </section>
+</ToolLayout>

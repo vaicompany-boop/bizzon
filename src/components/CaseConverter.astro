@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" role="group" aria-label="Case conversion options">
+  <div id="caseOptions" class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" role="group" aria-label="Case conversion options">
     <button data-case="lower" type="button" class="case-option rounded-2xl bg-blue-600 px-4 py-3 text-left font-bold text-white shadow-sm transition hover:bg-blue-700">lowercase</button>
     <button data-case="upper" type="button" class="case-option rounded-2xl bg-slate-100 px-4 py-3 text-left font-bold text-slate-900 transition hover:bg-blue-50 hover:text-blue-700">UPPERCASE</button>
     <button data-case="title" type="button" class="case-option rounded-2xl bg-slate-100 px-4 py-3 text-left font-bold text-slate-900 transition hover:bg-blue-50 hover:text-blue-700">Title Case</button>
@@ -55,6 +55,7 @@
   const clearButton = document.getElementById('clearCaseText');
   const copyButton = document.getElementById('copyCaseOutput');
   const copyStatus = document.getElementById('copyStatus');
+  const options = document.getElementById('caseOptions');
   const optionButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.case-option'));
   const sample = 'Bizzon helps you convert messy text into clean formats for titles, URLs, code names, and everyday writing.';
   let activeCase = 'lower';
@@ -124,12 +125,12 @@
   input?.addEventListener('input', render);
   sampleButton?.addEventListener('click', () => { if (!input) return; input.value = sample; render(); input.focus(); });
   clearButton?.addEventListener('click', () => { if (!input || !output) return; input.value = ''; output.value = ''; setStatus(); input.focus(); });
-  optionButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      activeCase = button.dataset.case ?? 'lower';
-      updateActiveButton();
-      render();
-    });
+  options?.addEventListener('click', (event) => {
+    const button = (event.target as HTMLElement | null)?.closest<HTMLButtonElement>('.case-option');
+    if (!button) return;
+    activeCase = button.dataset.case ?? 'lower';
+    updateActiveButton();
+    render();
   });
   copyButton?.addEventListener('click', async () => {
     if (!output) return;

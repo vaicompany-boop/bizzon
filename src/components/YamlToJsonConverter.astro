@@ -1,0 +1,319 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="yaml-json-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only YAML tool</p>
+      <h2 id="yaml-json-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Convert YAML to JSON</h2>
+      <p class="mt-2 text-slate-600">Paste common YAML and turn it into pretty JSON locally. Great for simple config, front matter, and docs snippets.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleYamlJson" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="convertYamlJson" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Convert</button>
+      <button id="copyYamlJson" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy JSON</button>
+      <button id="clearYamlJson" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <label for="yamlJsonInput" class="text-sm font-bold text-slate-700">YAML input</label>
+      <textarea
+        id="yamlJsonInput"
+        class="mt-3 min-h-[30rem] w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder={`site: Bizzon\ntools:\n  - name: YAML to JSON\n    browserOnly: true\nlimits:\n  maxFileSize: 1 MB`}
+        spellcheck="false"
+      ></textarea>
+    </div>
+
+    <div>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p class="text-sm font-bold text-slate-700">JSON output</p>
+        <p id="yamlJsonSummary" class="text-sm font-semibold text-slate-500" aria-live="polite">Paste YAML to convert it.</p>
+      </div>
+      <pre class="mt-3 min-h-[30rem] overflow-auto rounded-3xl border border-slate-200 bg-slate-950 p-5 text-sm leading-6 text-slate-50"><code id="yamlJsonOutput"></code></pre>
+      <p id="yamlJsonStatus" class="mt-3 min-h-6 text-sm font-semibold text-blue-700" role="status"></p>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
+    <p><strong>Private:</strong> the YAML text is parsed in your browser and is not uploaded.</p>
+    <p><strong>Supported:</strong> simple maps, nested objects, lists, quoted strings, booleans, null, numbers, and inline arrays/objects.</p>
+    <p><strong>Not a full YAML engine:</strong> anchors, aliases, tags, block strings, and multi-document YAML are intentionally rejected with a clear error.</p>
+  </div>
+</section>
+
+<script>
+  type YamlLine = { indent: number; text: string; line: number };
+
+  const input = document.getElementById('yamlJsonInput') as HTMLTextAreaElement | null;
+  const output = document.getElementById('yamlJsonOutput');
+  const summary = document.getElementById('yamlJsonSummary');
+  const status = document.getElementById('yamlJsonStatus');
+  const sampleButton = document.getElementById('sampleYamlJson');
+  const convertButton = document.getElementById('convertYamlJson');
+  const copyButton = document.getElementById('copyYamlJson');
+  const clearButton = document.getElementById('clearYamlJson');
+
+  const sampleYaml = `site: Bizzon
+private: true
+tags: [converter, browser-only, yaml]
+tools:
+  - name: YAML to JSON
+    status: live
+    checks:
+      - maps
+      - lists
+      - quoted strings
+  - name: JSON Formatter
+    status: live
+limits:
+  maxFileSize: "paste-friendly"
+  uploadRequired: false
+notes: "Quotes, commas, booleans, and nested lists stay readable."`;
+
+  function stripComment(line: string) {
+    let quote: string | null = null;
+    for (let index = 0; index < line.length; index += 1) {
+      const char = line[index];
+      const previous = line[index - 1];
+      if ((char === '"' || char === "'") && previous !== '\\') {
+        quote = quote === char ? null : quote || char;
+      }
+      if (char === '#' && !quote && (index === 0 || /\s/.test(line[index - 1]))) {
+        return line.slice(0, index).trimEnd();
+      }
+    }
+    return line.trimEnd();
+  }
+
+  function prepareLines(text: string): YamlLine[] {
+    if (/^---\s*$/m.test(text) || /^\.\.\.\s*$/m.test(text)) {
+      throw new Error('Multi-document YAML markers (--- or ...) are not supported in this browser subset.');
+    }
+    return text.split('\n').flatMap((raw, index) => {
+      if (raw.includes('\t')) throw new Error(`Tabs are not supported for indentation. Use spaces instead near line ${index + 1}.`);
+      const withoutComment = stripComment(raw);
+      if (!withoutComment.trim()) return [];
+      const indent = withoutComment.match(/^ */)?.[0].length || 0;
+      const text = withoutComment.trim();
+      if (/^[!&*]/.test(text) || text.includes(' &') || text.includes(' *')) {
+        throw new Error(`YAML anchors, aliases, and tags are not supported near line ${index + 1}.`);
+      }
+      if (/^[>|]/.test(text) || /:\s*[>|]\s*$/.test(text)) {
+        throw new Error(`Block strings are not supported near line ${index + 1}. Use quoted single-line strings.`);
+      }
+      return [{ indent, text, line: index + 1 }];
+    });
+  }
+
+  function splitTopLevel(text: string, separator: string) {
+    const parts: string[] = [];
+    let current = '';
+    let depth = 0;
+    let quote: string | null = null;
+    for (let index = 0; index < text.length; index += 1) {
+      const char = text[index];
+      const previous = text[index - 1];
+      if ((char === '"' || char === "'") && previous !== '\\') quote = quote === char ? null : quote || char;
+      if (!quote && (char === '[' || char === '{')) depth += 1;
+      if (!quote && (char === ']' || char === '}')) depth -= 1;
+      if (!quote && depth === 0 && char === separator) {
+        parts.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    if (current.trim()) parts.push(current.trim());
+    return parts;
+  }
+
+  function findTopLevelColon(text: string) {
+    let depth = 0;
+    let quote: string | null = null;
+    for (let index = 0; index < text.length; index += 1) {
+      const char = text[index];
+      const previous = text[index - 1];
+      if ((char === '"' || char === "'") && previous !== '\\') quote = quote === char ? null : quote || char;
+      if (!quote && (char === '[' || char === '{')) depth += 1;
+      if (!quote && (char === ']' || char === '}')) depth -= 1;
+      if (!quote && depth === 0 && char === ':') return index;
+    }
+    return -1;
+  }
+
+  function parseScalar(value: string): unknown {
+    const trimmed = value.trim();
+    if (!trimmed) return '';
+    if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+      const inner = trimmed.slice(1, -1);
+      return trimmed.startsWith('"') ? inner.replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\t/g, '\t') : inner.replace(/''/g, "'");
+    }
+    if (/^(true|false)$/i.test(trimmed)) return /^true$/i.test(trimmed);
+    if (/^(null|~)$/i.test(trimmed)) return null;
+    if (/^-?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test(trimmed)) return Number(trimmed);
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) return splitTopLevel(trimmed.slice(1, -1), ',').map(parseScalar);
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      const object: Record<string, unknown> = {};
+      splitTopLevel(trimmed.slice(1, -1), ',').forEach((pair) => {
+        const colon = findTopLevelColon(pair);
+        if (colon === -1) throw new Error(`Invalid inline object pair: ${pair}`);
+        const key = String(parseScalar(pair.slice(0, colon))).trim();
+        object[key] = parseScalar(pair.slice(colon + 1));
+      });
+      return object;
+    }
+    return trimmed;
+  }
+
+  function parseBlock(lines: YamlLine[], start: number, indent: number): { value: unknown; next: number } {
+    const first = lines[start];
+    if (!first || first.indent < indent) return { value: {}, next: start };
+    if (first.indent !== indent) throw new Error(`Unexpected indentation near line ${first.line}.`);
+
+    const isArray = first.text.startsWith('- ');
+    if (isArray) {
+      const array: unknown[] = [];
+      let index = start;
+      while (index < lines.length && lines[index].indent === indent && lines[index].text.startsWith('- ')) {
+        const line = lines[index];
+        const itemText = line.text.slice(2).trim();
+        index += 1;
+        if (!itemText) {
+          const nested = parseBlock(lines, index, indent + 2);
+          array.push(nested.value);
+          index = nested.next;
+          continue;
+        }
+        const colon = findTopLevelColon(itemText);
+        if (colon > 0 && !itemText.startsWith('http://') && !itemText.startsWith('https://')) {
+          const object: Record<string, unknown> = {};
+          const key = itemText.slice(0, colon).trim();
+          const rawValue = itemText.slice(colon + 1).trim();
+          object[key] = rawValue ? parseScalar(rawValue) : {};
+          while (index < lines.length && lines[index].indent > indent) {
+            const nestedLine = lines[index];
+            if (nestedLine.indent !== indent + 2) throw new Error(`Unexpected nested indentation near line ${nestedLine.line}.`);
+            if (nestedLine.text.startsWith('- ')) {
+              throw new Error(`Mixed list/object indentation is not supported near line ${nestedLine.line}.`);
+            }
+            const nestedColon = findTopLevelColon(nestedLine.text);
+            if (nestedColon <= 0) throw new Error(`Expected key: value near line ${nestedLine.line}.`);
+            const nestedKey = nestedLine.text.slice(0, nestedColon).trim();
+            const nestedRawValue = nestedLine.text.slice(nestedColon + 1).trim();
+            index += 1;
+            if (nestedRawValue) {
+              object[nestedKey] = parseScalar(nestedRawValue);
+            } else {
+              const nested = parseBlock(lines, index, nestedLine.indent + 2);
+              object[nestedKey] = nested.value;
+              index = nested.next;
+            }
+          }
+          array.push(object);
+        } else {
+          array.push(parseScalar(itemText));
+        }
+      }
+      return { value: array, next: index };
+    }
+
+    const object: Record<string, unknown> = {};
+    let index = start;
+    while (index < lines.length && lines[index].indent === indent && !lines[index].text.startsWith('- ')) {
+      const line = lines[index];
+      const colon = findTopLevelColon(line.text);
+      if (colon <= 0) throw new Error(`Expected key: value near line ${line.line}.`);
+      const key = line.text.slice(0, colon).trim();
+      const rawValue = line.text.slice(colon + 1).trim();
+      index += 1;
+      if (rawValue) {
+        object[key] = parseScalar(rawValue);
+      } else {
+        const nested = parseBlock(lines, index, indent + 2);
+        object[key] = nested.value;
+        index = nested.next;
+      }
+    }
+    return { value: object, next: index };
+  }
+
+  function countNodes(value: unknown) {
+    const totals = { objects: 0, arrays: 0, keys: 0 };
+    function walk(item: unknown) {
+      if (Array.isArray(item)) {
+        totals.arrays += 1;
+        item.forEach(walk);
+        return;
+      }
+      if (item && typeof item === 'object') {
+        totals.objects += 1;
+        const keys = Object.keys(item as Record<string, unknown>);
+        totals.keys += keys.length;
+        keys.forEach((key) => walk((item as Record<string, unknown>)[key]));
+      }
+    }
+    walk(value);
+    return totals;
+  }
+
+  function convertYaml() {
+    if (!input || !output || !summary) return;
+    const text = input.value.trim();
+    if (!text) {
+      output.textContent = '';
+      summary.textContent = 'Paste YAML to convert it.';
+      if (status) status.textContent = '';
+      return;
+    }
+    try {
+      const lines = prepareLines(text);
+      if (!lines.length) throw new Error('No YAML content found after removing comments and blank lines.');
+      const parsed = parseBlock(lines, 0, lines[0].indent);
+      if (parsed.next < lines.length) throw new Error(`Could not parse all YAML near line ${lines[parsed.next].line}.`);
+      const rendered = JSON.stringify(parsed.value, null, 2);
+      output.textContent = rendered;
+      const totals = countNodes(parsed.value);
+      summary.textContent = `Converted YAML · ${totals.objects} ${totals.objects === 1 ? 'object' : 'objects'} · ${totals.arrays} ${totals.arrays === 1 ? 'array' : 'arrays'} · ${totals.keys} ${totals.keys === 1 ? 'key' : 'keys'} · ${new Blob([rendered]).size} bytes`;
+      if (status) status.textContent = 'YAML converted to JSON.';
+    } catch (error) {
+      output.textContent = '';
+      summary.textContent = 'YAML could not be converted.';
+      if (status) status.textContent = error instanceof Error ? error.message : 'Invalid YAML for this subset parser.';
+    }
+  }
+
+  input?.addEventListener('input', convertYaml);
+  convertButton?.addEventListener('click', convertYaml);
+
+  sampleButton?.addEventListener('click', () => {
+    if (!input) return;
+    input.value = sampleYaml;
+    convertYaml();
+    input.focus();
+  });
+
+  clearButton?.addEventListener('click', () => {
+    if (!input) return;
+    input.value = '';
+    convertYaml();
+    input.focus();
+  });
+
+  copyButton?.addEventListener('click', async () => {
+    if (!output || !status) return;
+    const rendered = output.textContent || '';
+    if (!rendered) {
+      status.textContent = 'Nothing to copy yet.';
+      return;
+    }
+    try {
+      status.textContent = 'Copying JSON...';
+      await navigator.clipboard.writeText(rendered);
+      status.textContent = 'JSON copied.';
+    } catch {
+      status.textContent = 'Copy blocked by browser. Select the output and copy manually.';
+    }
+  });
+
+  convertYaml();
+</script>

@@ -7,7 +7,8 @@ Bizzon is a boring-but-useful utility tools website: simple browser-based tools 
 - Astro + Tailwind
 - Homepage
 - Tools index
-- Word Counter at `/word-counter`
+- Live text/SEO utility tools tracked in `src/data/tools.ts`
+- Converter + social creator roadmap tracked in `BIZZON_CONVERTER_SOCIAL_ROADMAP.md`
 - Static deployment target: Vercel
 
 ## Commands

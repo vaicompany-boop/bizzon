@@ -1,0 +1,166 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="meta-checker-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only SEO utility</p>
+      <h2 id="meta-checker-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Preview title and meta description</h2>
+      <p class="mt-2 text-slate-600">Measure common search snippet lengths and see a simple preview before publishing.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleMeta" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="copySnippet" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy snippet</button>
+      <button id="clearMeta" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_24rem]">
+    <div class="grid gap-5">
+      <label class="block">
+        <span class="text-sm font-bold text-slate-700">Meta title</span>
+        <input
+          id="metaTitle"
+          type="text"
+          class="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+          placeholder="Example: Free Word Counter — Count Words and Characters | Bizzon"
+          maxlength="220"
+        />
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-bold text-slate-700">Meta description</span>
+        <textarea
+          id="metaDescription"
+          class="mt-2 min-h-44 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+          placeholder="Describe the page clearly in one or two useful sentences."
+          maxlength="420"
+        ></textarea>
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-bold text-slate-700">Display URL</span>
+        <input
+          id="metaUrl"
+          type="text"
+          class="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+          placeholder="https://bizzon.app/word-counter"
+          maxlength="220"
+        />
+      </label>
+    </div>
+
+    <aside class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+      <p class="text-sm font-bold text-slate-700">Length checks</p>
+      <div class="mt-4 grid gap-3" aria-live="polite">
+        <div class="rounded-2xl bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between gap-3"><p class="text-sm font-semibold text-slate-500">Title</p><p id="titleCount" class="text-sm font-black text-slate-950">0 / 60</p></div>
+          <div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-100"><div id="titleBar" class="h-full w-0 rounded-full bg-blue-600 transition-all"></div></div>
+          <p id="titleStatus" class="mt-3 text-sm font-semibold text-slate-600">Add a title to check its length.</p>
+        </div>
+        <div class="rounded-2xl bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between gap-3"><p class="text-sm font-semibold text-slate-500">Description</p><p id="descriptionCount" class="text-sm font-black text-slate-950">0 / 160</p></div>
+          <div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-100"><div id="descriptionBar" class="h-full w-0 rounded-full bg-blue-600 transition-all"></div></div>
+          <p id="descriptionStatus" class="mt-3 text-sm font-semibold text-slate-600">Add a description to check its length.</p>
+        </div>
+      </div>
+      <p id="copyStatus" class="mt-4 text-sm font-semibold text-blue-700" role="status"></p>
+    </aside>
+  </div>
+
+  <div class="mt-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+    <p class="text-sm font-bold text-slate-700">Search-style preview</p>
+    <div class="mt-4 rounded-2xl bg-slate-50 p-5">
+      <p id="previewUrl" class="truncate text-sm text-emerald-700">https://example.com/page</p>
+      <p id="previewTitle" class="mt-1 truncate text-xl text-blue-800">Your meta title will appear here</p>
+      <p id="previewDescription" class="mt-2 text-sm leading-6 text-slate-700">Your meta description preview will appear here. Keep it useful and specific for people deciding whether to click.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const titleInput = document.getElementById('metaTitle') as HTMLInputElement | null;
+  const descriptionInput = document.getElementById('metaDescription') as HTMLTextAreaElement | null;
+  const urlInput = document.getElementById('metaUrl') as HTMLInputElement | null;
+  const sampleButton = document.getElementById('sampleMeta');
+  const clearButton = document.getElementById('clearMeta');
+  const copyButton = document.getElementById('copySnippet');
+  const copyStatus = document.getElementById('copyStatus');
+
+  const titleCount = document.getElementById('titleCount');
+  const descriptionCount = document.getElementById('descriptionCount');
+  const titleStatus = document.getElementById('titleStatus');
+  const descriptionStatus = document.getElementById('descriptionStatus');
+  const titleBar = document.getElementById('titleBar');
+  const descriptionBar = document.getElementById('descriptionBar');
+  const previewTitle = document.getElementById('previewTitle');
+  const previewDescription = document.getElementById('previewDescription');
+  const previewUrl = document.getElementById('previewUrl');
+
+  const sample = {
+    title: 'Free Meta Title & Description Checker | Bizzon',
+    description: 'Preview your page title and meta description, check common length ranges, and copy a clean snippet without sending text to a server.',
+    url: 'https://bizzon.app/meta-title-description-checker',
+  };
+
+  function setBar(element: HTMLElement | null, length: number, ideal: number, max: number) {
+    if (!element) return;
+    element.style.width = `${Math.min(100, Math.round((length / max) * 100))}%`;
+    element.className = `h-full rounded-full transition-all ${length === 0 ? 'bg-slate-300' : length <= ideal ? 'bg-blue-600' : 'bg-amber-500'}`;
+  }
+
+  function getStatus(length: number, idealMin: number, idealMax: number, label: string) {
+    if (length === 0) return `Add a ${label} to check its length.`;
+    if (length < idealMin) return `Short ${label}. Add useful detail if it helps the page.`;
+    if (length <= idealMax) return `Good ${label} range for many search snippets.`;
+    return `Long ${label}. Search engines may truncate it.`;
+  }
+
+  function updatePreview() {
+    const title = titleInput?.value.trim() || '';
+    const description = descriptionInput?.value.trim() || '';
+    const url = urlInput?.value.trim() || '';
+    const titleLength = title.length;
+    const descriptionLength = description.length;
+
+    if (titleCount) titleCount.textContent = `${titleLength} / 60`;
+    if (descriptionCount) descriptionCount.textContent = `${descriptionLength} / 160`;
+    if (titleStatus) titleStatus.textContent = getStatus(titleLength, 35, 60, 'title');
+    if (descriptionStatus) descriptionStatus.textContent = getStatus(descriptionLength, 110, 160, 'description');
+    setBar(titleBar, titleLength, 60, 90);
+    setBar(descriptionBar, descriptionLength, 160, 220);
+
+    if (previewTitle) previewTitle.textContent = title || 'Your meta title will appear here';
+    if (previewDescription) previewDescription.textContent = description || 'Your meta description preview will appear here. Keep it useful and specific for people deciding whether to click.';
+    if (previewUrl) previewUrl.textContent = url || 'https://example.com/page';
+    if (copyStatus) copyStatus.textContent = '';
+  }
+
+  [titleInput, descriptionInput, urlInput].forEach((field) => field?.addEventListener('input', updatePreview));
+  sampleButton?.addEventListener('click', () => {
+    if (titleInput) titleInput.value = sample.title;
+    if (descriptionInput) descriptionInput.value = sample.description;
+    if (urlInput) urlInput.value = sample.url;
+    updatePreview();
+    titleInput?.focus();
+  });
+  clearButton?.addEventListener('click', () => {
+    if (titleInput) titleInput.value = '';
+    if (descriptionInput) descriptionInput.value = '';
+    if (urlInput) urlInput.value = '';
+    updatePreview();
+    titleInput?.focus();
+  });
+  copyButton?.addEventListener('click', async () => {
+    if (!copyStatus) return;
+    const title = titleInput?.value.trim() || '';
+    const description = descriptionInput?.value.trim() || '';
+    const url = urlInput?.value.trim() || '';
+    if (!title && !description && !url) { copyStatus.textContent = 'Nothing to copy yet.'; return; }
+    const snippet = [`Title: ${title || '(empty)'}`, `Description: ${description || '(empty)'}`, `URL: ${url || '(empty)'}`].join('\n');
+    try {
+      await navigator.clipboard.writeText(snippet);
+      copyStatus.textContent = 'Snippet copied.';
+    } catch {
+      copyStatus.textContent = 'Copy blocked by browser. Select the fields and copy manually.';
+    }
+  });
+  updatePreview();
+</script>

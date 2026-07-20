@@ -1,0 +1,295 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="markdown-html-tool-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only converter</p>
+      <h2 id="markdown-html-tool-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Convert Markdown to safe HTML</h2>
+      <p class="mt-2 text-slate-600">Paste Markdown, preview the rendered result, and copy clean HTML generated locally in your browser.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleMarkdown" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="convertMarkdown" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Convert</button>
+      <button id="copyMarkdownHtml" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy HTML</button>
+      <button id="clearMarkdown" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <label for="markdownInput" class="text-sm font-bold text-slate-700">Markdown input</label>
+        <p class="text-sm font-semibold text-slate-500">Headings, lists, links, quotes, code</p>
+      </div>
+      <textarea
+        id="markdownInput"
+        class="mt-3 min-h-[30rem] w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="# Page title\n\nPaste Markdown here..."
+        spellcheck="false"
+      ></textarea>
+    </div>
+
+    <div>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p class="text-sm font-bold text-slate-700">HTML output</p>
+        <p id="markdownSummary" class="text-sm font-semibold text-slate-500" aria-live="polite">Enter Markdown to convert.</p>
+      </div>
+      <pre class="mt-3 min-h-[30rem] overflow-auto whitespace-pre-wrap break-words rounded-3xl border border-slate-200 bg-slate-950 p-5 text-sm leading-6 text-slate-50"><code id="markdownOutput"></code></pre>
+      <p id="markdownStatus" class="mt-3 min-h-6 text-sm font-semibold text-blue-700" role="status"></p>
+    </div>
+  </div>
+
+  <div class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <h3 class="text-lg font-bold text-slate-950">Preview</h3>
+      <p class="text-sm font-semibold text-slate-500">Scripts and raw HTML are escaped, not executed.</p>
+    </div>
+    <div id="markdownPreview" class="prose-preview mt-4 min-h-48 rounded-2xl border border-slate-200 bg-white p-5 text-slate-800">
+      <p class="text-slate-500">Converted preview will appear here.</p>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
+    <p><strong>Private:</strong> Markdown conversion runs locally in your browser; pasted drafts are not uploaded.</p>
+    <p><strong>Safe preview:</strong> user HTML is escaped and links are limited to common safe protocols before rendering.</p>
+    <p><strong>Practical subset:</strong> supports headings, paragraphs, emphasis, links, quotes, lists, horizontal rules, and fenced code blocks.</p>
+  </div>
+</section>
+
+<style>
+  .prose-preview :global(h1) { margin: 0.2rem 0 0.9rem; font-size: 2rem; line-height: 1.15; font-weight: 900; color: rgb(15 23 42); }
+  .prose-preview :global(h2) { margin: 1.2rem 0 0.65rem; font-size: 1.5rem; line-height: 1.2; font-weight: 800; color: rgb(15 23 42); }
+  .prose-preview :global(h3) { margin: 1rem 0 0.5rem; font-size: 1.2rem; font-weight: 800; color: rgb(15 23 42); }
+  .prose-preview :global(p) { margin: 0.75rem 0; line-height: 1.75; }
+  .prose-preview :global(ul), .prose-preview :global(ol) { margin: 0.75rem 0; padding-left: 1.5rem; }
+  .prose-preview :global(ul) { list-style: disc; }
+  .prose-preview :global(ol) { list-style: decimal; }
+  .prose-preview :global(li) { margin: 0.25rem 0; }
+  .prose-preview :global(blockquote) { margin: 1rem 0; border-left: 4px solid rgb(147 197 253); padding-left: 1rem; color: rgb(71 85 105); }
+  .prose-preview :global(pre) { overflow: auto; border-radius: 1rem; background: rgb(15 23 42); padding: 1rem; color: rgb(248 250 252); }
+  .prose-preview :global(code) { border-radius: 0.35rem; background: rgb(226 232 240); padding: 0.1rem 0.3rem; font-size: 0.92em; }
+  .prose-preview :global(pre code) { background: transparent; padding: 0; }
+  .prose-preview :global(a) { color: rgb(29 78 216); text-decoration: underline; text-underline-offset: 3px; }
+  .prose-preview :global(hr) { margin: 1.25rem 0; border: 0; border-top: 1px solid rgb(203 213 225); }
+</style>
+
+<script>
+  const input = document.getElementById('markdownInput') as HTMLTextAreaElement | null;
+  const output = document.getElementById('markdownOutput');
+  const summary = document.getElementById('markdownSummary');
+  const status = document.getElementById('markdownStatus');
+  const preview = document.getElementById('markdownPreview');
+  const sampleButton = document.getElementById('sampleMarkdown');
+  const convertButton = document.getElementById('convertMarkdown');
+  const copyButton = document.getElementById('copyMarkdownHtml');
+  const clearButton = document.getElementById('clearMarkdown');
+
+  const sampleMarkdown = `# Launch checklist\n\nWrite copy that is **clear**, _short_, and useful.\n\n## Steps\n\n1. Paste Markdown\n2. Convert to HTML\n3. Copy the result\n\n> Bizzon keeps this conversion in your browser.\n\n- Safe links: [Bizzon](https://bizzon.app/tools)\n- Inline code: \`npm run build\`\n\n\`\`\`html\n<script>alert('escaped, not run')<\/script>\n\`\`\``;
+
+  function escapeHtml(value: string) {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function escapeAttribute(value: string) {
+    return escapeHtml(value).replace(/`/g, '&#96;');
+  }
+
+  function isSafeUrl(value: string) {
+    const trimmed = value.trim();
+    if (/^(https?:|mailto:|tel:)/i.test(trimmed)) return true;
+    if (/^(\/|#)/.test(trimmed)) return true;
+    return false;
+  }
+
+  function inlineMarkdown(value: string) {
+    const codeStore: string[] = [];
+    let html = escapeHtml(value).replace(/`([^`]+)`/g, (_match, code) => {
+      const token = `\u0000CODE${codeStore.length}\u0000`;
+      codeStore.push(`<code>${code}</code>`);
+      return token;
+    });
+
+    html = html.replace(/\[([^\]\n]+)\]\(([^)\s]+)\)/g, (_match, text, href) => {
+      const safeText = inlineMarkdown(text).replace(/<a\b[^>]*>|<\/a>/g, '');
+      if (!isSafeUrl(href)) return safeText;
+      return `<a href="${escapeAttribute(href)}" rel="noopener noreferrer">${safeText}</a>`;
+    });
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+    html = html.replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>');
+    html = html.replace(/(^|[^_])_([^_]+)_/g, '$1<em>$2</em>');
+
+    codeStore.forEach((code, index) => {
+      html = html.replace(`\u0000CODE${index}\u0000`, code);
+    });
+    return html;
+  }
+
+  function closeList(state: { type: '' | 'ul' | 'ol' }) {
+    if (!state.type) return '';
+    const closing = `</${state.type}>`;
+    state.type = '';
+    return closing;
+  }
+
+  function convertMarkdown(markdown: string) {
+    const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
+    const html: string[] = [];
+    const listState: { type: '' | 'ul' | 'ol' } = { type: '' };
+    let paragraph: string[] = [];
+    let inCodeFence = false;
+    let codeLanguage = '';
+    let codeLines: string[] = [];
+
+    function flushParagraph() {
+      if (!paragraph.length) return;
+      html.push(`<p>${inlineMarkdown(paragraph.join(' '))}</p>`);
+      paragraph = [];
+    }
+
+    lines.forEach((line) => {
+      const fence = line.match(/^```\s*([A-Za-z0-9_-]+)?\s*$/);
+      if (fence) {
+        if (inCodeFence) {
+          html.push(`<pre><code${codeLanguage ? ` class="language-${escapeAttribute(codeLanguage)}"` : ''}>${escapeHtml(codeLines.join('\n'))}</code></pre>`);
+          inCodeFence = false;
+          codeLanguage = '';
+          codeLines = [];
+        } else {
+          flushParagraph();
+          html.push(closeList(listState));
+          inCodeFence = true;
+          codeLanguage = fence[1] || '';
+          codeLines = [];
+        }
+        return;
+      }
+
+      if (inCodeFence) {
+        codeLines.push(line);
+        return;
+      }
+
+      if (!line.trim()) {
+        flushParagraph();
+        html.push(closeList(listState));
+        return;
+      }
+
+      const heading = line.match(/^(#{1,3})\s+(.+)$/);
+      if (heading) {
+        flushParagraph();
+        html.push(closeList(listState));
+        const level = heading[1].length;
+        html.push(`<h${level}>${inlineMarkdown(heading[2].trim())}</h${level}>`);
+        return;
+      }
+
+      if (/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(line)) {
+        flushParagraph();
+        html.push(closeList(listState));
+        html.push('<hr>');
+        return;
+      }
+
+      const quote = line.match(/^>\s?(.+)$/);
+      if (quote) {
+        flushParagraph();
+        html.push(closeList(listState));
+        html.push(`<blockquote><p>${inlineMarkdown(quote[1].trim())}</p></blockquote>`);
+        return;
+      }
+
+      const unordered = line.match(/^\s*[-*+]\s+(.+)$/);
+      const ordered = line.match(/^\s*\d+[.)]\s+(.+)$/);
+      if (unordered || ordered) {
+        flushParagraph();
+        const type = unordered ? 'ul' : 'ol';
+        if (listState.type && listState.type !== type) html.push(closeList(listState));
+        if (!listState.type) {
+          listState.type = type;
+          html.push(`<${type}>`);
+        }
+        html.push(`<li>${inlineMarkdown((unordered || ordered)?.[1].trim() || '')}</li>`);
+        return;
+      }
+
+      if (listState.type) html.push(closeList(listState));
+      paragraph.push(line.trim());
+    });
+
+    if (inCodeFence) {
+      html.push(`<pre><code${codeLanguage ? ` class="language-${escapeAttribute(codeLanguage)}"` : ''}>${escapeHtml(codeLines.join('\n'))}</code></pre>`);
+    }
+    flushParagraph();
+    html.push(closeList(listState));
+    return html.filter(Boolean).join('\n');
+  }
+
+  function updateResult(html: string, message: string, tone: 'ok' | 'error' = 'ok') {
+    if (output) output.textContent = html;
+    if (preview) {
+      preview.innerHTML = html || '<p class="text-slate-500">Converted preview will appear here.</p>';
+    }
+    if (summary) summary.textContent = message;
+    if (status) {
+      status.textContent = tone === 'error' ? message : '';
+      status.className = `mt-3 min-h-6 text-sm font-semibold ${tone === 'error' ? 'text-red-700' : 'text-blue-700'}`;
+    }
+  }
+
+  function convertInput() {
+    if (!input) return;
+    const markdown = input.value;
+    if (!markdown.trim()) {
+      updateResult('', 'Enter Markdown to convert.', 'error');
+      return;
+    }
+    const html = convertMarkdown(markdown);
+    const wordCount = markdown.trim().split(/\s+/).filter(Boolean).length;
+    const blockCount = (html.match(/<(h1|h2|h3|p|ul|ol|blockquote|pre|hr)\b/g) || []).length;
+    updateResult(html, `Converted ${wordCount} ${wordCount === 1 ? 'word' : 'words'} into ${blockCount} HTML ${blockCount === 1 ? 'block' : 'blocks'}.`);
+  }
+
+  sampleButton?.addEventListener('click', () => {
+    if (!input) return;
+    input.value = sampleMarkdown;
+    convertInput();
+    input.focus();
+  });
+
+  convertButton?.addEventListener('click', convertInput);
+  input?.addEventListener('input', () => {
+    if (input.value.trim()) convertInput();
+    else updateResult('', 'Enter Markdown to convert.');
+  });
+
+  clearButton?.addEventListener('click', () => {
+    if (!input) return;
+    input.value = '';
+    updateResult('', 'Enter Markdown to convert.');
+    input.focus();
+  });
+
+  copyButton?.addEventListener('click', async () => {
+    if (!output || !status) return;
+    const html = output.textContent || '';
+    if (!html) {
+      status.textContent = 'Nothing to copy yet.';
+      status.className = 'mt-3 min-h-6 text-sm font-semibold text-red-700';
+      return;
+    }
+    try {
+      status.textContent = 'Copying HTML...';
+      status.className = 'mt-3 min-h-6 text-sm font-semibold text-blue-700';
+      await navigator.clipboard.writeText(html);
+      status.textContent = 'HTML copied.';
+    } catch {
+      status.textContent = 'Copy blocked by browser. Select the HTML output and copy manually.';
+      status.className = 'mt-3 min-h-6 text-sm font-semibold text-red-700';
+    }
+  });
+</script>

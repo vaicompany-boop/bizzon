@@ -1,0 +1,151 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="canonical-checker-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only SEO utility</p>
+      <h2 id="canonical-checker-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Check and clean a canonical URL</h2>
+      <p class="mt-2 text-slate-600">Paste a page URL to validate the format, spot common canonical issues, and copy a cleaner version.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleCanonical" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="copyCanonical" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy clean URL</button>
+      <button id="clearCanonical" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
+    <div class="grid gap-5">
+      <label class="block">
+        <span class="text-sm font-bold text-slate-700">Page URL</span>
+        <input
+          id="canonicalInput"
+          type="text"
+          class="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+          placeholder="https://www.example.com/blog/post?utm_source=newsletter#comments"
+          autocomplete="url"
+        />
+      </label>
+
+      <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <p class="text-sm font-bold text-slate-700">Suggested canonical</p>
+          <p id="canonicalScore" class="text-sm font-black text-slate-950">0 / 5 checks passing</p>
+        </div>
+        <div class="mt-4 rounded-2xl bg-white p-4 shadow-sm">
+          <p id="canonicalOutput" class="break-all font-mono text-sm text-slate-800">Enter a URL to generate a clean canonical candidate.</p>
+        </div>
+        <p id="copyCanonicalStatus" class="mt-4 text-sm font-semibold text-blue-700" role="status"></p>
+      </div>
+    </div>
+
+    <aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p class="text-sm font-bold text-slate-700">Canonical checks</p>
+      <ul id="canonicalChecks" class="mt-4 space-y-3" aria-live="polite">
+        <li class="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">Paste a URL to check protocol, fragments, tracking parameters, host casing, and path readability.</li>
+      </ul>
+      <p class="mt-4 rounded-2xl bg-blue-50 p-4 text-sm leading-6 text-blue-900">This tool checks URL structure only. It does not crawl the page or verify whether the live HTML contains a canonical tag.</p>
+    </aside>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('canonicalInput') as HTMLInputElement | null;
+  const output = document.getElementById('canonicalOutput');
+  const checksList = document.getElementById('canonicalChecks');
+  const score = document.getElementById('canonicalScore');
+  const sampleButton = document.getElementById('sampleCanonical');
+  const clearButton = document.getElementById('clearCanonical');
+  const copyButton = document.getElementById('copyCanonical');
+  const copyStatus = document.getElementById('copyCanonicalStatus');
+
+  const sampleUrl = 'HTTP://WWW.Example.com/Blog/My Post/?utm_source=newsletter&utm_medium=email#comments';
+  let cleanUrl = '';
+
+  function addReadablePath(pathname: string) {
+    return pathname
+      .split('/')
+      .map((part) => part ? encodeURIComponent(decodeURIComponent(part).trim().replace(/\s+/g, '-')) : '')
+      .join('/');
+  }
+
+  function getTrackingParams(url: URL) {
+    const trackingPrefixes = ['utm_', 'fbclid', 'gclid', 'mc_cid', 'mc_eid'];
+    return Array.from(url.searchParams.keys()).filter((key) => trackingPrefixes.some((prefix) => key.toLowerCase().startsWith(prefix)));
+  }
+
+  function renderCheck(ok: boolean, text: string) {
+    return `<li class="rounded-2xl ${ok ? 'bg-emerald-50 text-emerald-900' : 'bg-amber-50 text-amber-900'} p-4 text-sm leading-6"><span class="font-bold">${ok ? 'Pass' : 'Check'}:</span> ${text}</li>`;
+  }
+
+  function updateCanonical() {
+    const raw = input?.value.trim() || '';
+    if (copyStatus) copyStatus.textContent = '';
+
+    if (!raw) {
+      cleanUrl = '';
+      if (output) output.textContent = 'Enter a URL to generate a clean canonical candidate.';
+      if (score) score.textContent = '0 / 5 checks passing';
+      if (checksList) checksList.innerHTML = '<li class="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">Paste a URL to check protocol, fragments, tracking parameters, host casing, and path readability.</li>';
+      return;
+    }
+
+    let parsed: URL;
+    try {
+      parsed = new URL(raw.includes('://') ? raw : `https://${raw}`);
+    } catch {
+      cleanUrl = '';
+      if (output) output.textContent = 'Invalid URL. Include a domain such as example.com/page.';
+      if (score) score.textContent = '0 / 5 checks passing';
+      if (checksList) checksList.innerHTML = renderCheck(false, 'The URL could not be parsed. Check the domain and remove spaces around punctuation.');
+      return;
+    }
+
+    const originalProtocol = parsed.protocol;
+    const originalHost = parsed.host;
+    const originalHash = parsed.hash;
+    const trackingParams = getTrackingParams(parsed);
+    const hadWhitespace = /\s/.test(parsed.pathname);
+
+    parsed.protocol = 'https:';
+    parsed.hostname = parsed.hostname.toLowerCase();
+    trackingParams.forEach((key) => parsed.searchParams.delete(key));
+    parsed.hash = '';
+    parsed.pathname = addReadablePath(parsed.pathname);
+
+    cleanUrl = parsed.toString();
+    const checks = [
+      { ok: originalProtocol === 'https:', text: originalProtocol === 'https:' ? 'Uses HTTPS.' : 'Canonical URLs should usually use HTTPS when the page supports it.' },
+      { ok: !originalHash, text: originalHash ? 'Remove fragments such as #comments from canonical URLs.' : 'No fragment identifier is included.' },
+      { ok: trackingParams.length === 0, text: trackingParams.length ? `Remove tracking parameters: ${trackingParams.join(', ')}.` : 'No common tracking parameters found.' },
+      { ok: originalHost === originalHost.toLowerCase(), text: originalHost === originalHost.toLowerCase() ? 'Host casing is clean.' : 'Lowercase the hostname for consistency.' },
+      { ok: !hadWhitespace, text: hadWhitespace ? 'Replace spaces in the path with encoded hyphens.' : 'Path has no raw spaces.' },
+    ];
+
+    if (output) output.textContent = cleanUrl;
+    if (score) score.textContent = `${checks.filter((item) => item.ok).length} / ${checks.length} checks passing`;
+    if (checksList) checksList.innerHTML = checks.map((item) => renderCheck(item.ok, item.text)).join('');
+  }
+
+  input?.addEventListener('input', updateCanonical);
+  sampleButton?.addEventListener('click', () => {
+    if (input) input.value = sampleUrl;
+    updateCanonical();
+    input?.focus();
+  });
+  clearButton?.addEventListener('click', () => {
+    if (input) input.value = '';
+    updateCanonical();
+    input?.focus();
+  });
+  copyButton?.addEventListener('click', async () => {
+    if (!copyStatus) return;
+    if (!cleanUrl) { copyStatus.textContent = 'Nothing to copy yet.'; return; }
+    try {
+      await navigator.clipboard.writeText(cleanUrl);
+      copyStatus.textContent = 'Clean canonical URL copied.';
+    } catch {
+      copyStatus.textContent = 'Copy blocked by browser. Select the suggested URL and copy manually.';
+    }
+  });
+
+  updateCanonical();
+</script>

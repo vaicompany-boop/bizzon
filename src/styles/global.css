@@ -24,5 +24,12 @@ body {
 }
 a { color: inherit; text-decoration: none; }
 a:hover { color: var(--bz-accent); }
+
+/* Keep global link styling from overriding Tailwind CTA text colors. */
+a.text-white,
+.text-white { color: #fff; }
+a.hover\:text-white:hover,
+.hover\:text-white:hover { color: #fff; }
+
 textarea, button { font: inherit; }
 ::selection { background: rgba(37, 99, 235, 0.2); }

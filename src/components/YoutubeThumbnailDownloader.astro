@@ -1,0 +1,206 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="youtube-thumb-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only creator tool</p>
+      <h2 id="youtube-thumb-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Get public YouTube thumbnail URLs</h2>
+      <p class="mt-2 text-slate-600">Paste a YouTube URL or video ID. Bizzon extracts the public video ID and shows copy-ready thumbnail image links.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleYoutubeThumb" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="extractYoutubeThumb" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Extract thumbnails</button>
+      <button id="clearYoutubeThumb" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+    <div>
+      <label for="youtubeThumbInput" class="text-sm font-bold text-slate-700">YouTube URL or video ID</label>
+      <textarea
+        id="youtubeThumbInput"
+        class="mt-3 min-h-36 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        spellcheck="false"
+      ></textarea>
+      <p id="youtubeThumbStatus" class="mt-3 min-h-6 text-sm font-semibold text-blue-700" role="status" aria-live="polite">Paste a watch, youtu.be, Shorts, embed, live URL, or 11-character video ID.</p>
+      <div class="mt-5 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950">
+        <p><strong>Safe scope:</strong> this tool only builds public thumbnail image URLs. It does not download video or audio, bypass access controls, or contact a backend.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p class="text-sm font-bold text-slate-700">Thumbnail options</p>
+        <p id="youtubeThumbSummary" class="text-sm font-semibold text-slate-500">No video ID extracted yet.</p>
+      </div>
+      <div id="youtubeThumbResults" class="mt-3 grid gap-4"></div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-700 md:grid-cols-3">
+    <p><strong>Supported input:</strong> watch URLs, youtu.be links, Shorts, embed, live links, and raw video IDs.</p>
+    <p><strong>Resolution choices:</strong> max, standard, high, medium, and default thumbnail URL patterns.</p>
+    <p><strong>Availability note:</strong> some videos do not have every size. Open the image to confirm the exact version YouTube serves.</p>
+  </div>
+</section>
+
+<script>
+  type ThumbnailOption = {
+    key: string;
+    label: string;
+    size: string;
+    filename: string;
+    note: string;
+  };
+
+  const input = document.getElementById('youtubeThumbInput') as HTMLTextAreaElement | null;
+  const sampleButton = document.getElementById('sampleYoutubeThumb');
+  const extractButton = document.getElementById('extractYoutubeThumb');
+  const clearButton = document.getElementById('clearYoutubeThumb');
+  const results = document.getElementById('youtubeThumbResults');
+  const status = document.getElementById('youtubeThumbStatus');
+  const summary = document.getElementById('youtubeThumbSummary');
+
+  const sampleUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+  const videoIdPattern = /^[A-Za-z0-9_-]{11}$/;
+  const thumbnailOptions: ThumbnailOption[] = [
+    { key: 'max', label: 'Max resolution', size: '1280 × 720 when available', filename: 'maxresdefault.jpg', note: 'Best first choice for blog covers and large previews.' },
+    { key: 'standard', label: 'Standard quality', size: '640 × 480', filename: 'sddefault.jpg', note: 'Useful fallback when max resolution is missing.' },
+    { key: 'high', label: 'High quality', size: '480 × 360', filename: 'hqdefault.jpg', note: 'Reliable preview size for many videos.' },
+    { key: 'medium', label: 'Medium quality', size: '320 × 180', filename: 'mqdefault.jpg', note: 'Small web/card preview.' },
+    { key: 'default', label: 'Default thumbnail', size: '120 × 90', filename: 'default.jpg', note: 'Smallest default thumbnail.' },
+  ];
+
+  function normalizeCandidate(value: string) {
+    return value.trim().replace(/^@+/, '');
+  }
+
+  function extractVideoId(raw: string) {
+    const trimmed = normalizeCandidate(raw);
+    if (!trimmed) return '';
+    if (videoIdPattern.test(trimmed)) return trimmed;
+
+    const firstToken = trimmed.split(/\s+/)[0];
+    if (videoIdPattern.test(firstToken)) return firstToken;
+
+    try {
+      const url = new URL(firstToken);
+      const host = url.hostname.replace(/^www\./, '').toLowerCase();
+      const searchId = url.searchParams.get('v');
+      if (searchId && videoIdPattern.test(searchId)) return searchId;
+
+      const parts = url.pathname.split('/').filter(Boolean);
+      const knownPathMarkers = ['shorts', 'embed', 'live', 'v'];
+      if (host === 'youtu.be' && parts[0] && videoIdPattern.test(parts[0])) return parts[0];
+
+      for (let index = 0; index < parts.length; index += 1) {
+        const part = parts[index];
+        const nextPart = parts[index + 1];
+        if (knownPathMarkers.includes(part.toLowerCase()) && nextPart && videoIdPattern.test(nextPart)) return nextPart;
+        if (videoIdPattern.test(part)) return part;
+      }
+    } catch {
+      const match = trimmed.match(/[A-Za-z0-9_-]{11}/);
+      if (match && videoIdPattern.test(match[0])) return match[0];
+    }
+
+    return '';
+  }
+
+  function thumbnailUrl(videoId: string, filename: string) {
+    return `https://img.youtube.com/vi/${videoId}/${filename}`;
+  }
+
+  function renderEmpty(message = 'No video ID extracted yet.') {
+    if (results) {
+      results.innerHTML = '<div class="rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-slate-500">Paste a YouTube URL or video ID to generate public thumbnail links.</div>';
+    }
+    if (summary) summary.textContent = message;
+  }
+
+  function renderThumbnails(videoId: string) {
+    if (!results || !summary || !status) return;
+    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    summary.textContent = `Video ID: ${videoId}`;
+    status.textContent = `Found video ID ${videoId}. Thumbnail URLs are ready.`;
+    results.innerHTML = thumbnailOptions
+      .map((option) => {
+        const url = thumbnailUrl(videoId, option.filename);
+        return `
+          <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <div class="grid gap-0 md:grid-cols-[12rem_minmax(0,1fr)]">
+              <a href="${url}" target="_blank" rel="noopener noreferrer" class="block bg-slate-100">
+                <img src="${url}" alt="${option.label} thumbnail for YouTube video ${videoId}" loading="lazy" class="h-full min-h-32 w-full object-cover" />
+              </a>
+              <div class="min-w-0 p-4">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <h3 class="font-black text-slate-950">${option.label}</h3>
+                    <p class="mt-1 text-sm text-slate-600">${option.size} · ${option.note}</p>
+                  </div>
+                  <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-blue-700">${option.key}</span>
+                </div>
+                <p class="mt-3 break-all rounded-2xl bg-slate-50 p-3 font-mono text-xs text-slate-700">${url}</p>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <button type="button" data-copy-url="${url}" class="rounded-full border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy URL</button>
+                  <a href="${url}" target="_blank" rel="noopener noreferrer" class="rounded-full border border-slate-300 px-3 py-2 text-xs font-bold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Open image</a>
+                  <a href="${videoUrl}" target="_blank" rel="noopener noreferrer" class="rounded-full bg-slate-950 px-3 py-2 text-xs font-bold text-white transition hover:bg-blue-700">Open video page</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        `;
+      })
+      .join('');
+  }
+
+  function extractAndRender() {
+    if (!input || !status || !summary) return;
+    const videoId = extractVideoId(input.value);
+    if (!input.value.trim()) {
+      status.textContent = 'Paste a watch, youtu.be, Shorts, embed, live URL, or 11-character video ID.';
+      renderEmpty();
+      return;
+    }
+    if (!videoId) {
+      status.textContent = 'Could not find a valid 11-character YouTube video ID. Check the URL and try again.';
+      renderEmpty('Invalid or missing YouTube video ID.');
+      return;
+    }
+    renderThumbnails(videoId);
+  }
+
+  sampleButton?.addEventListener('click', () => {
+    if (!input) return;
+    input.value = sampleUrl;
+    extractAndRender();
+    input.focus();
+  });
+
+  extractButton?.addEventListener('click', extractAndRender);
+  input?.addEventListener('input', extractAndRender);
+
+  clearButton?.addEventListener('click', () => {
+    if (!input || !status) return;
+    input.value = '';
+    status.textContent = 'Paste a watch, youtu.be, Shorts, embed, live URL, or 11-character video ID.';
+    renderEmpty();
+    input.focus();
+  });
+
+  results?.addEventListener('click', async (event) => {
+    const target = event.target as HTMLElement | null;
+    const button = target?.closest('[data-copy-url]') as HTMLButtonElement | null;
+    if (!button || !status) return;
+    const url = button.dataset.copyUrl || '';
+    if (!url) return;
+    try {
+      status.textContent = 'Copying thumbnail URL...';
+      await navigator.clipboard.writeText(url);
+      status.textContent = 'Thumbnail URL copied.';
+    } catch {
+      status.textContent = 'Copy blocked by browser. Select the URL text and copy manually.';
+    }
+  });
+
+  renderEmpty();
+</script>

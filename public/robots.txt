@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bizzon.app/sitemap-index.xml
+Sitemap: https://bizzon.app/sitemap.xml

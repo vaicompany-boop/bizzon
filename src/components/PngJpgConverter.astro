@@ -1,0 +1,358 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="png-jpg-tool-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only image converter</p>
+      <h2 id="png-jpg-tool-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Convert PNG, JPG, and WebP images</h2>
+      <p class="mt-2 text-slate-600">Choose a browser-readable image, pick PNG or JPG output, preview the result, and download it locally.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="samplePngJpg" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="downloadConvertedImage" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50">Download</button>
+      <button id="clearPngJpg" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+    <div class="space-y-5">
+      <div>
+        <label for="pngJpgInput" class="text-sm font-bold text-slate-700">Image file</label>
+        <input
+          id="pngJpgInput"
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif,image/bmp,image/svg+xml,image/*"
+          class="mt-3 block w-full cursor-pointer rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-700 file:mr-4 file:rounded-full file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:border-blue-300 focus:outline-none focus:ring-4 focus:ring-blue-100"
+        />
+        <p class="mt-2 text-sm text-slate-500">Your image stays in this browser. Bizzon does not upload it to a server.</p>
+      </div>
+
+      <fieldset class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <legend class="text-sm font-bold text-slate-700">Output format</legend>
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+          <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-700 has-[:checked]:border-blue-400 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-800">
+            <input type="radio" name="outputFormat" value="image/png" class="accent-blue-600" checked />
+            PNG
+          </label>
+          <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-700 has-[:checked]:border-blue-400 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-800">
+            <input type="radio" name="outputFormat" value="image/jpeg" class="accent-blue-600" />
+            JPG
+          </label>
+        </div>
+      </fieldset>
+
+      <div id="jpgControls" class="space-y-4 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <div class="flex items-center justify-between gap-4">
+          <label for="jpgQualityInput" class="text-sm font-bold text-slate-700">JPG quality</label>
+          <output id="jpgQualityOutput" for="jpgQualityInput" class="rounded-full bg-white px-3 py-1 text-sm font-bold text-slate-700">88%</output>
+        </div>
+        <input id="jpgQualityInput" type="range" min="10" max="100" value="88" step="1" class="w-full accent-blue-600" />
+        <div>
+          <label for="backgroundColor" class="text-sm font-bold text-slate-700">Transparency background for JPG</label>
+          <div class="mt-3 flex items-center gap-3">
+            <input id="backgroundColor" type="color" value="#ffffff" class="size-11 cursor-pointer rounded-xl border border-slate-300 bg-white p-1" />
+            <span id="backgroundColorLabel" class="text-sm font-semibold text-slate-600">#ffffff</span>
+          </div>
+          <p class="mt-2 text-sm text-slate-500">JPG cannot keep transparency, so transparent pixels are flattened onto this color.</p>
+        </div>
+      </div>
+
+      <div class="grid gap-3 rounded-3xl border border-slate-200 bg-white p-5 text-sm text-slate-600 sm:grid-cols-2">
+        <div>
+          <p class="font-bold text-slate-950">Original</p>
+          <p id="pngJpgOriginalMeta" class="mt-1">No image selected.</p>
+        </div>
+        <div>
+          <p class="font-bold text-slate-950">Output</p>
+          <p id="pngJpgOutputMeta" class="mt-1">Convert an image to see size.</p>
+        </div>
+      </div>
+
+      <p id="pngJpgStatus" class="min-h-6 text-sm font-semibold text-blue-700" role="status" aria-live="polite"></p>
+    </div>
+
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      <div>
+        <div class="flex items-center justify-between gap-3">
+          <p class="text-sm font-bold text-slate-700">Original preview</p>
+          <p id="pngJpgDimensions" class="text-sm font-semibold text-slate-500">—</p>
+        </div>
+        <div class="mt-3 grid min-h-80 place-items-center overflow-hidden rounded-3xl border border-slate-200 bg-[linear-gradient(45deg,#e2e8f0_25%,transparent_25%),linear-gradient(-45deg,#e2e8f0_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#e2e8f0_75%),linear-gradient(-45deg,transparent_75%,#e2e8f0_75%)] bg-[length:24px_24px] bg-[position:0_0,0_12px,12px_-12px,-12px_0] p-3">
+          <img id="pngJpgOriginalPreview" alt="Original image preview" class="hidden max-h-[26rem] max-w-full rounded-2xl object-contain" />
+          <p id="pngJpgOriginalEmpty" class="px-6 text-center text-sm font-semibold text-slate-500">Choose an image or use the sample to preview it here.</p>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center justify-between gap-3">
+          <p class="text-sm font-bold text-slate-700">Converted preview</p>
+          <p id="pngJpgSavingsMeta" class="text-sm font-semibold text-slate-500">—</p>
+        </div>
+        <div class="mt-3 grid min-h-80 place-items-center overflow-hidden rounded-3xl border border-slate-200 bg-slate-950 p-3">
+          <img id="pngJpgOutputPreview" alt="Converted image preview" class="hidden max-h-[26rem] max-w-full rounded-2xl object-contain" />
+          <p id="pngJpgOutputEmpty" class="px-6 text-center text-sm font-semibold text-slate-300">Converted preview will appear here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
+    <p><strong>Private:</strong> image decoding and conversion happen locally with your browser canvas.</p>
+    <p><strong>PNG output:</strong> good when you need transparency, screenshots, UI assets, or lossless-looking graphics.</p>
+    <p><strong>JPG output:</strong> good for photos and smaller files when transparency is not needed.</p>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('pngJpgInput') as HTMLInputElement | null;
+  const sampleButton = document.getElementById('samplePngJpg');
+  const downloadButton = document.getElementById('downloadConvertedImage') as HTMLButtonElement | null;
+  const clearButton = document.getElementById('clearPngJpg');
+  const formatInputs = Array.from(document.querySelectorAll<HTMLInputElement>('input[name="outputFormat"]'));
+  const qualityInput = document.getElementById('jpgQualityInput') as HTMLInputElement | null;
+  const qualityOutput = document.getElementById('jpgQualityOutput');
+  const backgroundInput = document.getElementById('backgroundColor') as HTMLInputElement | null;
+  const backgroundLabel = document.getElementById('backgroundColorLabel');
+  const originalPreview = document.getElementById('pngJpgOriginalPreview') as HTMLImageElement | null;
+  const outputPreview = document.getElementById('pngJpgOutputPreview') as HTMLImageElement | null;
+  const originalEmpty = document.getElementById('pngJpgOriginalEmpty');
+  const outputEmpty = document.getElementById('pngJpgOutputEmpty');
+  const originalMeta = document.getElementById('pngJpgOriginalMeta');
+  const outputMeta = document.getElementById('pngJpgOutputMeta');
+  const dimensions = document.getElementById('pngJpgDimensions');
+  const savingsMeta = document.getElementById('pngJpgSavingsMeta');
+  const status = document.getElementById('pngJpgStatus');
+
+  let originalObjectUrl = '';
+  let outputObjectUrl = '';
+  let outputBlob: Blob | null = null;
+  let outputName = 'bizzon-image.png';
+  let currentFile: File | null = null;
+
+  function setStatus(message: string, tone: 'ok' | 'error' = 'ok') {
+    if (!status) return;
+    status.textContent = message;
+    status.className = `min-h-6 text-sm font-semibold ${tone === 'error' ? 'text-red-700' : 'text-blue-700'}`;
+  }
+
+  function formatBytes(bytes: number) {
+    if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
+    const units = ['B', 'KB', 'MB', 'GB'];
+    const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+    return `${(bytes / Math.pow(1024, index)).toFixed(index === 0 ? 0 : 1)} ${units[index]}`;
+  }
+
+  function selectedMimeType() {
+    return formatInputs.find((item) => item.checked)?.value || 'image/png';
+  }
+
+  function extensionFor(mimeType: string) {
+    return mimeType === 'image/jpeg' ? 'jpg' : 'png';
+  }
+
+  function safeBaseName(name: string, extension: string) {
+    const base = name.replace(/\.[^.]+$/, '').replace(/[^a-z0-9-]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'bizzon-image';
+    return `${base}.${extension}`;
+  }
+
+  function revokeUrls() {
+    if (originalObjectUrl) URL.revokeObjectURL(originalObjectUrl);
+    if (outputObjectUrl) URL.revokeObjectURL(outputObjectUrl);
+    originalObjectUrl = '';
+    outputObjectUrl = '';
+  }
+
+  function resetOutput() {
+    outputBlob = null;
+    if (outputObjectUrl) URL.revokeObjectURL(outputObjectUrl);
+    outputObjectUrl = '';
+    if (outputPreview) {
+      outputPreview.removeAttribute('src');
+      outputPreview.classList.add('hidden');
+    }
+    outputEmpty?.classList.remove('hidden');
+    if (outputMeta) outputMeta.textContent = 'Convert an image to see size.';
+    if (savingsMeta) savingsMeta.textContent = '—';
+    if (downloadButton) downloadButton.disabled = true;
+  }
+
+  function updateControlLabels() {
+    if (qualityOutput && qualityInput) qualityOutput.textContent = `${qualityInput.value}%`;
+    if (backgroundLabel && backgroundInput) backgroundLabel.textContent = backgroundInput.value.toLowerCase();
+  }
+
+  function canvasToBlob(canvas: HTMLCanvasElement, mimeType: string, quality?: number) {
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error(`This browser could not create a ${extensionFor(mimeType).toUpperCase()} file from the selected image.`));
+      }, mimeType, quality);
+    });
+  }
+
+  function drawImageToCanvas(image: HTMLImageElement, mimeType: string) {
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Canvas is not available in this browser.');
+    if (mimeType === 'image/jpeg') {
+      context.fillStyle = backgroundInput?.value || '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    context.drawImage(image, 0, 0);
+    return canvas;
+  }
+
+  async function convertCurrentImage() {
+    if (!currentFile || !originalPreview) {
+      resetOutput();
+      setStatus('Choose an image to convert.');
+      return;
+    }
+
+    try {
+      if (!originalPreview.naturalWidth || !originalPreview.naturalHeight) await originalPreview.decode();
+      if (!originalPreview.naturalWidth || !originalPreview.naturalHeight) throw new Error('The image loaded but has no readable dimensions.');
+      const mimeType = selectedMimeType();
+      const extension = extensionFor(mimeType);
+      const canvas = drawImageToCanvas(originalPreview, mimeType);
+      const quality = Math.max(0.1, Math.min(1, Number(qualityInput?.value || 88) / 100));
+      const blob = await canvasToBlob(canvas, mimeType, mimeType === 'image/jpeg' ? quality : undefined);
+      outputBlob = blob;
+      outputName = safeBaseName(currentFile.name, extension);
+      if (outputObjectUrl) URL.revokeObjectURL(outputObjectUrl);
+      outputObjectUrl = URL.createObjectURL(blob);
+      if (outputPreview) {
+        outputPreview.src = outputObjectUrl;
+        outputPreview.classList.remove('hidden');
+      }
+      outputEmpty?.classList.add('hidden');
+      if (outputMeta) outputMeta.textContent = `${outputName} · ${formatBytes(blob.size)} · ${mimeType}`;
+      const savings = currentFile.size > 0 ? Math.round((1 - blob.size / currentFile.size) * 100) : 0;
+      if (savingsMeta) savingsMeta.textContent = savings > 0 ? `${savings}% smaller` : savings < 0 ? `${Math.abs(savings)}% larger` : 'Same size';
+      if (downloadButton) downloadButton.disabled = false;
+      const formatLabel = extension.toUpperCase();
+      const qualityText = mimeType === 'image/jpeg' ? ` at ${Math.round(quality * 100)}% quality` : '';
+      setStatus(`Converted to ${formatLabel}${qualityText}.`);
+    } catch (error) {
+      resetOutput();
+      setStatus(error instanceof Error ? error.message : 'Could not convert this image.', 'error');
+    }
+  }
+
+  async function loadFile(file: File) {
+    if (!file.type.startsWith('image/')) {
+      setStatus('Choose an image file such as PNG, JPG, WebP, GIF, BMP, or SVG.', 'error');
+      return;
+    }
+
+    currentFile = file;
+    resetOutput();
+    if (originalObjectUrl) URL.revokeObjectURL(originalObjectUrl);
+    originalObjectUrl = URL.createObjectURL(file);
+    if (!originalPreview) return;
+    originalPreview.src = originalObjectUrl;
+    originalPreview.classList.remove('hidden');
+    originalEmpty?.classList.add('hidden');
+    if (originalMeta) originalMeta.textContent = `${file.name} · ${formatBytes(file.size)} · ${file.type || 'image'}`;
+    if (dimensions) dimensions.textContent = 'Loading...';
+    setStatus('Loading image...');
+
+    try {
+      await originalPreview.decode();
+      if (!originalPreview.naturalWidth || !originalPreview.naturalHeight) throw new Error('The image loaded but has no readable dimensions.');
+      if (dimensions) dimensions.textContent = `${originalPreview.naturalWidth} × ${originalPreview.naturalHeight}px`;
+      await convertCurrentImage();
+    } catch (error) {
+      resetOutput();
+      setStatus(error instanceof Error ? error.message : 'Could not read this image.', 'error');
+    }
+  }
+
+  async function makeSampleFile() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 960;
+    canvas.height = 540;
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Canvas is not available in this browser.');
+    context.clearRect(0, 0, 960, 540);
+    context.fillStyle = '#ffffff';
+    context.fillRect(0, 0, 960, 540);
+    context.fillStyle = '#dbeafe';
+    context.fillRect(0, 0, 960, 540);
+    context.clearRect(90, 90, 780, 360);
+    context.fillStyle = '#1d4ed8';
+    context.fillRect(140, 145, 680, 250);
+    context.fillStyle = '#ffffff';
+    context.font = '700 54px system-ui, sans-serif';
+    context.fillText('Bizzon image sample', 180, 260);
+    context.font = '500 28px system-ui, sans-serif';
+    context.fillText('PNG transparency test', 184, 312);
+    const blob = await canvasToBlob(canvas, 'image/png');
+    return new File([blob], 'bizzon-png-jpg-sample.png', { type: 'image/png' });
+  }
+
+  input?.addEventListener('change', () => {
+    const file = input.files?.[0];
+    if (file) loadFile(file);
+    else setStatus('Choose an image to convert.');
+  });
+
+  formatInputs.forEach((formatInput) => {
+    formatInput.addEventListener('change', () => {
+      updateControlLabels();
+      if (currentFile) convertCurrentImage();
+      else setStatus('Choose an image to convert.');
+    });
+  });
+
+  qualityInput?.addEventListener('input', () => {
+    updateControlLabels();
+    if (selectedMimeType() === 'image/jpeg' && currentFile) convertCurrentImage();
+  });
+
+  backgroundInput?.addEventListener('input', () => {
+    updateControlLabels();
+    if (selectedMimeType() === 'image/jpeg' && currentFile) convertCurrentImage();
+  });
+
+  sampleButton?.addEventListener('click', async () => {
+    try {
+      setStatus('Creating sample image...');
+      const file = await makeSampleFile();
+      await loadFile(file);
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : 'Could not create the sample image.', 'error');
+    }
+  });
+
+  downloadButton?.addEventListener('click', () => {
+    if (!outputBlob || !outputObjectUrl) {
+      setStatus('Nothing to download yet.', 'error');
+      return;
+    }
+    const link = document.createElement('a');
+    link.href = outputObjectUrl;
+    link.download = outputName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setStatus(`${extensionFor(selectedMimeType()).toUpperCase()} download started.`);
+  });
+
+  clearButton?.addEventListener('click', () => {
+    currentFile = null;
+    revokeUrls();
+    if (input) input.value = '';
+    if (originalPreview) {
+      originalPreview.removeAttribute('src');
+      originalPreview.classList.add('hidden');
+    }
+    originalEmpty?.classList.remove('hidden');
+    resetOutput();
+    if (originalMeta) originalMeta.textContent = 'No image selected.';
+    if (dimensions) dimensions.textContent = '—';
+    setStatus('Choose an image to convert.');
+  });
+
+  updateControlLabels();
+  if (downloadButton) downloadButton.disabled = true;
+</script>

@@ -11,6 +11,29 @@
       ],
       "destination": "https://bizzon.app/:path*",
       "permanent": true
+    },
+    { "source": "/free-word-counter", "destination": "/word-counter", "permanent": true },
+    { "source": "/best-free-text-tools", "destination": "/tools", "permanent": true },
+    { "source": "/character-limit-guide", "destination": "/character-counter", "permanent": true },
+    { "source": "/filename-cleaner", "destination": "/slug-generator", "permanent": true },
+    { "source": "/free-qr-code-generator", "destination": "/tools", "permanent": true },
+    { "source": "/date-calculator", "destination": "/tools", "permanent": true },
+    { "source": "/discount-calculator", "destination": "/tools", "permanent": true },
+    { "source": "/percentage-calculator", "destination": "/tools", "permanent": true },
+    { "source": "/tip-calculator", "destination": "/tools", "permanent": true },
+    { "source": "/vat-calculator", "destination": "/tools", "permanent": true },
+    { "source": "/invoice-generator", "destination": "/tools", "permanent": true },
+    { "source": "/password-generator", "destination": "/tools", "permanent": true },
+    { "source": "/random-picker", "destination": "/tools", "permanent": true },
+    { "source": "/unit-converter", "destination": "/tools", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
     }
   ]
 }

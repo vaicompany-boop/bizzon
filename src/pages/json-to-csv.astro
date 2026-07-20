@@ -1,0 +1,19 @@
+---
+import JsonToCsvConverter from '../components/JsonToCsvConverter.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="JSON to CSV Converter — Free browser tool | Bizzon"
+  description="Free browser-based JSON to CSV converter by Bizzon. Paste an array of objects or arrays and export CSV locally in your browser."
+  canonicalPath="/json-to-csv"
+  heading="JSON to CSV Converter"
+  intro="Convert JSON arrays into clean CSV with header control, delimiter options, copy, and download actions — all processed locally in your browser."
+>
+  <JsonToCsvConverter />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Objects or arrays</h2><p class="mt-3 text-slate-600">Paste an array of objects for named columns, an array of arrays for raw rows, or a single object for one CSV row.</p></div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Escaped CSV output</h2><p class="mt-3 text-slate-600">Cells with quotes, delimiters, line breaks, or nested values are converted into safe CSV text.</p></div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Private conversion</h2><p class="mt-3 text-slate-600">Your JSON stays in the browser. Bizzon does not upload, store, or inspect the data you paste.</p></div>
+  </section>
+</ToolLayout>
