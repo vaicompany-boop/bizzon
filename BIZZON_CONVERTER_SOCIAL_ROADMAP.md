@@ -90,7 +90,7 @@ When the three-hour rotation selects Bizzon:
 ## Current recommended next Bizzon chunk
 
 ```text
-Build YouTube URL Cleaner at /youtube-url-cleaner, or add file upload/download polish to the converter tools if Tedi wants richer utility UX first.
+Build TikTok Caption & Hashtag Cleaner at /tiktok-caption-hashtag-cleaner, or add file upload/download polish to the converter tools if Tedi wants richer utility UX first.
 ```
 
 Acceptance criteria for YouTube Thumbnail Downloader:
@@ -107,4 +107,20 @@ Acceptance criteria for YouTube URL Cleaner:
 - removes tracking/noise parameters such as `si`, `feature`, `utm_*`, `fbclid`, `gclid` while preserving essential IDs like `v` and `list`;
 - never downloads video/audio or calls a backend;
 - copy/clear actions and clear errors for invalid URLs;
+- route listed as live after working.
+
+Acceptance criteria for X / Twitter Character Counter:
+
+- counts post characters locally, with a 280-character default limit;
+- shows remaining/over-limit state and approximate thread chunks;
+- handles pasted line breaks, links, emojis, and whitespace clearly;
+- copy/clear actions and helpful empty-state guidance;
+- route listed as live after working.
+
+Acceptance criteria for Instagram Caption Formatter:
+
+- cleans extra blank lines and spacing while preserving intentional line breaks;
+- normalizes hashtags, removes duplicates, and shows caption/hashtag counts;
+- keeps everything browser-only with no Instagram scraping or API calls;
+- copy/clear actions and helpful empty-state guidance;
 - route listed as live after working.

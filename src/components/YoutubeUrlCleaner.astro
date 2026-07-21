@@ -1,0 +1,290 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="youtube-cleaner-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only creator tool</p>
+      <h2 id="youtube-cleaner-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Clean YouTube links</h2>
+      <p class="mt-2 text-slate-600">Paste a YouTube URL. Bizzon removes tracking parameters while keeping the useful video, playlist, channel, Shorts, embed, or live link intact.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleYoutubeCleaner" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="cleanYoutubeUrl" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Clean URL</button>
+      <button id="clearYoutubeCleaner" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <label for="youtubeCleanerInput" class="text-sm font-bold text-slate-700">YouTube URL</label>
+      <textarea
+        id="youtubeCleanerInput"
+        class="mt-3 min-h-36 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ&si=abc123&utm_source=share&feature=youtu.be"
+        spellcheck="false"
+      ></textarea>
+      <p id="youtubeCleanerStatus" class="mt-3 min-h-6 text-sm font-semibold text-blue-700" role="status" aria-live="polite">Paste a YouTube watch, youtu.be, Shorts, embed, live, playlist, channel, or handle URL.</p>
+      <div class="mt-5 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950">
+        <p><strong>Safe scope:</strong> this tool only rewrites the URL text in your browser. It does not download video/audio, scrape YouTube, or send the link to a server.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p class="text-sm font-bold text-slate-700">Clean result</p>
+        <p id="youtubeCleanerSummary" class="text-sm font-semibold text-slate-500">No URL cleaned yet.</p>
+      </div>
+      <div id="youtubeCleanerResult" class="mt-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-slate-500">Paste a YouTube URL to remove tracking noise.</div>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <button id="copyYoutubeCleanUrl" type="button" disabled class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50">Copy clean URL</button>
+        <a id="openYoutubeCleanUrl" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true" class="pointer-events-none rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white opacity-50 transition hover:bg-blue-700">Open clean URL</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-700 md:grid-cols-3">
+    <p><strong>Removes:</strong> <code>si</code>, <code>feature</code>, <code>utm_*</code>, <code>fbclid</code>, <code>gclid</code>, and other common tracking parameters.</p>
+    <p><strong>Preserves:</strong> useful IDs such as <code>v</code>, <code>list</code>, <code>index</code>, <code>t</code>, <code>start</code>, and channel or playlist paths.</p>
+    <p><strong>Supported links:</strong> watch, youtu.be, Shorts, embed, live, playlist, channel, user, c, and @handle URLs.</p>
+  </div>
+</section>
+
+<script>
+  type CleanResult = {
+    cleanUrl: string;
+    removed: string[];
+    preserved: string[];
+    kind: string;
+  };
+
+  const input = document.getElementById('youtubeCleanerInput') as HTMLTextAreaElement | null;
+  const sampleButton = document.getElementById('sampleYoutubeCleaner');
+  const cleanButton = document.getElementById('cleanYoutubeUrl');
+  const clearButton = document.getElementById('clearYoutubeCleaner');
+  const copyButton = document.getElementById('copyYoutubeCleanUrl') as HTMLButtonElement | null;
+  const openLink = document.getElementById('openYoutubeCleanUrl') as HTMLAnchorElement | null;
+  const resultBox = document.getElementById('youtubeCleanerResult');
+  const status = document.getElementById('youtubeCleanerStatus');
+  const summary = document.getElementById('youtubeCleanerSummary');
+
+  const sampleUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&si=shareToken&utm_source=twitter&feature=youtu.be&list=PL1234567890ABCDEF&index=2&t=43s';
+  const videoIdPattern = /^[A-Za-z0-9_-]{11}$/;
+  const allowedHosts = new Set(['youtube.com', 'www.youtube.com', 'm.youtube.com', 'music.youtube.com', 'youtu.be']);
+  const alwaysRemove = new Set(['si', 'feature', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id', 'fbclid', 'gclid', 'dclid', 'igshid', 'mc_cid', 'mc_eid', 'pp']);
+  const watchKeep = new Set(['v', 'list', 'index', 't', 'start']);
+  const pathKeep = new Set(['list', 'index', 't', 'start']);
+  const playlistKeep = new Set(['list']);
+
+  function escapeHtml(value: string) {
+    return value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char] || char));
+  }
+
+  function resetResult(message = 'Paste a YouTube URL to remove tracking noise.') {
+    if (resultBox) {
+      resultBox.className = 'mt-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-slate-500';
+      resultBox.textContent = message;
+    }
+    if (summary) summary.textContent = 'No URL cleaned yet.';
+    if (copyButton) {
+      copyButton.disabled = true;
+      copyButton.dataset.cleanUrl = '';
+    }
+    if (openLink) {
+      openLink.href = '#';
+      openLink.setAttribute('aria-disabled', 'true');
+      openLink.classList.add('pointer-events-none', 'opacity-50');
+    }
+  }
+
+  function firstToken(value: string) {
+    return value.trim().split(/\s+/)[0] || '';
+  }
+
+  function normalizeHost(hostname: string) {
+    const host = hostname.toLowerCase();
+    if (host === 'm.youtube.com' || host === 'music.youtube.com') return 'www.youtube.com';
+    return host;
+  }
+
+  function isTrackingParam(key: string) {
+    const lower = key.toLowerCase();
+    return alwaysRemove.has(lower) || lower.startsWith('utm_');
+  }
+
+  function uniquePush(list: string[], value: string) {
+    if (value && !list.includes(value)) list.push(value);
+  }
+
+  function classifyUrl(url: URL) {
+    const host = normalizeHost(url.hostname);
+    const parts = url.pathname.split('/').filter(Boolean);
+    if (host === 'youtu.be') return 'short video link';
+    if (url.pathname === '/watch') return 'watch URL';
+    if (parts[0]?.toLowerCase() === 'shorts') return 'Shorts URL';
+    if (parts[0]?.toLowerCase() === 'embed') return 'embed URL';
+    if (parts[0]?.toLowerCase() === 'live') return 'live URL';
+    if (url.pathname === '/playlist') return 'playlist URL';
+    if (parts[0]?.startsWith('@')) return 'channel handle URL';
+    if (['channel', 'c', 'user'].includes(parts[0]?.toLowerCase() || '')) return 'channel URL';
+    return 'YouTube URL';
+  }
+
+  function cleanSearchParams(original: URL, keep: Set<string>) {
+    const params = new URLSearchParams();
+    const removed: string[] = [];
+    const preserved: string[] = [];
+
+    original.searchParams.forEach((value, key) => {
+      const lower = key.toLowerCase();
+      if (isTrackingParam(lower)) {
+        uniquePush(removed, key);
+        return;
+      }
+      if (keep.has(lower)) {
+        params.set(lower, value.trim());
+        uniquePush(preserved, lower);
+      } else {
+        uniquePush(removed, key);
+      }
+    });
+
+    return { params, removed, preserved };
+  }
+
+  function buildUrl(host: string, pathname: string, params: URLSearchParams) {
+    const clean = new URL(`https://${host}${pathname || '/'}`);
+    params.forEach((value, key) => clean.searchParams.set(key, value));
+    return clean.toString();
+  }
+
+  function cleanYoutubeUrl(raw: string): CleanResult | null {
+    const token = firstToken(raw);
+    if (!token) return null;
+    if (videoIdPattern.test(token)) {
+      return { cleanUrl: `https://www.youtube.com/watch?v=${token}`, removed: [], preserved: ['v'], kind: 'raw video ID' };
+    }
+
+    let url: URL;
+    try {
+      url = new URL(token);
+    } catch {
+      try {
+        url = new URL(`https://${token}`);
+      } catch {
+        return null;
+      }
+    }
+
+    const sourceHost = url.hostname.toLowerCase();
+    const normalizedHost = normalizeHost(sourceHost.replace(/^www\./, 'www.'));
+    if (!allowedHosts.has(sourceHost) && !allowedHosts.has(url.hostname.replace(/^www\./, 'youtube.com'))) return null;
+
+    const host = normalizedHost === 'youtube.com' ? 'www.youtube.com' : normalizedHost;
+    const parts = url.pathname.split('/').filter(Boolean).map((part) => part.trim()).filter(Boolean);
+    const kind = classifyUrl(url);
+    let pathname = url.pathname || '/';
+    let keep = pathKeep;
+
+    if (host === 'youtu.be') {
+      const videoId = parts[0] || '';
+      if (!videoIdPattern.test(videoId)) return null;
+      pathname = `/${videoId}`;
+      keep = pathKeep;
+    } else if (url.pathname === '/watch') {
+      const videoId = url.searchParams.get('v')?.trim() || '';
+      if (!videoIdPattern.test(videoId)) return null;
+      pathname = '/watch';
+      keep = watchKeep;
+    } else if (url.pathname === '/playlist') {
+      const listId = url.searchParams.get('list')?.trim() || '';
+      if (!listId) return null;
+      pathname = '/playlist';
+      keep = playlistKeep;
+    } else if (['shorts', 'embed', 'live'].includes(parts[0]?.toLowerCase() || '')) {
+      const videoId = parts[1] || '';
+      if (!videoIdPattern.test(videoId)) return null;
+      pathname = `/${parts[0].toLowerCase()}/${videoId}`;
+      keep = pathKeep;
+    } else if (parts[0]?.startsWith('@')) {
+      pathname = `/${parts[0]}`;
+      keep = new Set();
+    } else if (['channel', 'c', 'user'].includes(parts[0]?.toLowerCase() || '')) {
+      if (!parts[1]) return null;
+      pathname = `/${parts[0].toLowerCase()}/${parts[1]}`;
+      keep = new Set();
+    } else {
+      return null;
+    }
+
+    const { params, removed, preserved } = cleanSearchParams(url, keep);
+    if (url.hash) uniquePush(removed, 'fragment');
+    return { cleanUrl: buildUrl(host, pathname, params), removed, preserved, kind };
+  }
+
+  function renderClean(result: CleanResult) {
+    if (!resultBox || !summary || !status || !copyButton || !openLink) return;
+    const removedText = result.removed.length ? result.removed.join(', ') : 'none';
+    const preservedText = result.preserved.length ? result.preserved.join(', ') : 'path only';
+    const encodedUrl = escapeHtml(result.cleanUrl);
+    resultBox.className = 'mt-3 rounded-3xl border border-slate-200 bg-white p-5 text-sm text-slate-700 shadow-sm';
+    resultBox.innerHTML = `
+      <p class="text-xs font-bold uppercase tracking-[0.18em] text-blue-700">${escapeHtml(result.kind)}</p>
+      <p class="mt-3 break-all rounded-2xl bg-slate-50 p-4 font-mono text-sm text-slate-900">${encodedUrl}</p>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">
+        <p class="rounded-2xl bg-green-50 p-3 text-green-900"><strong>Preserved:</strong> ${escapeHtml(preservedText)}</p>
+        <p class="rounded-2xl bg-amber-50 p-3 text-amber-900"><strong>Removed:</strong> ${escapeHtml(removedText)}</p>
+      </div>
+    `;
+    summary.textContent = result.removed.length ? `Removed ${result.removed.length} tracking/noise item${result.removed.length === 1 ? '' : 's'}.` : 'Already clean.';
+    status.textContent = result.removed.length ? 'Clean YouTube URL is ready.' : 'This YouTube URL was already clean.';
+    copyButton.disabled = false;
+    copyButton.dataset.cleanUrl = result.cleanUrl;
+    openLink.href = result.cleanUrl;
+    openLink.removeAttribute('aria-disabled');
+    openLink.classList.remove('pointer-events-none', 'opacity-50');
+  }
+
+  function cleanAndRender() {
+    if (!input || !status) return;
+    if (!input.value.trim()) {
+      status.textContent = 'Paste a YouTube watch, youtu.be, Shorts, embed, live, playlist, channel, or handle URL.';
+      resetResult();
+      return;
+    }
+    const result = cleanYoutubeUrl(input.value);
+    if (!result) {
+      status.textContent = 'Could not clean this link. Paste a valid YouTube URL or 11-character video ID.';
+      resetResult('Invalid or unsupported YouTube URL.');
+      return;
+    }
+    renderClean(result);
+  }
+
+  sampleButton?.addEventListener('click', () => {
+    if (!input) return;
+    input.value = sampleUrl;
+    cleanAndRender();
+  });
+
+  cleanButton?.addEventListener('click', cleanAndRender);
+  input?.addEventListener('input', cleanAndRender);
+
+  clearButton?.addEventListener('click', () => {
+    if (!input || !status) return;
+    input.value = '';
+    status.textContent = 'Paste a YouTube watch, youtu.be, Shorts, embed, live, playlist, channel, or handle URL.';
+    resetResult();
+    input.focus();
+  });
+
+  copyButton?.addEventListener('click', async () => {
+    if (!copyButton?.dataset.cleanUrl || !status) return;
+    try {
+      status.textContent = 'Copying clean URL...';
+      await navigator.clipboard.writeText(copyButton.dataset.cleanUrl);
+      status.textContent = 'Clean URL copied.';
+    } catch {
+      status.textContent = 'Copy blocked by browser. Select the clean URL and copy manually.';
+    }
+  });
+
+  resetResult();
+</script>

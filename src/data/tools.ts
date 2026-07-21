@@ -175,6 +175,24 @@ export const tools: Tool[] = [
     status: 'live',
   },
   {
+    title: 'YouTube URL Cleaner',
+    href: '/youtube-url-cleaner',
+    description: 'Remove YouTube tracking parameters while preserving useful video, playlist, Shorts, embed, live, and channel links.',
+    status: 'live',
+  },
+  {
+    title: 'X / Twitter Character Counter',
+    href: '/x-character-counter',
+    description: 'Count X/Twitter post length, remaining characters, links, words, and rough thread chunks locally in your browser.',
+    status: 'live',
+  },
+  {
+    title: 'Instagram Caption Formatter',
+    href: '/instagram-caption-formatter',
+    description: 'Clean Instagram caption spacing, dedupe hashtags, count length, and copy a ready-to-post caption locally in your browser.',
+    status: 'live',
+  },
+  {
     title: 'Loan Calculator',
     href: '/loan-calculator',
     description: 'Estimate monthly payments, total interest, and repayment totals for simple loan scenarios.',

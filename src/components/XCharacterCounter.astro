@@ -1,0 +1,225 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="x-counter-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only social tool</p>
+      <h2 id="x-counter-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Count X / Twitter post length</h2>
+      <p class="mt-2 text-slate-600">Draft a post or thread. Bizzon counts locally, treats links like short t.co links, and shows whether you fit the limit.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleXCounter" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="copyXCounter" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy stats</button>
+      <button id="clearXCounter" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[1fr_19rem]">
+    <div>
+      <label for="xCounterInput" class="text-sm font-bold text-slate-700">Post or thread draft</label>
+      <textarea
+        id="xCounterInput"
+        class="mt-3 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="Paste or write an X / Twitter post here..."
+        spellcheck="true"
+      ></textarea>
+      <p id="xCounterStatus" class="mt-3 min-h-6 text-sm font-semibold text-blue-700" role="status" aria-live="polite">Default limit is 280 characters. Links are counted as 23 characters, similar to X/Twitter t.co wrapping.</p>
+    </div>
+
+    <aside class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+      <label for="xCounterLimit" class="text-sm font-bold text-slate-700">Character limit</label>
+      <select
+        id="xCounterLimit"
+        class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base font-semibold text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+      >
+        <option value="280" selected>Standard post — 280</option>
+        <option value="4000">Long post — 4,000</option>
+        <option value="25000">Premium article-style post — 25,000</option>
+      </select>
+      <div class="mt-5 rounded-3xl bg-white p-4 shadow-sm">
+        <p class="text-sm font-semibold text-slate-500">Counted length</p>
+        <p id="xCountedLength" class="mt-2 text-4xl font-black text-slate-950">0</p>
+      </div>
+      <div id="xLimitCard" class="mt-4 rounded-3xl bg-blue-600 p-4 text-white shadow-sm">
+        <p class="text-sm font-semibold text-blue-100">Remaining</p>
+        <p id="xRemaining" class="mt-2 text-4xl font-black">280</p>
+      </div>
+      <p class="mt-4 text-sm text-slate-600">Counts are a practical planning estimate, not an official X API validation result.</p>
+    </aside>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-live="polite">
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Actual characters</p><p id="xActualCharacters" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Links found</p><p id="xLinksFound" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Words</p><p id="xWords" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Thread chunks</p><p id="xThreadChunks" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+  </div>
+
+  <div class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <p class="text-sm font-bold text-slate-700">Thread preview</p>
+      <p id="xThreadSummary" class="text-sm font-semibold text-slate-500">No text yet.</p>
+    </div>
+    <div id="xThreadPreview" class="mt-4 rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500">Write a post to see a rough 280-character chunk preview.</div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
+    <p><strong>Private:</strong> text is counted in your browser and is not uploaded to Bizzon.</p>
+    <p><strong>Link-aware:</strong> each detected <code>http://</code> or <code>https://</code> link counts as 23 characters for a more realistic draft estimate.</p>
+    <p><strong>Useful for threads:</strong> line breaks, emojis, links, and whitespace stay visible while you plan post chunks.</p>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('xCounterInput') as HTMLTextAreaElement | null;
+  const limitSelect = document.getElementById('xCounterLimit') as HTMLSelectElement | null;
+  const sampleButton = document.getElementById('sampleXCounter');
+  const clearButton = document.getElementById('clearXCounter');
+  const copyButton = document.getElementById('copyXCounter');
+  const status = document.getElementById('xCounterStatus');
+  const limitCard = document.getElementById('xLimitCard');
+  const threadPreview = document.getElementById('xThreadPreview');
+  const threadSummary = document.getElementById('xThreadSummary');
+  const fields = {
+    counted: document.getElementById('xCountedLength'),
+    remaining: document.getElementById('xRemaining'),
+    actual: document.getElementById('xActualCharacters'),
+    links: document.getElementById('xLinksFound'),
+    words: document.getElementById('xWords'),
+    chunks: document.getElementById('xThreadChunks'),
+  };
+
+  const linkPattern = /https?:\/\/[^\s<>()]+/gi;
+  const sample = 'New utility idea: clean the link before you post it.\n\nBizzon now has browser-only tools for YouTube thumbnails, URL cleaning, JSON/YAML conversion, and more. https://bizzon.app/tools 🚀';
+
+  function escapeHtml(value: string) {
+    return value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char] || char));
+  }
+
+  function codePointLength(value: string) {
+    return Array.from(value).length;
+  }
+
+  function countWords(text: string) {
+    const matches = text.trim().match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu);
+    return matches ? matches.length : 0;
+  }
+
+  function linkAwareLength(text: string) {
+    let counted = 0;
+    let lastIndex = 0;
+    const links: string[] = [];
+    for (const match of text.matchAll(linkPattern)) {
+      const link = match[0];
+      const index = match.index ?? 0;
+      counted += codePointLength(text.slice(lastIndex, index));
+      counted += 23;
+      links.push(link);
+      lastIndex = index + link.length;
+    }
+    counted += codePointLength(text.slice(lastIndex));
+    return { counted, links };
+  }
+
+  function chunkText(text: string, limit = 280) {
+    const words = text.trim().split(/\s+/).filter(Boolean);
+    const chunks: string[] = [];
+    let current = '';
+    for (const word of words) {
+      const candidate = current ? `${current} ${word}` : word;
+      if (linkAwareLength(candidate).counted <= limit || !current) {
+        current = candidate;
+      } else {
+        chunks.push(current);
+        current = word;
+      }
+    }
+    if (current) chunks.push(current);
+    return chunks;
+  }
+
+  function getStats() {
+    const text = input?.value ?? '';
+    const limit = Number(limitSelect?.value || 280);
+    const { counted, links } = linkAwareLength(text);
+    const remaining = limit - counted;
+    const chunks = text.trim() ? chunkText(text, 280) : [];
+    return {
+      text,
+      limit,
+      counted,
+      remaining,
+      actual: codePointLength(text),
+      links: links.length,
+      words: countWords(text),
+      chunks,
+    };
+  }
+
+  function renderThreadPreview(chunks: string[]) {
+    if (!threadPreview || !threadSummary) return;
+    if (!chunks.length) {
+      threadPreview.className = 'mt-4 rounded-3xl border border-dashed border-slate-300 bg-white p-5 text-sm text-slate-500';
+      threadPreview.textContent = 'Write a post to see a rough 280-character chunk preview.';
+      threadSummary.textContent = 'No text yet.';
+      return;
+    }
+    threadPreview.className = 'mt-4 grid gap-3';
+    threadPreview.innerHTML = chunks.slice(0, 6).map((chunk, index) => {
+      const length = linkAwareLength(chunk).counted;
+      return `<div class="rounded-3xl border border-slate-200 bg-white p-4 text-sm text-slate-700"><p class="font-bold text-slate-950">${index + 1}/${chunks.length} · ${length}/280</p><p class="mt-2 whitespace-pre-wrap break-words">${escapeHtml(chunk)}</p></div>`;
+    }).join('') + (chunks.length > 6 ? `<p class="text-sm font-semibold text-slate-500">${chunks.length - 6} more chunk${chunks.length - 6 === 1 ? '' : 's'} not shown.</p>` : '');
+    threadSummary.textContent = chunks.length === 1 ? 'Fits in one standard post.' : `Roughly ${chunks.length} standard-post chunks.`;
+  }
+
+  function render() {
+    const stats = getStats();
+    if (fields.counted) fields.counted.textContent = String(stats.counted);
+    if (fields.remaining) fields.remaining.textContent = String(stats.remaining);
+    if (fields.actual) fields.actual.textContent = String(stats.actual);
+    if (fields.links) fields.links.textContent = String(stats.links);
+    if (fields.words) fields.words.textContent = String(stats.words);
+    if (fields.chunks) fields.chunks.textContent = String(stats.chunks.length);
+
+    if (limitCard) {
+      limitCard.className = stats.remaining < 0
+        ? 'mt-4 rounded-3xl bg-red-600 p-4 text-white shadow-sm'
+        : stats.remaining <= 20
+          ? 'mt-4 rounded-3xl bg-amber-500 p-4 text-white shadow-sm'
+          : 'mt-4 rounded-3xl bg-blue-600 p-4 text-white shadow-sm';
+    }
+    if (status) {
+      if (!stats.text.trim()) status.textContent = 'Default limit is 280 characters. Links are counted as 23 characters, similar to X/Twitter t.co wrapping.';
+      else if (stats.remaining < 0) status.textContent = `Over the selected limit by ${Math.abs(stats.remaining)} character${Math.abs(stats.remaining) === 1 ? '' : 's'}.`;
+      else status.textContent = `Within the selected limit with ${stats.remaining} character${stats.remaining === 1 ? '' : 's'} remaining.`;
+    }
+    renderThreadPreview(stats.chunks);
+  }
+
+  function statsText() {
+    const stats = getStats();
+    return [
+      `X / Twitter counted length: ${stats.counted}`,
+      `Limit: ${stats.limit}`,
+      `Remaining: ${stats.remaining}`,
+      `Actual characters: ${stats.actual}`,
+      `Links found: ${stats.links}`,
+      `Words: ${stats.words}`,
+      `Rough thread chunks: ${stats.chunks.length}`,
+    ].join('\n');
+  }
+
+  input?.addEventListener('input', render);
+  limitSelect?.addEventListener('change', render);
+  sampleButton?.addEventListener('click', () => { if (!input) return; input.value = sample; render(); input.focus(); });
+  clearButton?.addEventListener('click', () => { if (!input) return; input.value = ''; render(); input.focus(); });
+  copyButton?.addEventListener('click', async () => {
+    if (!status) return;
+    try {
+      await navigator.clipboard.writeText(statsText());
+      status.textContent = 'X / Twitter stats copied.';
+    } catch {
+      status.textContent = 'Copy blocked by browser. You can still read the stats on this page.';
+    }
+  });
+
+  render();
+</script>
