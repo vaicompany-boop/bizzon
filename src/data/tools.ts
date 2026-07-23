@@ -193,6 +193,42 @@ export const tools: Tool[] = [
     status: 'live',
   },
   {
+    title: 'TikTok Caption & Hashtag Cleaner',
+    href: '/tiktok-caption-hashtag-cleaner',
+    description: 'Clean TikTok caption spacing, dedupe hashtags, count length, and copy ready-to-post text locally in your browser.',
+    status: 'live',
+  },
+  {
+    title: 'YouTube Title & Description Checker',
+    href: '/youtube-title-description-checker',
+    description: 'Check YouTube title length, description length, hashtags, links, and preview text locally before publishing.',
+    status: 'live',
+  },
+  {
+    title: 'Social Bio Formatter',
+    href: '/social-bio-formatter',
+    description: 'Clean short social bios, dedupe hashtags, and check Instagram, TikTok, X, or LinkedIn character limits locally.',
+    status: 'live',
+  },
+  {
+    title: 'Hashtag Deduplicator',
+    href: '/hashtag-deduplicator',
+    description: 'Extract, normalize, dedupe, count, and copy clean hashtags from captions or tag blocks locally in your browser.',
+    status: 'live',
+  },
+  {
+    title: 'Social Link Cleaner',
+    href: '/social-link-cleaner',
+    description: 'Remove tracking clutter from public YouTube, X/Twitter, TikTok, Instagram, Facebook, and LinkedIn links locally.',
+    status: 'live',
+  },
+  {
+    title: 'Shorts/Reels/TikTok Size Guide',
+    href: '/shorts-reels-size-guide',
+    description: 'Check vertical video dimensions, 9:16 aspect ratio, safe-area reminders, and export checklist locally.',
+    status: 'live',
+  },
+  {
     title: 'Loan Calculator',
     href: '/loan-calculator',
     description: 'Estimate monthly payments, total interest, and repayment totals for simple loan scenarios.',

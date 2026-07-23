@@ -1,0 +1,32 @@
+---
+import HashtagDeduplicator from '../components/HashtagDeduplicator.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Hashtag Deduplicator — Clean duplicate hashtags | Bizzon"
+  description="Free browser-based hashtag deduplicator by Bizzon. Paste captions or tag blocks, normalize hashtags, remove duplicates, count tags, and copy clean output locally."
+  canonicalPath="/hashtag-deduplicator"
+  heading="Hashtag Deduplicator"
+  intro="Clean messy hashtag blocks for Instagram, TikTok, X, YouTube, or any social post. Bizzon extracts unique tags, removes duplicates, and keeps everything in your browser."
+>
+  <HashtagDeduplicator />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Remove duplicate hashtags</h2>
+      <p class="mt-3 text-slate-600">Paste a caption, comma-separated tags, or one tag per line. Duplicate hashtags are removed case-insensitively so the final list is cleaner.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Choose copy-ready output</h2>
+      <p class="mt-3 text-slate-600">Switch between one-line, one-per-line, and comma-separated formats. Optionally keep the caption text above the cleaned tag list.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Private by default</h2>
+      <p class="mt-3 text-slate-600">The tool runs locally in the browser. There is no scraping, platform API connection, account login, or upload.</p>
+    </div>
+  </section>
+  <section class="mt-10 rounded-[2rem] border border-slate-200 bg-blue-50 p-6 md:p-8">
+    <h2 class="text-2xl font-black text-slate-950">Related creator tools</h2>
+    <p class="mt-4 text-slate-700">Writing full captions? Try the <a class="font-bold text-blue-700" href="/instagram-caption-formatter">Instagram Caption Formatter</a> or <a class="font-bold text-blue-700" href="/tiktok-caption-hashtag-cleaner">TikTok Caption Cleaner</a>. Cleaning profile text? Use the <a class="font-bold text-blue-700" href="/social-bio-formatter">Social Bio Formatter</a>.</p>
+  </section>
+</ToolLayout>

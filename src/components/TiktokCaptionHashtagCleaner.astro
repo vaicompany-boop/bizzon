@@ -1,0 +1,208 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="tiktok-caption-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only social tool</p>
+      <h2 id="tiktok-caption-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Clean TikTok captions and hashtags</h2>
+      <p class="mt-2 text-slate-600">Normalize spacing, remove duplicate hashtags, count caption length, and prepare copy-ready TikTok text without scraping or using an API.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleTiktokCaption" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="copyTiktokCaption" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy caption</button>
+      <button id="clearTiktokCaption" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <label for="tiktokCaptionInput" class="text-sm font-bold text-slate-700">Draft caption</label>
+      <textarea
+        id="tiktokCaptionInput"
+        class="mt-3 min-h-96 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="Paste a TikTok caption with repeated hashtags, messy spacing, or too many line breaks..."
+        spellcheck="true"
+      ></textarea>
+      <p id="tiktokCaptionStatus" class="mt-3 min-h-6 text-sm font-semibold text-blue-700" role="status" aria-live="polite">Paste a caption to clean spacing, dedupe hashtags, and check the 2,200-character caption length.</p>
+    </div>
+
+    <div>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <label for="tiktokCaptionOutput" class="text-sm font-bold text-slate-700">Cleaned output</label>
+        <div class="flex flex-wrap gap-3 text-sm font-semibold text-slate-600">
+          <label class="inline-flex items-center gap-2">
+            <input id="tiktokMoveHashtags" type="checkbox" class="size-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" checked />
+            Put hashtags at the end
+          </label>
+          <label class="inline-flex items-center gap-2">
+            <input id="tiktokLowercaseHashtags" type="checkbox" class="size-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" checked />
+            Lowercase hashtags
+          </label>
+        </div>
+      </div>
+      <textarea
+        id="tiktokCaptionOutput"
+        class="mt-3 min-h-96 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base leading-7 text-slate-900 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        readonly
+        placeholder="Clean TikTok caption appears here..."
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5" aria-live="polite">
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Characters</p><p id="tiktokCharacters" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Words</p><p id="tiktokWords" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Hashtags</p><p id="tiktokHashtags" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Duplicates removed</p><p id="tiktokDuplicates" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div id="tiktokLimitCard" class="rounded-3xl bg-blue-600 p-5 text-white"><p class="text-sm font-semibold text-blue-100">Remaining to 2,200</p><p id="tiktokRemaining" class="mt-2 text-3xl font-black">2200</p></div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
+    <p><strong>Private:</strong> everything runs locally in your browser. No TikTok login, scraping, API calls, or uploads.</p>
+    <p><strong>Cleaner tags:</strong> duplicate hashtags are removed case-insensitively, and hashtag case can be normalized for consistency.</p>
+    <p><strong>Caption-safe:</strong> the tool cleans text only. It never downloads videos, audio, watermarks, or private content.</p>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('tiktokCaptionInput') as HTMLTextAreaElement | null;
+  const output = document.getElementById('tiktokCaptionOutput') as HTMLTextAreaElement | null;
+  const moveHashtags = document.getElementById('tiktokMoveHashtags') as HTMLInputElement | null;
+  const lowercaseHashtags = document.getElementById('tiktokLowercaseHashtags') as HTMLInputElement | null;
+  const sampleButton = document.getElementById('sampleTiktokCaption');
+  const copyButton = document.getElementById('copyTiktokCaption');
+  const clearButton = document.getElementById('clearTiktokCaption');
+  const status = document.getElementById('tiktokCaptionStatus');
+  const limitCard = document.getElementById('tiktokLimitCard');
+  const fields = {
+    characters: document.getElementById('tiktokCharacters'),
+    words: document.getElementById('tiktokWords'),
+    hashtags: document.getElementById('tiktokHashtags'),
+    duplicates: document.getElementById('tiktokDuplicates'),
+    remaining: document.getElementById('tiktokRemaining'),
+  };
+
+  const tiktokLimit = 2200;
+  const sample = 'Quick workflow check ✅    \n\nBatch the hooks, film the variations, then post the cleanest cut.\n\n#TikTokTips #CreatorTools #tiktoktips   #ContentCreator #CreatorTools\n#Bizzon';
+
+  function codePointLength(value: string) {
+    return Array.from(value).length;
+  }
+
+  function countWords(text: string) {
+    const matches = text.trim().match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu);
+    return matches ? matches.length : 0;
+  }
+
+  function normalizeLine(line: string) {
+    return line.replace(/[\t ]+/g, ' ').trim();
+  }
+
+  function splitCaption(raw: string) {
+    return raw
+      .replace(/\r\n?/g, '\n')
+      .split('\n')
+      .map(normalizeLine);
+  }
+
+  function normalizeHashtagToken(token: string, forceLowercase: boolean) {
+    const cleaned = token.replace(/^[“”"'([{]+/g, '').replace(/[.,;:!?…\])}"']+$/g, '');
+    if (!/^#[\p{L}\p{N}_][\p{L}\p{N}_-]*$/u.test(cleaned)) return null;
+    return forceLowercase ? cleaned.toLocaleLowerCase() : cleaned;
+  }
+
+  function formatCaption(raw: string, putHashtagsAtEnd: boolean, forceLowercase: boolean) {
+    const lines = splitCaption(raw);
+    const bodyLines: string[] = [];
+    const hashtags: string[] = [];
+    const seen = new Set<string>();
+    let duplicateCount = 0;
+    let previousBlank = false;
+
+    for (const line of lines) {
+      if (!line) {
+        if (!previousBlank && bodyLines.length) bodyLines.push('');
+        previousBlank = true;
+        continue;
+      }
+
+      previousBlank = false;
+      const words = line.split(/\s+/);
+      const keptWords: string[] = [];
+
+      for (const word of words) {
+        const tag = normalizeHashtagToken(word, forceLowercase);
+        if (tag) {
+          const key = tag.toLocaleLowerCase();
+          if (seen.has(key)) {
+            duplicateCount += 1;
+          } else {
+            seen.add(key);
+            hashtags.push(tag);
+            if (!putHashtagsAtEnd) keptWords.push(tag);
+          }
+        } else {
+          keptWords.push(word);
+        }
+      }
+
+      const cleanedLine = keptWords.join(' ').trim();
+      if (cleanedLine) bodyLines.push(cleanedLine);
+    }
+
+    while (bodyLines[bodyLines.length - 1] === '') bodyLines.pop();
+    let formatted = bodyLines.join('\n');
+    if (putHashtagsAtEnd && hashtags.length) {
+      formatted = formatted ? `${formatted}\n\n${hashtags.join(' ')}` : hashtags.join(' ');
+    }
+
+    return { formatted, hashtags, duplicateCount };
+  }
+
+  function render() {
+    const raw = input?.value ?? '';
+    const { formatted, hashtags, duplicateCount } = formatCaption(raw, Boolean(moveHashtags?.checked), Boolean(lowercaseHashtags?.checked));
+    if (output) output.value = formatted;
+
+    const characters = codePointLength(formatted);
+    const remaining = tiktokLimit - characters;
+    if (fields.characters) fields.characters.textContent = String(characters);
+    if (fields.words) fields.words.textContent = String(countWords(formatted));
+    if (fields.hashtags) fields.hashtags.textContent = String(hashtags.length);
+    if (fields.duplicates) fields.duplicates.textContent = String(duplicateCount);
+    if (fields.remaining) fields.remaining.textContent = String(remaining);
+
+    if (limitCard) {
+      limitCard.className = remaining < 0
+        ? 'rounded-3xl bg-red-600 p-5 text-white'
+        : remaining <= 150
+          ? 'rounded-3xl bg-amber-500 p-5 text-white'
+          : 'rounded-3xl bg-blue-600 p-5 text-white';
+    }
+
+    if (status) {
+      if (!raw.trim()) status.textContent = 'Paste a caption to clean spacing, dedupe hashtags, and check the 2,200-character caption length.';
+      else if (remaining < 0) status.textContent = `Cleaned caption is over TikTok’s 2,200-character caption limit by ${Math.abs(remaining)} character${Math.abs(remaining) === 1 ? '' : 's'}.`;
+      else status.textContent = `TikTok caption ready · ${hashtags.length} hashtag${hashtags.length === 1 ? '' : 's'} · ${duplicateCount} duplicate${duplicateCount === 1 ? '' : 's'} removed · ${remaining} characters remaining.`;
+    }
+  }
+
+  input?.addEventListener('input', render);
+  moveHashtags?.addEventListener('change', render);
+  lowercaseHashtags?.addEventListener('change', render);
+  sampleButton?.addEventListener('click', () => { if (!input) return; input.value = sample; render(); input.focus(); });
+  clearButton?.addEventListener('click', () => { if (!input) return; input.value = ''; render(); input.focus(); });
+  copyButton?.addEventListener('click', async () => {
+    if (!status || !output) return;
+    if (!output.value.trim()) {
+      status.textContent = 'Nothing to copy yet. Paste or write a caption first.';
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(output.value);
+      status.textContent = 'Clean TikTok caption copied.';
+    } catch {
+      status.textContent = 'Copy blocked by browser. You can still select and copy the cleaned caption.';
+    }
+  });
+
+  render();
+</script>

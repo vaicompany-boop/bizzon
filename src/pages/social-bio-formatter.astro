@@ -1,0 +1,32 @@
+---
+import SocialBioFormatter from '../components/SocialBioFormatter.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Social Bio Formatter — Instagram, TikTok, X bio checker | Bizzon"
+  description="Free browser-based social bio formatter by Bizzon. Clean short bios, dedupe hashtags, check Instagram, TikTok, X, and LinkedIn character limits, and copy locally."
+  canonicalPath="/social-bio-formatter"
+  heading="Social Bio Formatter"
+  intro="Clean and check short bios for Instagram, TikTok, X, and LinkedIn. Bizzon formats spacing, removes duplicate hashtags, previews the result, and keeps everything in your browser."
+>
+  <SocialBioFormatter />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Check platform limits</h2>
+      <p class="mt-3 text-slate-600">Switch between Instagram, TikTok, X, and LinkedIn-style character guidance before you paste a bio into a profile.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Clean short profile copy</h2>
+      <p class="mt-3 text-slate-600">Remove repeated spaces, collapse messy blank lines, optionally make one clean line, and keep the final bio readable.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Private by default</h2>
+      <p class="mt-3 text-slate-600">Formatting runs locally in the browser. There is no social scraping, account login, API connection, or server upload.</p>
+    </div>
+  </section>
+  <section class="mt-10 rounded-[2rem] border border-slate-200 bg-blue-50 p-6 md:p-8">
+    <h2 class="text-2xl font-black text-slate-950">Related creator tools</h2>
+    <p class="mt-4 text-slate-700">Writing longer social copy? Try the <a class="font-bold text-blue-700" href="/instagram-caption-formatter">Instagram Caption Formatter</a> or the <a class="font-bold text-blue-700" href="/tiktok-caption-hashtag-cleaner">TikTok Caption Cleaner</a>. Posting to X? Use the <a class="font-bold text-blue-700" href="/x-character-counter">X / Twitter Character Counter</a>.</p>
+  </section>
+</ToolLayout>

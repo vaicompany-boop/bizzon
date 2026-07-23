@@ -1,0 +1,221 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="social-bio-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only social tool</p>
+      <h2 id="social-bio-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Format a short social bio</h2>
+      <p class="mt-2 text-slate-600">Clean spacing, preserve readable line breaks, check platform limits, and copy a ready-to-paste bio without scraping or API calls.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleSocialBio" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="copySocialBio" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy bio</button>
+      <button id="clearSocialBio" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-3">
+    <label class="text-sm font-bold text-slate-700">
+      Platform limit
+      <select id="socialBioPlatform" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+        <option value="instagram">Instagram bio · 150 characters</option>
+        <option value="tiktok">TikTok bio · 80 characters</option>
+        <option value="x">X / Twitter bio · 160 characters</option>
+        <option value="linkedin">LinkedIn headline · 220 characters</option>
+      </select>
+    </label>
+    <label class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-700">
+      <input id="socialBioSingleLine" type="checkbox" class="size-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+      Single-line version
+    </label>
+    <label class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-700">
+      <input id="socialBioLowercaseHashtags" type="checkbox" class="size-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" checked />
+      Lowercase hashtags
+    </label>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <label for="socialBioInput" class="text-sm font-bold text-slate-700">Draft bio</label>
+      <textarea
+        id="socialBioInput"
+        class="mt-3 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="Paste a messy Instagram, TikTok, X, or LinkedIn bio draft..."
+        spellcheck="true"
+      ></textarea>
+      <p id="socialBioStatus" class="mt-3 min-h-6 text-sm font-semibold text-blue-700" role="status" aria-live="polite">Paste a bio draft to clean spacing, dedupe hashtags, and check the selected platform limit.</p>
+    </div>
+
+    <div>
+      <label for="socialBioOutput" class="text-sm font-bold text-slate-700">Formatted bio</label>
+      <textarea
+        id="socialBioOutput"
+        class="mt-3 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base leading-7 text-slate-900 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        readonly
+        placeholder="Clean bio appears here..."
+      ></textarea>
+      <div class="mt-3 rounded-3xl border border-slate-200 bg-white p-5">
+        <p class="text-sm font-bold text-slate-700">Preview</p>
+        <p id="socialBioPreview" class="mt-3 whitespace-pre-wrap rounded-2xl bg-slate-950 p-4 text-sm leading-6 text-white">Your formatted bio preview appears here.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5" aria-live="polite">
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Characters</p><p id="socialBioCharacters" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Words</p><p id="socialBioWords" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Lines</p><p id="socialBioLines" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Hashtags removed</p><p id="socialBioDuplicates" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div id="socialBioLimitCard" class="rounded-3xl bg-blue-600 p-5 text-white"><p id="socialBioLimitLabel" class="text-sm font-semibold text-blue-100">Remaining</p><p id="socialBioRemaining" class="mt-2 text-3xl font-black">150</p></div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
+    <p><strong>Private:</strong> bio formatting runs locally in your browser and is not uploaded.</p>
+    <p><strong>Platform-aware:</strong> switch between Instagram, TikTok, X, and LinkedIn length guidance.</p>
+    <p><strong>Clean output:</strong> repeated spaces, repeated blank lines, and duplicate hashtags are cleaned before copying.</p>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('socialBioInput') as HTMLTextAreaElement | null;
+  const output = document.getElementById('socialBioOutput') as HTMLTextAreaElement | null;
+  const platform = document.getElementById('socialBioPlatform') as HTMLSelectElement | null;
+  const singleLine = document.getElementById('socialBioSingleLine') as HTMLInputElement | null;
+  const lowercaseHashtags = document.getElementById('socialBioLowercaseHashtags') as HTMLInputElement | null;
+  const sampleButton = document.getElementById('sampleSocialBio');
+  const copyButton = document.getElementById('copySocialBio');
+  const clearButton = document.getElementById('clearSocialBio');
+  const status = document.getElementById('socialBioStatus');
+  const preview = document.getElementById('socialBioPreview');
+  const limitCard = document.getElementById('socialBioLimitCard');
+  const fields = {
+    characters: document.getElementById('socialBioCharacters'),
+    words: document.getElementById('socialBioWords'),
+    lines: document.getElementById('socialBioLines'),
+    duplicates: document.getElementById('socialBioDuplicates'),
+    remaining: document.getElementById('socialBioRemaining'),
+    limitLabel: document.getElementById('socialBioLimitLabel'),
+  };
+
+  const platformLimits: Record<string, { label: string; limit: number }> = {
+    instagram: { label: 'Instagram bio', limit: 150 },
+    tiktok: { label: 'TikTok bio', limit: 80 },
+    x: { label: 'X / Twitter bio', limit: 160 },
+    linkedin: { label: 'LinkedIn headline', limit: 220 },
+  };
+  const sample = 'Founder @ Bizzon   · browser tools that just work\n\nClean links, captions, files, and little work chores.\n#CreatorTools #NoUpload #creatortools';
+
+  function codePointLength(value: string) {
+    return Array.from(value).length;
+  }
+
+  function countWords(text: string) {
+    const matches = text.trim().match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu);
+    return matches ? matches.length : 0;
+  }
+
+  function normalizeHashtag(tag: string, makeLowercase: boolean) {
+    const cleaned = tag.replace(/[.,;:!?)]*$/g, '');
+    return makeLowercase ? cleaned.toLocaleLowerCase() : cleaned;
+  }
+
+  function normalizeLines(raw: string) {
+    return raw
+      .replace(/\r\n?/g, '\n')
+      .split('\n')
+      .map((line) => line.replace(/[\t ]+/g, ' ').trim());
+  }
+
+  function formatBio(raw: string, makeSingleLine: boolean, makeHashtagsLowercase: boolean) {
+    const lines = normalizeLines(raw);
+    const outputLines: string[] = [];
+    const seenHashtags = new Set<string>();
+    let duplicateHashtags = 0;
+    let previousBlank = false;
+
+    for (const line of lines) {
+      if (!line) {
+        if (!makeSingleLine && !previousBlank && outputLines.length) outputLines.push('');
+        previousBlank = true;
+        continue;
+      }
+      previousBlank = false;
+
+      const words = line.split(/\s+/).map((word) => {
+        const possibleTag = normalizeHashtag(word, makeHashtagsLowercase);
+        if (/^#[\p{L}\p{N}_][\p{L}\p{N}_-]*$/u.test(possibleTag)) {
+          const key = possibleTag.toLocaleLowerCase();
+          if (seenHashtags.has(key)) {
+            duplicateHashtags += 1;
+            return '';
+          }
+          seenHashtags.add(key);
+          return possibleTag;
+        }
+        return word;
+      }).filter(Boolean);
+
+      const cleaned = words.join(' ').trim();
+      if (cleaned) outputLines.push(cleaned);
+    }
+
+    while (outputLines[outputLines.length - 1] === '') outputLines.pop();
+    const formatted = makeSingleLine
+      ? outputLines.filter(Boolean).join(' · ').replace(/\s+·\s+·\s+/g, ' · ')
+      : outputLines.join('\n');
+
+    return { formatted, duplicateHashtags };
+  }
+
+  function render() {
+    const raw = input?.value ?? '';
+    const selected = platformLimits[platform?.value ?? 'instagram'] ?? platformLimits.instagram;
+    const { formatted, duplicateHashtags } = formatBio(raw, Boolean(singleLine?.checked), Boolean(lowercaseHashtags?.checked));
+    const characters = codePointLength(formatted);
+    const remaining = selected.limit - characters;
+    const nonEmptyLines = formatted ? formatted.split('\n').filter((line) => line.trim()).length : 0;
+
+    if (output) output.value = formatted;
+    if (preview) preview.textContent = formatted || 'Your formatted bio preview appears here.';
+    if (fields.characters) fields.characters.textContent = String(characters);
+    if (fields.words) fields.words.textContent = String(countWords(formatted));
+    if (fields.lines) fields.lines.textContent = String(nonEmptyLines);
+    if (fields.duplicates) fields.duplicates.textContent = String(duplicateHashtags);
+    if (fields.remaining) fields.remaining.textContent = String(remaining);
+    if (fields.limitLabel) fields.limitLabel.textContent = `Remaining to ${selected.limit}`;
+
+    if (limitCard) {
+      limitCard.className = remaining < 0
+        ? 'rounded-3xl bg-red-600 p-5 text-white'
+        : remaining <= 20
+          ? 'rounded-3xl bg-amber-500 p-5 text-white'
+          : 'rounded-3xl bg-blue-600 p-5 text-white';
+    }
+
+    if (status) {
+      if (!raw.trim()) status.textContent = 'Paste a bio draft to clean spacing, dedupe hashtags, and check the selected platform limit.';
+      else if (remaining < 0) status.textContent = `${selected.label} is over the selected limit by ${Math.abs(remaining)} character${Math.abs(remaining) === 1 ? '' : 's'}.`;
+      else status.textContent = `${selected.label} ready · ${characters}/${selected.limit} characters · ${duplicateHashtags} duplicate hashtag${duplicateHashtags === 1 ? '' : 's'} removed.`;
+    }
+  }
+
+  input?.addEventListener('input', render);
+  platform?.addEventListener('change', render);
+  singleLine?.addEventListener('change', render);
+  lowercaseHashtags?.addEventListener('change', render);
+  sampleButton?.addEventListener('click', () => { if (!input) return; input.value = sample; render(); input.focus(); });
+  clearButton?.addEventListener('click', () => { if (!input) return; input.value = ''; render(); input.focus(); });
+  copyButton?.addEventListener('click', async () => {
+    if (!status || !output) return;
+    if (!output.value.trim()) {
+      status.textContent = 'Nothing to copy yet. Paste or write a bio first.';
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(output.value);
+      status.textContent = 'Formatted bio copied.';
+    } catch {
+      status.textContent = 'Copy blocked by browser. You can still select and copy the formatted bio.';
+    }
+  });
+
+  render();
+</script>

@@ -90,8 +90,51 @@ When the three-hour rotation selects Bizzon:
 ## Current recommended next Bizzon chunk
 
 ```text
-Build TikTok Caption & Hashtag Cleaner at /tiktok-caption-hashtag-cleaner, or add file upload/download polish to the converter tools if Tedi wants richer utility UX first.
+Review converter file upload/download polish or add the next safe utility from traffic/search evidence.
 ```
+
+Acceptance criteria for Shorts/Reels/TikTok Size Guide:
+
+- checks user-entered width/height against 9:16 vertical video guidance;
+- calls out 1080 × 1920 px as the practical default while allowing other 9:16 exports;
+- includes Shorts/Reels/TikTok safe-area and duration reminders without claiming exact platform policy guarantees;
+- produces a copy-ready export checklist;
+- keeps everything browser-only with no upload, scraping, downloads, login, or API calls;
+- route listed as live after working.
+
+Acceptance criteria for Social Bio Formatter:
+
+- supports Instagram, TikTok, X / Twitter, and LinkedIn-style character limit modes;
+- cleans repeated spaces/blank lines and optionally creates a single-line bio;
+- deduplicates hashtags and optionally lowercases hashtags;
+- shows character, word, line, duplicate hashtag, and remaining/over-limit states;
+- keeps everything browser-only with no scraping, API calls, account login, or upload;
+- route listed as live after working.
+
+Acceptance criteria for Hashtag Deduplicator:
+
+- accepts pasted hashtags and caption snippets from multiple platforms;
+- normalizes spacing/case, removes duplicate hashtags, and counts unique/duplicate tags;
+- offers copy-ready output and clear actions;
+- keeps everything browser-only with no platform scraping or API calls;
+- route listed as live after working.
+
+Acceptance criteria for Social Link Cleaner:
+
+- accepts common YouTube, X/Twitter, TikTok, Instagram, Facebook, and LinkedIn public URLs;
+- removes tracking/noise parameters such as `utm_*`, `fbclid`, `gclid`, `igsh`, `si`, and similar share clutter while preserving essential IDs and paths;
+- explains that it does not scrape, download media, log in, or bypass platform restrictions;
+- copy/clear actions and clear invalid-URL states;
+- route listed as live after working.
+
+Acceptance criteria for YouTube Title & Description Checker:
+
+- checks title length against YouTube’s 100-character title limit;
+- checks description length against YouTube’s 5,000-character description limit;
+- counts hashtags and visible links, with practical guidance for overlong titles/descriptions;
+- shows a simple preview and copy-ready checklist;
+- keeps everything browser-only with no YouTube scraping, API calls, video download, or audio download;
+- route listed as live after working.
 
 Acceptance criteria for YouTube Thumbnail Downloader:
 
@@ -122,5 +165,13 @@ Acceptance criteria for Instagram Caption Formatter:
 - cleans extra blank lines and spacing while preserving intentional line breaks;
 - normalizes hashtags, removes duplicates, and shows caption/hashtag counts;
 - keeps everything browser-only with no Instagram scraping or API calls;
+- copy/clear actions and helpful empty-state guidance;
+- route listed as live after working.
+
+Acceptance criteria for TikTok Caption & Hashtag Cleaner:
+
+- cleans extra blank lines and spacing while preserving intentional line breaks;
+- normalizes hashtags, removes duplicates, and shows caption/hashtag counts;
+- keeps everything browser-only with no TikTok scraping, API calls, video downloads, audio downloads, or watermark removal;
 - copy/clear actions and helpful empty-state guidance;
 - route listed as live after working.

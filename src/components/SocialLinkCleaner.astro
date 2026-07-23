@@ -1,0 +1,244 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="social-link-cleaner-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only social tool</p>
+      <h2 id="social-link-cleaner-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Clean social share links</h2>
+      <p class="mt-2 text-slate-600">Paste public social URLs, remove tracking clutter, and keep the useful post, video, profile, or playlist path.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleSocialLinks" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="copySocialLinks" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy clean links</button>
+      <button id="clearSocialLinks" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <label for="socialLinkInput" class="text-sm font-bold text-slate-700">Social links</label>
+      <textarea
+        id="socialLinkInput"
+        class="mt-3 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 font-mono text-sm leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="Paste one or more YouTube, X/Twitter, TikTok, Instagram, Facebook, or LinkedIn URLs..."
+        spellcheck="false"
+      ></textarea>
+      <p id="socialLinkStatus" class="mt-3 min-h-6 text-sm font-semibold text-blue-700" role="status" aria-live="polite">Paste one or more public social URLs to remove tracking parameters locally.</p>
+    </div>
+
+    <div>
+      <label for="socialLinkOutput" class="text-sm font-bold text-slate-700">Clean links</label>
+      <textarea
+        id="socialLinkOutput"
+        class="mt-3 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 font-mono text-sm leading-7 text-slate-900 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        readonly
+        placeholder="Clean links appear here..."
+      ></textarea>
+      <div class="mt-3 rounded-3xl border border-slate-200 bg-white p-5">
+        <p class="text-sm font-bold text-slate-700">Details</p>
+        <div id="socialLinkDetails" class="mt-3 grid gap-2 text-sm text-slate-600">No links cleaned yet.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5" aria-live="polite">
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Cleaned links</p><p id="cleanSocialLinkCount" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Tracking params removed</p><p id="removedParamCount" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Supported platforms</p><p id="platformCount" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Invalid lines</p><p id="invalidSocialLinkCount" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div id="socialLinkGuidanceCard" class="rounded-3xl bg-blue-600 p-5 text-white"><p class="text-sm font-semibold text-blue-100">Result</p><p id="socialLinkGuidance" class="mt-2 text-3xl font-black">Ready</p></div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
+    <p><strong>Private:</strong> cleanup runs locally in your browser. Links are not uploaded.</p>
+    <p><strong>Safe:</strong> this does not scrape, download media, log in, call APIs, or bypass platform rules.</p>
+    <p><strong>Practical:</strong> keeps useful IDs like YouTube video and playlist parameters while removing share clutter.</p>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('socialLinkInput') as HTMLTextAreaElement | null;
+  const output = document.getElementById('socialLinkOutput') as HTMLTextAreaElement | null;
+  const sampleButton = document.getElementById('sampleSocialLinks');
+  const copyButton = document.getElementById('copySocialLinks');
+  const clearButton = document.getElementById('clearSocialLinks');
+  const status = document.getElementById('socialLinkStatus');
+  const details = document.getElementById('socialLinkDetails');
+  const guidanceCard = document.getElementById('socialLinkGuidanceCard');
+  const fields = {
+    cleaned: document.getElementById('cleanSocialLinkCount'),
+    removed: document.getElementById('removedParamCount'),
+    platforms: document.getElementById('platformCount'),
+    invalid: document.getElementById('invalidSocialLinkCount'),
+    guidance: document.getElementById('socialLinkGuidance'),
+  };
+
+  const sample = [
+    'https://www.youtube.com/watch?v=dQw4w9WgXcQ&si=abc123&utm_source=share&feature=shared&list=PL123&index=4&t=42s',
+    'https://x.com/bizzon_app/status/1234567890?s=20&utm_campaign=test',
+    'https://www.tiktok.com/@creator/video/7333333333333333333?_r=1&_t=8abc&utm_source=copy',
+    'https://www.instagram.com/p/C0Example/?igsh=MWR2Z2k&utm_medium=share_sheet',
+    'https://www.facebook.com/share/p/abc123/?mibextid=wwXIfr&fbclid=tracking',
+    'https://www.linkedin.com/posts/example_activity-123456789?utm_source=share&utm_medium=member_desktop'
+  ].join('\n');
+
+  const supportedHosts = [
+    'youtube.com', 'youtu.be', 'x.com', 'twitter.com', 'tiktok.com', 'instagram.com', 'facebook.com', 'fb.com', 'linkedin.com'
+  ];
+
+  const platformNames: Record<string, string> = {
+    youtube: 'YouTube',
+    x: 'X / Twitter',
+    tiktok: 'TikTok',
+    instagram: 'Instagram',
+    facebook: 'Facebook',
+    linkedin: 'LinkedIn',
+  };
+
+  function normalizeLine(line: string) {
+    return line.trim().replace(/[),.;]+$/g, '');
+  }
+
+  function getPlatform(hostname: string) {
+    const host = hostname.toLowerCase().replace(/^www\./, '').replace(/^m\./, '');
+    if (host === 'youtu.be' || host.endsWith('youtube.com')) return 'youtube';
+    if (host === 'x.com' || host.endsWith('twitter.com')) return 'x';
+    if (host.endsWith('tiktok.com')) return 'tiktok';
+    if (host.endsWith('instagram.com')) return 'instagram';
+    if (host.endsWith('facebook.com') || host === 'fb.com') return 'facebook';
+    if (host.endsWith('linkedin.com')) return 'linkedin';
+    return '';
+  }
+
+  function hostIsSupported(hostname: string) {
+    const host = hostname.toLowerCase().replace(/^www\./, '').replace(/^m\./, '');
+    return supportedHosts.some((supported) => host === supported || host.endsWith(`.${supported}`));
+  }
+
+  function isTrackingParam(name: string) {
+    const key = name.toLowerCase();
+    return key.startsWith('utm_') || ['fbclid', 'gclid', 'dclid', 'mc_cid', 'mc_eid', 'igsh', 'igshid', 'si', 'feature', 'share_id', 'mibextid', '_r', '_t', 's', 'ref', 'ref_src'].includes(key);
+  }
+
+  function keepParamsFor(url: URL, platform: string) {
+    if (platform === 'youtube') return new Set(['v', 'list', 'index', 't', 'start']);
+    if (platform === 'facebook' && url.pathname.includes('/permalink.php')) return new Set(['story_fbid', 'id']);
+    return new Set<string>();
+  }
+
+  function cleanUrl(line: string) {
+    const raw = normalizeLine(line);
+    if (!raw) return null;
+    let url: URL;
+    try {
+      url = new URL(raw);
+    } catch {
+      try {
+        url = new URL(`https://${raw}`);
+      } catch {
+        return { original: raw, error: 'Invalid URL' };
+      }
+    }
+
+    if (!['http:', 'https:'].includes(url.protocol)) return { original: raw, error: 'Only http/https URLs are supported' };
+    if (!hostIsSupported(url.hostname)) return { original: raw, error: 'Unsupported platform' };
+
+    const platform = getPlatform(url.hostname);
+    const keep = keepParamsFor(url, platform);
+    let removed = 0;
+    const next = new URL(url.toString());
+    next.protocol = 'https:';
+    next.hash = '';
+    next.search = '';
+
+    url.searchParams.forEach((value, key) => {
+      if (keep.has(key)) next.searchParams.append(key, value);
+      else if (isTrackingParam(key) || !keep.has(key)) removed += 1;
+    });
+
+    next.pathname = next.pathname.replace(/\/{2,}/g, '/');
+    if (next.pathname !== '/' && next.pathname.endsWith('/')) next.pathname = next.pathname.slice(0, -1);
+
+    return {
+      original: raw,
+      clean: next.toString(),
+      platform,
+      removed,
+      changed: raw !== next.toString(),
+    };
+  }
+
+  function renderDetails(results: Array<ReturnType<typeof cleanUrl>>) {
+    if (!details) return;
+    details.innerHTML = '';
+    const realResults = results.filter(Boolean);
+    if (!realResults.length) {
+      details.textContent = 'No links cleaned yet.';
+      return;
+    }
+    for (const result of realResults) {
+      if (!result) continue;
+      const row = document.createElement('div');
+      if ('error' in result) {
+        row.className = 'rounded-2xl bg-red-50 px-4 py-3 font-semibold text-red-700';
+        row.textContent = `${result.error}: ${result.original}`;
+      } else {
+        row.className = 'rounded-2xl bg-slate-50 px-4 py-3 text-slate-700';
+        const platform = platformNames[result.platform] ?? 'Social';
+        row.textContent = `${platform}: removed ${result.removed} parameter${result.removed === 1 ? '' : 's'}`;
+      }
+      details.appendChild(row);
+    }
+  }
+
+  function render() {
+    const lines = (input?.value ?? '').split(/\n+/).map((line) => line.trim()).filter(Boolean);
+    const results = lines.map(cleanUrl);
+    const valid = results.filter((result): result is Exclude<ReturnType<typeof cleanUrl>, null> & { clean: string; platform: string; removed: number; changed: boolean } => Boolean(result && 'clean' in result));
+    const invalid = results.filter((result) => Boolean(result && 'error' in result));
+    const removed = valid.reduce((sum, result) => sum + result.removed, 0);
+    const platforms = new Set(valid.map((result) => result.platform));
+
+    if (output) output.value = valid.map((result) => result.clean).join('\n');
+    if (fields.cleaned) fields.cleaned.textContent = String(valid.length);
+    if (fields.removed) fields.removed.textContent = String(removed);
+    if (fields.platforms) fields.platforms.textContent = String(platforms.size);
+    if (fields.invalid) fields.invalid.textContent = String(invalid.length);
+    renderDetails(results);
+
+    const hasInput = lines.length > 0;
+    const guidance = !hasInput ? 'Ready' : invalid.length ? 'Check' : removed ? 'Cleaned' : 'Already clean';
+    if (fields.guidance) fields.guidance.textContent = guidance;
+    if (guidanceCard) {
+      guidanceCard.className = invalid.length
+        ? 'rounded-3xl bg-red-600 p-5 text-white'
+        : removed
+          ? 'rounded-3xl bg-blue-600 p-5 text-white'
+          : 'rounded-3xl bg-emerald-600 p-5 text-white';
+    }
+
+    if (status) {
+      if (!hasInput) status.textContent = 'Paste one or more public social URLs to remove tracking parameters locally.';
+      else if (invalid.length && !valid.length) status.textContent = `No supported links cleaned. ${invalid.length} line${invalid.length === 1 ? '' : 's'} need attention.`;
+      else if (invalid.length) status.textContent = `Cleaned ${valid.length} link${valid.length === 1 ? '' : 's'} and found ${invalid.length} invalid or unsupported line${invalid.length === 1 ? '' : 's'}.`;
+      else status.textContent = `Cleaned ${valid.length} link${valid.length === 1 ? '' : 's'} and removed ${removed} tracking parameter${removed === 1 ? '' : 's'}.`;
+    }
+  }
+
+  input?.addEventListener('input', render);
+  sampleButton?.addEventListener('click', () => { if (!input) return; input.value = sample; render(); input.focus(); });
+  clearButton?.addEventListener('click', () => { if (!input) return; input.value = ''; render(); input.focus(); });
+  copyButton?.addEventListener('click', async () => {
+    if (!status || !output) return;
+    if (!output.value.trim()) {
+      status.textContent = 'Nothing to copy yet. Paste supported social links first.';
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(output.value);
+      status.textContent = 'Clean social links copied.';
+    } catch {
+      status.textContent = 'Copy blocked by browser. You can still select and copy the clean links.';
+    }
+  });
+
+  render();
+</script>

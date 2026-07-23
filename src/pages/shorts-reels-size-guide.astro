@@ -1,0 +1,32 @@
+---
+import ShortsReelsSizeGuide from '../components/ShortsReelsSizeGuide.astro';
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Shorts/Reels/TikTok Size Guide — Vertical video checker | Bizzon"
+  description="Free browser-based Shorts, Reels, and TikTok size guide by Bizzon. Check vertical video dimensions, 9:16 aspect ratio, safe-area reminders, and a copy-ready export checklist."
+  canonicalPath="/shorts-reels-size-guide"
+  heading="Shorts/Reels/TikTok Size Guide"
+  intro="Check whether a vertical video export is ready for Shorts, Reels, or TikTok. Enter width, height, and optional duration to get a practical 9:16 check and copy-ready posting checklist."
+>
+  <ShortsReelsSizeGuide />
+  <section class="mt-12 grid gap-6 md:grid-cols-3">
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Use 9:16 vertical video</h2>
+      <p class="mt-3 text-slate-600">A 1080 × 1920 px export is the simple default for Shorts, Reels, and TikTok. The checker flags landscape, square, and near-vertical sizes that may crop or pad.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Leave safe space</h2>
+      <p class="mt-3 text-slate-600">Keep captions, logos, and faces away from the outer edges and lower interface areas where buttons, captions, or platform UI can cover the frame.</p>
+    </div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6">
+      <h2 class="text-xl font-bold text-slate-950">Browser-only checklist</h2>
+      <p class="mt-3 text-slate-600">All checks run locally. The tool does not upload video files, scrape platforms, download media, or call any social network API.</p>
+    </div>
+  </section>
+  <section class="mt-10 rounded-[2rem] border border-slate-200 bg-blue-50 p-6 md:p-8">
+    <h2 class="text-2xl font-black text-slate-950">Related creator tools</h2>
+    <p class="mt-4 text-slate-700">Cleaning creator text and links too? Try the <a class="font-bold text-blue-700" href="/social-link-cleaner">Social Link Cleaner</a>, <a class="font-bold text-blue-700" href="/hashtag-deduplicator">Hashtag Deduplicator</a>, or <a class="font-bold text-blue-700" href="/youtube-title-description-checker">YouTube Title & Description Checker</a>.</p>
+  </section>
+</ToolLayout>

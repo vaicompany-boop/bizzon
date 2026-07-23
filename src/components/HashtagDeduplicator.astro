@@ -1,0 +1,213 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="hashtag-deduplicator-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only social tool</p>
+      <h2 id="hashtag-deduplicator-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Clean and dedupe hashtags</h2>
+      <p class="mt-2 text-slate-600">Paste hashtags or a full caption, remove duplicates, normalize spacing or case, and copy a ready-to-use tag list.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleHashtags" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="copyHashtags" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy tags</button>
+      <button id="clearHashtags" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-3">
+    <label class="text-sm font-bold text-slate-700">
+      Output format
+      <select id="hashtagFormat" class="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+        <option value="space">One line, space-separated</option>
+        <option value="newline">One tag per line</option>
+        <option value="comma">Comma-separated</option>
+      </select>
+    </label>
+    <label class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-700">
+      <input id="lowercaseHashtags" type="checkbox" class="size-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" checked />
+      Lowercase tags
+    </label>
+    <label class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-700">
+      <input id="keepCaptionText" type="checkbox" class="size-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
+      Keep caption text in output
+    </label>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-2">
+    <div>
+      <label for="hashtagInput" class="text-sm font-bold text-slate-700">Hashtags or caption</label>
+      <textarea
+        id="hashtagInput"
+        class="mt-3 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        placeholder="Paste hashtags, a social caption, or a messy tag block..."
+        spellcheck="true"
+      ></textarea>
+      <p id="hashtagStatus" class="mt-3 min-h-6 text-sm font-semibold text-blue-700" role="status" aria-live="polite">Paste hashtags or a caption to extract unique tags and remove duplicates.</p>
+    </div>
+
+    <div>
+      <label for="hashtagOutput" class="text-sm font-bold text-slate-700">Clean output</label>
+      <textarea
+        id="hashtagOutput"
+        class="mt-3 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base leading-7 text-slate-900 outline-none transition focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        readonly
+        placeholder="Unique hashtags appear here..."
+      ></textarea>
+      <div class="mt-3 rounded-3xl border border-slate-200 bg-white p-5">
+        <p class="text-sm font-bold text-slate-700">Duplicate tags removed</p>
+        <div id="duplicateList" class="mt-3 flex min-h-11 flex-wrap gap-2 text-sm text-slate-600">No duplicates found yet.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5" aria-live="polite">
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Unique tags</p><p id="uniqueHashtagCount" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Duplicates</p><p id="duplicateHashtagCount" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Input tags</p><p id="inputHashtagCount" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Caption words</p><p id="captionWordCount" class="mt-2 text-3xl font-black text-slate-950">0</p></div>
+    <div id="hashtagLimitCard" class="rounded-3xl bg-blue-600 p-5 text-white"><p class="text-sm font-semibold text-blue-100">Tag guidance</p><p id="hashtagGuidance" class="mt-2 text-3xl font-black">Good</p></div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
+    <p><strong>Private:</strong> hashtag cleanup runs locally in your browser. Nothing is uploaded.</p>
+    <p><strong>Flexible:</strong> paste plain tags, commas, line breaks, or full captions from any platform.</p>
+    <p><strong>Safe:</strong> this tool does not scrape social platforms, log in, or call APIs.</p>
+  </div>
+</section>
+
+<script>
+  const input = document.getElementById('hashtagInput') as HTMLTextAreaElement | null;
+  const output = document.getElementById('hashtagOutput') as HTMLTextAreaElement | null;
+  const formatSelect = document.getElementById('hashtagFormat') as HTMLSelectElement | null;
+  const lowercaseBox = document.getElementById('lowercaseHashtags') as HTMLInputElement | null;
+  const keepCaptionBox = document.getElementById('keepCaptionText') as HTMLInputElement | null;
+  const sampleButton = document.getElementById('sampleHashtags');
+  const copyButton = document.getElementById('copyHashtags');
+  const clearButton = document.getElementById('clearHashtags');
+  const status = document.getElementById('hashtagStatus');
+  const duplicateList = document.getElementById('duplicateList');
+  const limitCard = document.getElementById('hashtagLimitCard');
+  const fields = {
+    unique: document.getElementById('uniqueHashtagCount'),
+    duplicates: document.getElementById('duplicateHashtagCount'),
+    input: document.getElementById('inputHashtagCount'),
+    words: document.getElementById('captionWordCount'),
+    guidance: document.getElementById('hashtagGuidance'),
+  };
+
+  const sample = 'New video is live!  Editing desk setup + caption workflow.\n\n#CreatorTools #contentcreator #CreatorTools #VideoTips, #videotips #NoUpload #noUpload';
+  const hashtagPattern = /#[\p{L}\p{N}_][\p{L}\p{N}_-]*/gu;
+
+  function normalizeTag(tag: string, lowercase: boolean) {
+    const cleaned = tag.replace(/[.,;:!?)]*$/g, '').replace(/^-+|-+$/g, '');
+    return lowercase ? cleaned.toLocaleLowerCase() : cleaned;
+  }
+
+  function countWords(text: string) {
+    const withoutTags = text.replace(hashtagPattern, ' ');
+    const matches = withoutTags.trim().match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu);
+    return matches ? matches.length : 0;
+  }
+
+  function extract(raw: string, lowercase: boolean) {
+    const matches = raw.match(hashtagPattern) ?? [];
+    const seen = new Set<string>();
+    const uniqueTags: string[] = [];
+    const duplicateTags: string[] = [];
+
+    for (const match of matches) {
+      const tag = normalizeTag(match, lowercase);
+      const key = tag.toLocaleLowerCase();
+      if (!/^#[\p{L}\p{N}_][\p{L}\p{N}_-]*$/u.test(tag)) continue;
+      if (seen.has(key)) duplicateTags.push(tag);
+      else {
+        seen.add(key);
+        uniqueTags.push(tag);
+      }
+    }
+
+    return { uniqueTags, duplicateTags };
+  }
+
+  function formatTags(tags: string[], mode: string) {
+    if (mode === 'newline') return tags.join('\n');
+    if (mode === 'comma') return tags.join(', ');
+    return tags.join(' ');
+  }
+
+  function renderDuplicateList(duplicates: string[]) {
+    if (!duplicateList) return;
+    duplicateList.innerHTML = '';
+    if (!duplicates.length) {
+      duplicateList.textContent = 'No duplicates found yet.';
+      return;
+    }
+    const counts = new Map<string, number>();
+    duplicates.forEach((tag) => counts.set(tag, (counts.get(tag) ?? 0) + 1));
+    counts.forEach((count, tag) => {
+      const pill = document.createElement('span');
+      pill.className = 'rounded-full bg-red-50 px-3 py-2 font-semibold text-red-700';
+      pill.textContent = `${tag} × ${count}`;
+      duplicateList.appendChild(pill);
+    });
+  }
+
+  function render() {
+    const raw = input?.value ?? '';
+    const lowercase = Boolean(lowercaseBox?.checked);
+    const keepCaption = Boolean(keepCaptionBox?.checked);
+    const { uniqueTags, duplicateTags } = extract(raw, lowercase);
+    const tagOutput = formatTags(uniqueTags, formatSelect?.value ?? 'space');
+    const captionText = raw
+      .replace(hashtagPattern, '')
+      .replace(/\r\n?/g, '\n')
+      .split('\n')
+      .map((line) => line.replace(/[\t ]+/g, ' ').trim())
+      .filter(Boolean)
+      .join('\n');
+    const finalOutput = keepCaption && captionText ? `${captionText}\n\n${tagOutput}`.trim() : tagOutput;
+    const guidance = uniqueTags.length > 30 ? 'High' : uniqueTags.length >= 20 ? 'Many' : 'Good';
+
+    if (output) output.value = finalOutput;
+    if (fields.unique) fields.unique.textContent = String(uniqueTags.length);
+    if (fields.duplicates) fields.duplicates.textContent = String(duplicateTags.length);
+    if (fields.input) fields.input.textContent = String(uniqueTags.length + duplicateTags.length);
+    if (fields.words) fields.words.textContent = String(countWords(raw));
+    if (fields.guidance) fields.guidance.textContent = guidance;
+    renderDuplicateList(duplicateTags);
+
+    if (limitCard) {
+      limitCard.className = uniqueTags.length > 30
+        ? 'rounded-3xl bg-red-600 p-5 text-white'
+        : uniqueTags.length >= 20
+          ? 'rounded-3xl bg-amber-500 p-5 text-white'
+          : 'rounded-3xl bg-blue-600 p-5 text-white';
+    }
+
+    if (status) {
+      if (!raw.trim()) status.textContent = 'Paste hashtags or a caption to extract unique tags and remove duplicates.';
+      else if (!uniqueTags.length) status.textContent = 'No hashtags found yet. Add tags that start with # to build a clean list.';
+      else status.textContent = `Cleaned ${uniqueTags.length} unique hashtag${uniqueTags.length === 1 ? '' : 's'} and removed ${duplicateTags.length} duplicate${duplicateTags.length === 1 ? '' : 's'}.`;
+    }
+  }
+
+  input?.addEventListener('input', render);
+  formatSelect?.addEventListener('change', render);
+  lowercaseBox?.addEventListener('change', render);
+  keepCaptionBox?.addEventListener('change', render);
+  sampleButton?.addEventListener('click', () => { if (!input) return; input.value = sample; render(); input.focus(); });
+  clearButton?.addEventListener('click', () => { if (!input) return; input.value = ''; render(); input.focus(); });
+  copyButton?.addEventListener('click', async () => {
+    if (!status || !output) return;
+    if (!output.value.trim()) {
+      status.textContent = 'Nothing to copy yet. Paste hashtags or a caption first.';
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(output.value);
+      status.textContent = 'Clean hashtags copied.';
+    } catch {
+      status.textContent = 'Copy blocked by browser. You can still select and copy the clean output.';
+    }
+  });
+
+  render();
+</script>

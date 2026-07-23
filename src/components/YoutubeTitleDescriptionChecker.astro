@@ -1,0 +1,239 @@
+<section class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm md:p-8" aria-labelledby="youtube-title-description-app">
+  <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only creator tool</p>
+      <h2 id="youtube-title-description-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Check YouTube title and description length</h2>
+      <p class="mt-2 text-slate-600">Measure title length, description length, hashtags, links, and preview text locally before publishing. No YouTube login, scraping, or API calls.</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <button id="sampleYoutubeMeta" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
+      <button id="copyYoutubeMeta" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy checklist</button>
+      <button id="clearYoutubeMeta" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+    <div class="grid gap-5">
+      <div>
+        <label for="youtubeTitleInput" class="text-sm font-bold text-slate-700">Video title</label>
+        <input
+          id="youtubeTitleInput"
+          type="text"
+          class="mt-3 w-full rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+          placeholder="Paste or draft your YouTube title..."
+          autocomplete="off"
+        />
+        <p class="mt-2 text-sm text-slate-500">YouTube allows up to 100 characters. For readability, many titles work best around 40–70 characters.</p>
+      </div>
+
+      <div>
+        <label for="youtubeDescriptionInput" class="text-sm font-bold text-slate-700">Video description</label>
+        <textarea
+          id="youtubeDescriptionInput"
+          class="mt-3 min-h-80 w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 text-base leading-7 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+          placeholder="Paste your YouTube description, links, chapters, and hashtags..."
+          spellcheck="true"
+        ></textarea>
+      </div>
+      <p id="youtubeMetaStatus" class="min-h-6 text-sm font-semibold text-blue-700" role="status" aria-live="polite">Add a title and description to check lengths, links, hashtags, and preview text.</p>
+    </div>
+
+    <div class="grid gap-5 content-start">
+      <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+        <p class="text-sm font-bold uppercase tracking-[0.18em] text-slate-500">Search / share preview draft</p>
+        <div class="mt-4 rounded-2xl bg-white p-5 shadow-sm">
+          <p id="youtubePreviewTitle" class="line-clamp-2 text-xl font-bold leading-tight text-slate-950">Your video title preview appears here</p>
+          <p class="mt-2 text-sm text-emerald-700">youtube.com/watch?v=example</p>
+          <p id="youtubePreviewDescription" class="mt-3 text-sm leading-6 text-slate-600">The first part of your description appears here, so you can check whether the opening line is useful before links or hashtags.</p>
+        </div>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2" aria-live="polite">
+        <div id="youtubeTitleCard" class="rounded-3xl bg-blue-600 p-5 text-white"><p class="text-sm font-semibold text-blue-100">Title length</p><p id="youtubeTitleCount" class="mt-2 text-3xl font-black">0 / 100</p><p id="youtubeTitleHint" class="mt-2 text-sm font-semibold text-blue-100">Add a title.</p></div>
+        <div id="youtubeDescriptionCard" class="rounded-3xl bg-blue-600 p-5 text-white"><p class="text-sm font-semibold text-blue-100">Description length</p><p id="youtubeDescriptionCount" class="mt-2 text-3xl font-black">0 / 5,000</p><p id="youtubeDescriptionHint" class="mt-2 text-sm font-semibold text-blue-100">Add a description.</p></div>
+        <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Hashtags</p><p id="youtubeHashtagCount" class="mt-2 text-3xl font-black text-slate-950">0</p><p id="youtubeHashtagHint" class="mt-2 text-sm text-slate-600">YouTube surfaces up to 3 above the title.</p></div>
+        <div class="rounded-3xl bg-slate-100 p-5"><p class="text-sm font-semibold text-slate-500">Links</p><p id="youtubeLinkCount" class="mt-2 text-3xl font-black text-slate-950">0</p><p class="mt-2 text-sm text-slate-600">Counted from visible URLs.</p></div>
+      </div>
+
+      <div class="rounded-3xl border border-slate-200 bg-white p-5">
+        <p class="text-sm font-bold text-slate-700">Checklist</p>
+        <ul id="youtubeChecklist" class="mt-3 grid gap-2 text-sm text-slate-600">
+          <li>• Add a clear title.</li>
+          <li>• Put the most useful description text before links and hashtags.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
+    <p><strong>Private:</strong> text is processed locally in your browser and never uploaded by this tool.</p>
+    <p><strong>Practical limits:</strong> title limit is 100 characters and description limit is 5,000 characters.</p>
+    <p><strong>Safe scope:</strong> this tool checks your draft text only. It does not fetch videos, scrape YouTube, or use YouTube APIs.</p>
+  </div>
+</section>
+
+<script>
+  const titleInput = document.getElementById('youtubeTitleInput') as HTMLInputElement | null;
+  const descriptionInput = document.getElementById('youtubeDescriptionInput') as HTMLTextAreaElement | null;
+  const sampleButton = document.getElementById('sampleYoutubeMeta');
+  const copyButton = document.getElementById('copyYoutubeMeta');
+  const clearButton = document.getElementById('clearYoutubeMeta');
+  const status = document.getElementById('youtubeMetaStatus');
+  const previewTitle = document.getElementById('youtubePreviewTitle');
+  const previewDescription = document.getElementById('youtubePreviewDescription');
+  const titleCard = document.getElementById('youtubeTitleCard');
+  const descriptionCard = document.getElementById('youtubeDescriptionCard');
+  const titleCount = document.getElementById('youtubeTitleCount');
+  const descriptionCount = document.getElementById('youtubeDescriptionCount');
+  const titleHint = document.getElementById('youtubeTitleHint');
+  const descriptionHint = document.getElementById('youtubeDescriptionHint');
+  const hashtagCount = document.getElementById('youtubeHashtagCount');
+  const hashtagHint = document.getElementById('youtubeHashtagHint');
+  const linkCount = document.getElementById('youtubeLinkCount');
+  const checklist = document.getElementById('youtubeChecklist');
+
+  const titleLimit = 100;
+  const descriptionLimit = 5000;
+  const sampleTitle = 'How to batch content faster without losing quality';
+  const sampleDescription = 'A practical workflow for creators who want cleaner scripts, fewer duplicate takes, and a repeatable publishing checklist.\n\nIn this video:\n00:00 Plan the hook\n01:12 Batch three versions\n03:40 Edit the cleanest cut\n\nResources: https://bizzon.app/tools\n\n#CreatorTools #YouTubeTips #Productivity #CreatorTools';
+
+  function codePointLength(value: string) {
+    return Array.from(value).length;
+  }
+
+  function countLinks(value: string) {
+    return (value.match(/https?:\/\/[^\s)\]}"']+/gi) ?? []).length;
+  }
+
+  function extractHashtags(value: string) {
+    const matches = value.match(/#[\p{L}\p{N}_][\p{L}\p{N}_-]*/gu) ?? [];
+    const unique = new Set(matches.map((tag) => tag.toLocaleLowerCase()));
+    return { total: matches.length, unique: unique.size };
+  }
+
+  function setCardState(card: Element | null, state: 'good' | 'warn' | 'bad') {
+    if (!card) return;
+    const base = 'rounded-3xl p-5 text-white';
+    const color = state === 'bad' ? 'bg-red-600' : state === 'warn' ? 'bg-amber-500' : 'bg-blue-600';
+    card.className = `${base} ${color}`;
+  }
+
+  function getTitleState(length: number) {
+    if (length === 0) return { state: 'good' as const, hint: 'Add a title.' };
+    if (length > titleLimit) return { state: 'bad' as const, hint: `Over YouTube’s limit by ${length - titleLimit}.` };
+    if (length < 35) return { state: 'warn' as const, hint: 'Readable, but may be too vague if it lacks context.' };
+    if (length <= 70) return { state: 'good' as const, hint: 'Good practical title length.' };
+    return { state: 'warn' as const, hint: 'Allowed, but may truncate in some views.' };
+  }
+
+  function getDescriptionState(length: number) {
+    if (length === 0) return { state: 'good' as const, hint: 'Add a description.' };
+    if (length > descriptionLimit) return { state: 'bad' as const, hint: `Over YouTube’s limit by ${length - descriptionLimit}.` };
+    if (length < 80) return { state: 'warn' as const, hint: 'Short description. Add context before links if helpful.' };
+    return { state: 'good' as const, hint: 'Description length is within YouTube’s limit.' };
+  }
+
+  function buildChecklist(title: string, description: string, titleLength: number, descriptionLength: number, hashtags: { total: number; unique: number }, links: number) {
+    const items: string[] = [];
+    if (!title.trim()) items.push('Add a clear title before publishing.');
+    else if (titleLength > titleLimit) items.push(`Shorten the title by ${titleLength - titleLimit} character${titleLength - titleLimit === 1 ? '' : 's'}.`);
+    else if (titleLength > 70) items.push('Title is valid but long; check mobile truncation.');
+    else if (titleLength < 35) items.push('Title is short; make sure it includes the topic or benefit.');
+    else items.push('Title length looks practical.');
+
+    if (!description.trim()) items.push('Add a useful opening description before links and hashtags.');
+    else if (descriptionLength > descriptionLimit) items.push(`Shorten the description by ${descriptionLength - descriptionLimit} character${descriptionLength - descriptionLimit === 1 ? '' : 's'}.`);
+    else items.push('Description is within YouTube’s 5,000-character limit.');
+
+    if (hashtags.total > 15) items.push('Many hashtags detected; consider keeping only the most relevant tags.');
+    else if (hashtags.total > 3) items.push('More than 3 hashtags detected; YouTube usually surfaces only up to 3 above the title.');
+    else if (hashtags.total > 0) items.push('Hashtag count is conservative.');
+    else items.push('No hashtags detected; add only if they help discovery.');
+
+    if (hashtags.total !== hashtags.unique) items.push(`${hashtags.total - hashtags.unique} duplicate hashtag${hashtags.total - hashtags.unique === 1 ? '' : 's'} detected.`);
+    if (links > 8) items.push('Many links detected; make sure the first description lines still explain the video.');
+    if (description.trim() && /^https?:\/\//i.test(description.trim())) items.push('Description starts with a link; consider opening with useful context first.');
+
+    return items;
+  }
+
+  function render() {
+    const title = titleInput?.value ?? '';
+    const description = descriptionInput?.value ?? '';
+    const titleLength = codePointLength(title);
+    const descriptionLength = codePointLength(description);
+    const hashtags = extractHashtags(`${title}\n${description}`);
+    const links = countLinks(description);
+    const titleState = getTitleState(titleLength);
+    const descriptionState = getDescriptionState(descriptionLength);
+
+    if (titleCount) titleCount.textContent = `${titleLength} / ${titleLimit}`;
+    if (descriptionCount) descriptionCount.textContent = `${descriptionLength.toLocaleString()} / 5,000`;
+    if (titleHint) titleHint.textContent = titleState.hint;
+    if (descriptionHint) descriptionHint.textContent = descriptionState.hint;
+    if (hashtagCount) hashtagCount.textContent = String(hashtags.total);
+    if (hashtagHint) hashtagHint.textContent = hashtags.total === hashtags.unique ? 'No duplicate hashtags detected.' : `${hashtags.total - hashtags.unique} duplicate hashtag${hashtags.total - hashtags.unique === 1 ? '' : 's'} detected.`;
+    if (linkCount) linkCount.textContent = String(links);
+    setCardState(titleCard, titleState.state);
+    setCardState(descriptionCard, descriptionState.state);
+
+    if (previewTitle) previewTitle.textContent = title.trim() || 'Your video title preview appears here';
+    if (previewDescription) {
+      const firstUsefulLine = description.split('\n').map((line) => line.trim()).find(Boolean) ?? '';
+      previewDescription.textContent = firstUsefulLine ? `${firstUsefulLine.slice(0, 157)}${firstUsefulLine.length > 157 ? '…' : ''}` : 'The first part of your description appears here, so you can check whether the opening line is useful before links or hashtags.';
+    }
+
+    const items = buildChecklist(title, description, titleLength, descriptionLength, hashtags, links);
+    if (checklist) checklist.innerHTML = items.map((item) => `<li>• ${item}</li>`).join('');
+
+    if (status) {
+      if (!title.trim() && !description.trim()) status.textContent = 'Add a title and description to check lengths, links, hashtags, and preview text.';
+      else if (titleLength > titleLimit || descriptionLength > descriptionLimit) status.textContent = 'Draft needs shortening before it fits YouTube text limits.';
+      else status.textContent = `Draft fits YouTube limits · ${hashtags.total} hashtag${hashtags.total === 1 ? '' : 's'} · ${links} link${links === 1 ? '' : 's'} · ${descriptionLength.toLocaleString()} description characters.`;
+    }
+  }
+
+  function checklistText() {
+    const items = Array.from(checklist?.querySelectorAll('li') ?? []).map((item) => item.textContent?.replace(/^•\s*/, '').trim()).filter(Boolean);
+    return [
+      `Title: ${titleInput?.value ?? ''}`,
+      `Title length: ${titleCount?.textContent ?? '0 / 100'}`,
+      `Description length: ${descriptionCount?.textContent ?? '0 / 5,000'}`,
+      `Hashtags: ${hashtagCount?.textContent ?? '0'}`,
+      `Links: ${linkCount?.textContent ?? '0'}`,
+      '',
+      'Checklist:',
+      ...items.map((item) => `- ${item}`),
+    ].join('\n');
+  }
+
+  titleInput?.addEventListener('input', render);
+  descriptionInput?.addEventListener('input', render);
+  sampleButton?.addEventListener('click', () => {
+    if (titleInput) titleInput.value = sampleTitle;
+    if (descriptionInput) descriptionInput.value = sampleDescription;
+    render();
+    titleInput?.focus();
+  });
+  clearButton?.addEventListener('click', () => {
+    if (titleInput) titleInput.value = '';
+    if (descriptionInput) descriptionInput.value = '';
+    render();
+    titleInput?.focus();
+  });
+  copyButton?.addEventListener('click', async () => {
+    if (!status) return;
+    if (!titleInput?.value.trim() && !descriptionInput?.value.trim()) {
+      status.textContent = 'Nothing to copy yet. Add a title or description first.';
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(checklistText());
+      status.textContent = 'YouTube title and description checklist copied.';
+    } catch {
+      status.textContent = 'Copy blocked by browser. You can still select and copy the title, description, or checklist manually.';
+    }
+  });
+
+  render();
+</script>
