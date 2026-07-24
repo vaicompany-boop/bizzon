@@ -111,7 +111,7 @@ export const tools: Tool[] = [
   {
     title: 'CSV to JSON Converter',
     href: '/csv-to-json',
-    description: 'Convert pasted CSV, TSV, semicolon, or pipe-separated data into pretty JSON in your browser.',
+    description: 'Convert pasted CSV, TSV, semicolon, pipe-separated data, or a local file into downloadable JSON in your browser.',
     status: 'live',
   },
   {
