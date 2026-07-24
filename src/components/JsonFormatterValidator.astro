@@ -3,13 +3,14 @@
     <div>
       <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only JSON tool</p>
       <h2 id="json-formatter-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Format, minify, and validate JSON</h2>
-      <p class="mt-2 text-slate-600">Paste JSON to make it readable, compact it for configs, or find the exact parse error without uploading anything.</p>
+      <p class="mt-2 text-slate-600">Paste JSON or open a local .json file to make it readable, compact it for configs, or find the exact parse error without uploading anything.</p>
     </div>
     <div class="flex flex-wrap gap-3">
       <button id="sampleJsonFormatter" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
       <button id="formatJson" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Format</button>
       <button id="minifyJson" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Minify</button>
       <button id="copyFormattedJson" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy</button>
+      <button id="downloadFormattedJson" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Download .json</button>
       <button id="clearJsonFormatter" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
     </div>
   </div>
@@ -27,9 +28,19 @@
           </select>
         </label>
       </div>
+      <div class="mt-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-4">
+        <label for="jsonFile" class="text-sm font-bold text-slate-700">Or choose a local JSON/text file</label>
+        <input
+          id="jsonFile"
+          type="file"
+          accept=".json,.txt,application/json,text/plain"
+          class="mt-3 block w-full cursor-pointer rounded-2xl border border-slate-200 bg-white p-3 text-sm text-slate-700 file:mr-4 file:rounded-full file:border-0 file:bg-slate-950 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-700"
+        />
+        <p class="mt-2 text-xs font-semibold text-slate-500">The file is read by your browser only. It is not uploaded to Bizzon.</p>
+      </div>
       <textarea
         id="jsonFormatterInput"
-        class="mt-3 min-h-[28rem] w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
+        class="mt-3 min-h-[24rem] w-full resize-y rounded-3xl border border-slate-200 bg-slate-50 p-5 font-mono text-sm leading-6 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:ring-4 focus:ring-blue-100"
         placeholder='{"name":"Bizzon","tools":["CSV to JSON","JSON Formatter"],"private":true}'
         spellcheck="false"
       ></textarea>
@@ -46,7 +57,7 @@
   </div>
 
   <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
-    <p><strong>Private:</strong> JSON parsing runs locally in your browser.</p>
+    <p><strong>Private:</strong> pasted JSON and chosen files stay in your browser.</p>
     <p><strong>Helpful errors:</strong> invalid JSON shows the browser parser message and approximate line/column when available.</p>
     <p><strong>Clean output:</strong> use formatted JSON for reading or minified JSON for compact configs.</p>
   </div>
@@ -58,10 +69,12 @@
   const summary = document.getElementById('jsonFormatterSummary');
   const status = document.getElementById('jsonFormatterStatus');
   const indentSelect = document.getElementById('jsonIndent') as HTMLSelectElement | null;
+  const jsonFile = document.getElementById('jsonFile') as HTMLInputElement | null;
   const sampleButton = document.getElementById('sampleJsonFormatter');
   const formatButton = document.getElementById('formatJson');
   const minifyButton = document.getElementById('minifyJson');
   const copyButton = document.getElementById('copyFormattedJson');
+  const downloadButton = document.getElementById('downloadFormattedJson');
   const clearButton = document.getElementById('clearJsonFormatter');
 
   const sampleJson = JSON.stringify({
@@ -139,6 +152,21 @@
   input?.addEventListener('input', () => renderJson('format'));
   indentSelect?.addEventListener('change', () => renderJson('format'));
 
+  jsonFile?.addEventListener('change', async () => {
+    if (!input || !jsonFile || !status) return;
+    const file = jsonFile.files?.[0];
+    if (!file) return;
+    try {
+      status.textContent = `Reading ${file.name} locally...`;
+      input.value = await file.text();
+      renderJson('format');
+      if (status && output?.textContent) status.textContent = `Loaded ${file.name} locally.`;
+      input.focus();
+    } catch {
+      status.textContent = 'Could not read that file. Try opening it and pasting the JSON text instead.';
+    }
+  });
+
   sampleButton?.addEventListener('click', () => {
     if (!input) return;
     input.value = sampleJson;
@@ -152,6 +180,7 @@
   clearButton?.addEventListener('click', () => {
     if (!input) return;
     input.value = '';
+    if (jsonFile) jsonFile.value = '';
     renderJson('format');
     input.focus();
   });
@@ -170,6 +199,25 @@
     } catch {
       status.textContent = 'Copy blocked by browser. Select the output and copy manually.';
     }
+  });
+
+  downloadButton?.addEventListener('click', () => {
+    if (!output || !status) return;
+    const rendered = output.textContent || '';
+    if (!rendered) {
+      status.textContent = 'Nothing to download yet.';
+      return;
+    }
+    const blob = new Blob([rendered], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'bizzon-formatted-json.json';
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    status.textContent = 'JSON download started.';
   });
 
   renderJson('format');

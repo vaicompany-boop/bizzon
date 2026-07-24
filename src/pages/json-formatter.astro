@@ -5,15 +5,15 @@ import ToolLayout from '../layouts/ToolLayout.astro';
 
 <ToolLayout
   title="JSON Formatter & Validator — Free browser tool | Bizzon"
-  description="Free browser-based JSON formatter and validator by Bizzon. Paste JSON, format it, minify it, and find parse errors locally in your browser."
+  description="Free browser-based JSON formatter and validator by Bizzon. Paste JSON or open a local file, format it, minify it, download it, and find parse errors locally in your browser."
   canonicalPath="/json-formatter"
   heading="JSON Formatter & Validator"
-  intro="Format messy JSON, minify valid JSON, and catch syntax errors with a private browser-only utility."
+  intro="Format messy JSON, minify valid JSON, download clean output, and catch syntax errors with a private browser-only utility."
 >
   <JsonFormatterValidator />
   <section class="mt-12 grid gap-6 md:grid-cols-3">
-    <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Pretty or compact</h2><p class="mt-3 text-slate-600">Use the formatted view for reading nested data or the minified view for compact config snippets and API payloads.</p></div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Pretty, compact, or saved</h2><p class="mt-3 text-slate-600">Use the formatted view for reading nested data, the minified view for compact payloads, or download a clean .json file.</p></div>
     <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Validate before sharing</h2><p class="mt-3 text-slate-600">Invalid JSON shows a clear parser message so you can fix missing commas, quotes, brackets, and other syntax issues.</p></div>
-    <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Runs in your browser</h2><p class="mt-3 text-slate-600">Bizzon does not upload or store the JSON you paste. Formatting and validation happen locally on your device.</p></div>
+    <div class="rounded-3xl border border-slate-200 bg-white p-6"><h2 class="text-xl font-bold text-slate-950">Runs in your browser</h2><p class="mt-3 text-slate-600">Bizzon does not upload or store pasted JSON or chosen files. Formatting and validation happen locally on your device.</p></div>
   </section>
 </ToolLayout>

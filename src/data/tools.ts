@@ -123,7 +123,7 @@ export const tools: Tool[] = [
   {
     title: 'JSON Formatter & Validator',
     href: '/json-formatter',
-    description: 'Format, minify, validate, and copy JSON locally in your browser with helpful syntax errors.',
+    description: 'Format, minify, validate, copy, and download JSON locally in your browser with helpful syntax errors.',
     status: 'live',
   },
   {
