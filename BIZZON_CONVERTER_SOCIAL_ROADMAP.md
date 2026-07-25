@@ -90,7 +90,7 @@ When the three-hour rotation selects Bizzon:
 ## Current recommended next Bizzon chunk
 
 ```text
-Continue converter upload/download polish by checking Base64, Markdown/HTML converters, or add the next safe utility from traffic/search evidence.
+Continue converter upload/download polish by checking Markdown/HTML converters, or add the next safe utility from traffic/search evidence.
 ```
 
 Acceptance criteria for CSV to JSON upload/download polish:
@@ -108,6 +108,14 @@ Acceptance criteria for JSON Formatter upload/download polish:
 - preserves format, minify, indent, copy, syntax-error, and line/column behavior;
 - offers a downloadable `.json` export when JSON is valid;
 - route and `/tools` still build and browser-check cleanly.
+
+Acceptance criteria for Base64 Encoder / Decoder upload/download polish:
+
+- accepts pasted text/Base64 and a local text-style file input for small `.txt`, `.json`, `.csv`, `.md`, or similar files;
+- reads files locally in the browser with clear privacy copy and a lightweight size guard;
+- preserves UTF-8-safe encode/decode behavior and clear malformed/Base64-vs-binary errors;
+- offers copy and downloadable `.txt` export when output exists;
+- route and `/tools` still build, browser-check, deploy, and live-check cleanly.
 
 Acceptance criteria for Shorts/Reels/TikTok Size Guide:
 

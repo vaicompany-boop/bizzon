@@ -129,7 +129,7 @@ export const tools: Tool[] = [
   {
     title: 'Base64 Encoder / Decoder',
     href: '/base64-encoder-decoder',
-    description: 'Encode text to Base64 or decode Base64 back to UTF-8 text locally in your browser.',
+    description: 'Encode pasted text or a local text file to Base64, decode UTF-8 Base64, then copy or download the result locally.',
     status: 'live',
   },
   {
