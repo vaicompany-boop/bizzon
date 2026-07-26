@@ -141,7 +141,7 @@ export const tools: Tool[] = [
   {
     title: 'HTML to Markdown Converter',
     href: '/html-to-markdown',
-    description: 'Convert common article and document HTML into clean copy-ready Markdown locally in your browser.',
+    description: 'Convert pasted HTML or a local .html file into clean copy-ready Markdown, then copy or download it locally.',
     status: 'live',
   },
   {

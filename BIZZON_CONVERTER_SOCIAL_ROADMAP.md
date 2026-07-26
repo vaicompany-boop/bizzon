@@ -90,7 +90,7 @@ When the three-hour rotation selects Bizzon:
 ## Current recommended next Bizzon chunk
 
 ```text
-Continue converter upload/download polish by checking HTML to Markdown, or add the next safe utility from traffic/search evidence.
+HTML to Markdown upload/download polish is now complete. Next: add a small internal-link/guide cluster for converter tools, or pick the next safe utility from traffic/search evidence.
 ```
 
 Acceptance criteria for CSV to JSON upload/download polish:
@@ -123,6 +123,15 @@ Acceptance criteria for Markdown to HTML upload/download polish:
 - reads files locally in the browser with clear privacy copy and a lightweight size guard;
 - preserves safe preview behavior where raw HTML is escaped and unsafe links are not rendered as clickable links;
 - offers copy and downloadable `.html` export when conversion succeeds;
+- route and `/tools` still build, browser-check, deploy, and live-check cleanly.
+
+Acceptance criteria for HTML to Markdown upload/download polish:
+
+- accepts pasted HTML and local `.html`, `.htm`, or `.txt` file input;
+- reads files locally in the browser with clear privacy copy and a lightweight size guard;
+- preserves common document conversion for headings, paragraphs, links, lists, quotes, code, images and simple tables;
+- skips active content such as scripts, styles, iframes and forms;
+- offers copy and downloadable `.md` export when conversion succeeds;
 - route and `/tools` still build, browser-check, deploy, and live-check cleanly.
 
 Acceptance criteria for Shorts/Reels/TikTok Size Guide:

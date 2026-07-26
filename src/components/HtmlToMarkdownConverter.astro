@@ -3,13 +3,29 @@
     <div>
       <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only converter</p>
       <h2 id="html-markdown-tool-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Convert HTML to Markdown</h2>
-      <p class="mt-2 text-slate-600">Paste HTML, turn common tags into readable Markdown, and copy the result locally in your browser.</p>
+      <p class="mt-2 text-slate-600">Paste HTML or open a local text file, turn common tags into readable Markdown, then copy or download the result locally in your browser.</p>
     </div>
     <div class="flex flex-wrap gap-3">
       <button id="sampleHtml" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
       <button id="convertHtml" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Convert</button>
       <button id="copyMarkdown" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy Markdown</button>
+      <button id="downloadMarkdown" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Download .md</button>
       <button id="clearHtml" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div>
+        <label for="htmlFileInput" class="text-sm font-bold text-slate-800">Open a local HTML file</label>
+        <p class="mt-1 text-sm text-slate-600">Optional: load a small `.html`, `.htm`, or `.txt` file. The file is read in this browser only and is not uploaded.</p>
+      </div>
+      <input
+        id="htmlFileInput"
+        type="file"
+        accept=".html,.htm,.txt,text/html,text/plain"
+        class="max-w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:font-bold file:text-blue-700 hover:border-blue-300"
+      />
     </div>
   </div>
 
@@ -48,7 +64,7 @@
   </div>
 
   <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
-    <p><strong>Private:</strong> HTML conversion runs locally in your browser; pasted content is not uploaded.</p>
+    <p><strong>Private:</strong> HTML conversion and optional file reading run locally in your browser; pasted content and files are not uploaded.</p>
     <p><strong>Practical subset:</strong> supports common article/document HTML first, including headings, links, lists, quotes, code and tables.</p>
     <p><strong>Safe output:</strong> active content such as scripts, styles, iframes and forms is ignored instead of copied into Markdown.</p>
   </div>
@@ -63,7 +79,11 @@
   const sampleButton = document.getElementById('sampleHtml');
   const convertButton = document.getElementById('convertHtml');
   const copyButton = document.getElementById('copyMarkdown');
+  const downloadButton = document.getElementById('downloadMarkdown');
   const clearButton = document.getElementById('clearHtml');
+  const fileInput = document.getElementById('htmlFileInput') as HTMLInputElement | null;
+
+  const maxFileBytes = 750 * 1024;
 
   const sampleHtml = `<article>\n  <h1>Launch checklist</h1>\n  <p>Write copy that is <strong>clear</strong>, <em>short</em>, and useful.</p>\n  <h2>Steps</h2>\n  <ol>\n    <li>Paste HTML</li>\n    <li>Convert to Markdown</li>\n    <li>Copy the result</li>\n  </ol>\n  <blockquote>Bizzon keeps this conversion in your browser.</blockquote>\n  <p>Safe link: <a href="https://bizzon.app/tools">Bizzon tools</a></p>\n  <pre><code>npm run build</code></pre>\n  <script>alert('ignored')<\/script>\n</article>`;
 
@@ -189,6 +209,12 @@
     }
   }
 
+  function setStatus(message: string, tone: 'ok' | 'error' = 'ok') {
+    if (!status) return;
+    status.textContent = message;
+    status.className = `mt-3 min-h-6 text-sm font-semibold ${tone === 'error' ? 'text-red-700' : 'text-blue-700'}`;
+  }
+
   function convertInput() {
     if (!input) return;
     const html = input.value;
@@ -220,8 +246,37 @@
   clearButton?.addEventListener('click', () => {
     if (!input) return;
     input.value = '';
+    if (fileInput) fileInput.value = '';
     updateResult('', 'Enter HTML to convert.');
     input.focus();
+  });
+
+  fileInput?.addEventListener('change', () => {
+    const file = fileInput.files?.[0];
+    if (!file || !input) return;
+    const extensionOk = /\.(html|htm|txt)$/i.test(file.name);
+    const typeOk = !file.type || /^(text\/html|text\/plain|application\/octet-stream)$/i.test(file.type);
+    if (!extensionOk && !typeOk) {
+      fileInput.value = '';
+      setStatus('Choose an HTML or text file (.html, .htm, .txt).', 'error');
+      return;
+    }
+    if (file.size > maxFileBytes) {
+      fileInput.value = '';
+      setStatus('Choose a smaller HTML file under 750 KB.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      input.value = typeof reader.result === 'string' ? reader.result : '';
+      convertInput();
+      setStatus(`Loaded ${file.name} locally.`);
+      input.focus();
+    });
+    reader.addEventListener('error', () => {
+      setStatus('Could not read that file. Try pasting the HTML instead.', 'error');
+    });
+    reader.readAsText(file);
   });
 
   copyButton?.addEventListener('click', async () => {
@@ -241,5 +296,24 @@
       status.textContent = 'Copy blocked by browser. Select the Markdown output and copy manually.';
       status.className = 'mt-3 min-h-6 text-sm font-semibold text-red-700';
     }
+  });
+
+  downloadButton?.addEventListener('click', () => {
+    if (!output) return;
+    const markdown = output.textContent || '';
+    if (!markdown) {
+      setStatus('Nothing to download yet.', 'error');
+      return;
+    }
+    const blob = new Blob([`${markdown}\n`], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'converted-html.md';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setStatus('Markdown download started.');
   });
 </script>
