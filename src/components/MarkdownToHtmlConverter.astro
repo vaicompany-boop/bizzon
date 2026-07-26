@@ -3,13 +3,29 @@
     <div>
       <p class="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">Browser-only converter</p>
       <h2 id="markdown-html-tool-app" class="mt-2 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">Convert Markdown to safe HTML</h2>
-      <p class="mt-2 text-slate-600">Paste Markdown, preview the rendered result, and copy clean HTML generated locally in your browser.</p>
+      <p class="mt-2 text-slate-600">Paste Markdown or open a local text file, preview the rendered result, then copy or download clean HTML generated locally in your browser.</p>
     </div>
     <div class="flex flex-wrap gap-3">
       <button id="sampleMarkdown" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Sample</button>
       <button id="convertMarkdown" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Convert</button>
       <button id="copyMarkdownHtml" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Copy HTML</button>
+      <button id="downloadMarkdownHtml" type="button" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700">Download .html</button>
       <button id="clearMarkdown" type="button" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Clear</button>
+    </div>
+  </div>
+
+  <div class="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div>
+        <label for="markdownFileInput" class="text-sm font-bold text-slate-800">Open a local Markdown file</label>
+        <p class="mt-1 text-sm text-slate-600">Optional: load a small `.md`, `.markdown`, or `.txt` file. The file is read in this browser only and is not uploaded.</p>
+      </div>
+      <input
+        id="markdownFileInput"
+        type="file"
+        accept=".md,.markdown,.txt,text/markdown,text/plain"
+        class="max-w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:font-bold file:text-blue-700 hover:border-blue-300"
+      />
     </div>
   </div>
 
@@ -48,7 +64,7 @@
   </div>
 
   <div class="mt-6 grid gap-4 rounded-3xl border border-blue-100 bg-blue-50 p-5 text-sm text-blue-950 md:grid-cols-3">
-    <p><strong>Private:</strong> Markdown conversion runs locally in your browser; pasted drafts are not uploaded.</p>
+    <p><strong>Private:</strong> Markdown conversion and optional file reading run locally in your browser; drafts are not uploaded.</p>
     <p><strong>Safe preview:</strong> user HTML is escaped and links are limited to common safe protocols before rendering.</p>
     <p><strong>Practical subset:</strong> supports headings, paragraphs, emphasis, links, quotes, lists, horizontal rules, and fenced code blocks.</p>
   </div>
@@ -80,7 +96,11 @@
   const sampleButton = document.getElementById('sampleMarkdown');
   const convertButton = document.getElementById('convertMarkdown');
   const copyButton = document.getElementById('copyMarkdownHtml');
+  const downloadButton = document.getElementById('downloadMarkdownHtml');
   const clearButton = document.getElementById('clearMarkdown');
+  const fileInput = document.getElementById('markdownFileInput') as HTMLInputElement | null;
+
+  const maxFileBytes = 750 * 1024;
 
   const sampleMarkdown = `# Launch checklist\n\nWrite copy that is **clear**, _short_, and useful.\n\n## Steps\n\n1. Paste Markdown\n2. Convert to HTML\n3. Copy the result\n\n> Bizzon keeps this conversion in your browser.\n\n- Safe links: [Bizzon](https://bizzon.app/tools)\n- Inline code: \`npm run build\`\n\n\`\`\`html\n<script>alert('escaped, not run')<\/script>\n\`\`\``;
 
@@ -241,6 +261,12 @@
     }
   }
 
+  function setStatus(message: string, tone: 'ok' | 'error' = 'ok') {
+    if (!status) return;
+    status.textContent = message;
+    status.className = `mt-3 min-h-6 text-sm font-semibold ${tone === 'error' ? 'text-red-700' : 'text-blue-700'}`;
+  }
+
   function convertInput() {
     if (!input) return;
     const markdown = input.value;
@@ -270,8 +296,37 @@
   clearButton?.addEventListener('click', () => {
     if (!input) return;
     input.value = '';
+    if (fileInput) fileInput.value = '';
     updateResult('', 'Enter Markdown to convert.');
     input.focus();
+  });
+
+  fileInput?.addEventListener('change', () => {
+    const file = fileInput.files?.[0];
+    if (!file || !input) return;
+    const extensionOk = /\.(md|markdown|txt)$/i.test(file.name);
+    const typeOk = !file.type || /^(text\/plain|text\/markdown|application\/octet-stream)$/i.test(file.type);
+    if (!extensionOk && !typeOk) {
+      fileInput.value = '';
+      setStatus('Choose a Markdown or text file (.md, .markdown, .txt).', 'error');
+      return;
+    }
+    if (file.size > maxFileBytes) {
+      fileInput.value = '';
+      setStatus('Choose a smaller Markdown file under 750 KB.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      input.value = typeof reader.result === 'string' ? reader.result : '';
+      convertInput();
+      setStatus(`Loaded ${file.name} locally.`);
+      input.focus();
+    });
+    reader.addEventListener('error', () => {
+      setStatus('Could not read that file. Try pasting the Markdown instead.', 'error');
+    });
+    reader.readAsText(file);
   });
 
   copyButton?.addEventListener('click', async () => {
@@ -291,5 +346,25 @@
       status.textContent = 'Copy blocked by browser. Select the HTML output and copy manually.';
       status.className = 'mt-3 min-h-6 text-sm font-semibold text-red-700';
     }
+  });
+
+  downloadButton?.addEventListener('click', () => {
+    if (!output) return;
+    const html = output.textContent || '';
+    if (!html) {
+      setStatus('Nothing to download yet.', 'error');
+      return;
+    }
+    const documentHtml = `<!doctype html>\n<html lang="en">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <title>Converted Markdown</title>\n</head>\n<body>\n${html}\n</body>\n</html>\n`;
+    const blob = new Blob([documentHtml], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'converted-markdown.html';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setStatus('HTML download started.');
   });
 </script>

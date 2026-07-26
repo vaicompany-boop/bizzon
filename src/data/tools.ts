@@ -135,7 +135,7 @@ export const tools: Tool[] = [
   {
     title: 'Markdown to HTML Converter',
     href: '/markdown-to-html',
-    description: 'Convert Markdown into safe previewable HTML with copy-ready output in your browser.',
+    description: 'Convert pasted Markdown or a local .md file into safe previewable HTML, then copy or download it locally.',
     status: 'live',
   },
   {
