@@ -7,6 +7,17 @@ import { supportPageLinks } from '../data/supportPages';
 const liveTools = tools.filter((tool) => tool.status === 'live');
 const plannedTools = tools.filter((tool) => tool.status === 'planned').slice(0, 3);
 const liveToolCount = liveTools.length;
+const featuredToolHrefs = [
+  '/word-counter',
+  '/text-cleaner',
+  '/character-counter',
+  '/meta-title-description-checker',
+  '/password-generator',
+  '/qr-code-generator',
+];
+const featuredTools = featuredToolHrefs
+  .map((href) => liveTools.find((tool) => tool.href === href))
+  .filter((tool): tool is (typeof liveTools)[number] => Boolean(tool));
 
 const toolByHref = new Map(liveTools.map((tool) => [tool.href, tool]));
 const guideByHref = new Map(supportPageLinks.map((page) => [page.href, page]));
@@ -44,7 +55,7 @@ const toolGroups = [
 ---
 
 <BaseLayout title="Bizzon Free Browser Tools — no login, no upload" description="Bizzon is a no-login collection of fast, private browser tools for text cleanup, SEO snippets, invoices, passwords, random picks, conversions, date math, percentages, filenames, tips, VAT, QR codes, and everyday tasks." canonicalPath="/">
-  <section class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-[1.05fr_0.95fr] md:py-24">
+  <section class="mx-auto grid max-w-6xl items-start gap-10 px-5 py-16 md:grid-cols-[1.05fr_0.95fr] md:py-24">
     <div>
       <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">No login. No upload. No clutter.</p>
       <h1 class="mt-5 text-5xl font-black leading-tight tracking-tight text-slate-950 md:text-7xl">Simple browser tools for everyday tasks.</h1>
@@ -59,16 +70,20 @@ const toolGroups = [
         <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"><p class="text-3xl font-black text-slate-950">Fast</p><p class="mt-1 text-sm font-semibold text-slate-600">Static pages</p></div>
       </div>
     </div>
-    <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-      <div class="flex items-center justify-between gap-4">
+    <div class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p class="text-sm font-semibold text-slate-500">{liveToolCount} tools live now</p>
-          <h2 class="mt-1 text-2xl font-black text-slate-950">Pick the job you need.</h2>
+          <p class="text-sm font-semibold text-slate-500">{liveToolCount} browser tools live now</p>
+          <h2 class="mt-1 text-2xl font-black text-slate-950">Start with a common job.</h2>
+          <p class="mt-2 text-sm leading-6 text-slate-600">Shortcuts for the tasks most visitors need first. The full hub has every converter, calculator, creator, and cleanup tool.</p>
         </div>
-        <span class="rounded-full bg-blue-50 px-4 py-2 text-sm font-bold text-blue-700">{liveToolCount} live</span>
+        <span class="w-fit rounded-full bg-blue-50 px-4 py-2 text-sm font-bold text-blue-700">No upload</span>
       </div>
-      <div class="mt-5 max-h-[34rem] space-y-4 overflow-y-auto pr-1">{liveTools.map((tool) => <ToolCard tool={tool} />)}</div>
-      <p class="mt-6 rounded-2xl bg-blue-50 p-4 text-sm text-blue-900">All tools run locally in your browser. Bizzon does not upload or store your pasted text, lists, invoice details, passwords, dates, conversions, percentage calculations, filenames, bill amounts, tax estimates, or QR content.</p>
+      <div class="mt-5 grid gap-3 sm:grid-cols-2">{featuredTools.map((tool) => <ToolCard tool={tool} />)}</div>
+      <div class="mt-5 flex flex-col gap-3 rounded-2xl bg-blue-50 p-4 text-sm text-blue-900 sm:flex-row sm:items-center sm:justify-between">
+        <p>All tools run locally in your browser. Bizzon does not upload or store pasted text, lists, invoice details, passwords, dates, conversions, calculations, filenames, bill amounts, tax estimates, or QR content.</p>
+        <a class="shrink-0 rounded-full bg-white px-4 py-2 text-center font-bold text-blue-700 transition hover:text-blue-900" href="/tools">See all {liveToolCount} tools →</a>
+      </div>
     </div>
   </section>
 
