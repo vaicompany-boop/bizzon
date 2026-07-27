@@ -1,5 +1,8 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { tools as registeredTools } from '../src/data/tools.ts';
+
+const liveToolCount = registeredTools.filter((tool) => tool.status === 'live').length;
 
 const root = process.cwd();
 const pages = {
@@ -15,7 +18,7 @@ const home = readFileSync(pages.home, 'utf8');
 const tools = readFileSync(pages.tools, 'utf8');
 
 const homeRequired = [
-  '16 live browser tools',
+  `${liveToolCount} live browser tools`,
   'All tools run locally in your browser',
   'Popular text tools',
   'SEO and publishing tools',
@@ -46,7 +49,7 @@ const homeRequired = [
   'Loan Calculator',
   'Business Name Generator',
   'Explore all tools',
-  '16 tools live now',
+  `${liveToolCount} browser tools live now`,
   'No login. No upload. No clutter.',
   'Looking for a Bizzon login?',
   'Bizzon does not need an account or dashboard login',
@@ -95,7 +98,7 @@ const supportPageLinks = [
 ];
 
 const toolsRequired = [
-  '16 live tools',
+  `${liveToolCount} live tools`,
   'Live tools',
   'Browse by category',
   'Text tools',
