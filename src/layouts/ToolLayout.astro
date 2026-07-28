@@ -2,10 +2,27 @@
 import BaseLayout from './BaseLayout.astro';
 
 type Props = { title: string; description: string; eyebrow?: string; heading: string; intro: string; canonicalPath?: string };
-const { title, description, eyebrow = 'Free online tool', heading, intro, canonicalPath } = Astro.props;
+const { title, description, eyebrow = 'Free online tool', heading, intro, canonicalPath = Astro.url.pathname } = Astro.props;
+const canonicalUrl = new URL(canonicalPath, Astro.site ?? 'https://bizzon.app').toString();
+const webApplicationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: heading,
+  url: canonicalUrl,
+  description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  isAccessibleForFree: true,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+};
 ---
 
 <BaseLayout title={title} description={description} canonicalPath={canonicalPath}>
+  <script type="application/ld+json" set:html={JSON.stringify(webApplicationJsonLd)} />
   <section class="mx-auto max-w-6xl px-5 py-12 md:py-16">
     <div class="max-w-3xl">
       <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">{eyebrow}</p>
