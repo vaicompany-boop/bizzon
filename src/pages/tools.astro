@@ -74,18 +74,18 @@ const toolGroups = [
 
     <section class="mt-10 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8" aria-labelledby="categories-heading">
       <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Browse by category</p><h2 id="categories-heading" class="mt-3 text-3xl font-black text-slate-950">Find the right utility faster.</h2></div><p class="max-w-xl text-slate-600">Grouped internal links help people and search engines understand the toolbox.</p></div>
-      <div class="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+      <div class="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {toolGroups.map((group) => (
-          <div class="flex flex-col rounded-3xl border border-slate-200 bg-slate-50 p-5">
+          <div class="flex flex-col rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-[0_1px_0_rgba(15,23,42,0.03)] md:p-6">
             <h3 class="font-bold text-slate-950">{group.label}</h3>
             <p class="mt-2 text-sm leading-6 text-slate-600">{group.description}</p>
-            <div class="mt-4 grid gap-2 text-sm font-semibold text-blue-700">
-              {group.links.map((tool) => <a href={tool.href}>{tool.title}</a>)}
+            <div class="mt-4 flex flex-wrap gap-2 text-sm font-semibold">
+              {group.links.map((tool) => <a class="rounded-full border border-blue-100 bg-white px-3 py-1.5 text-blue-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-800" href={tool.href}>{tool.title}</a>)}
             </div>
             <div class="mt-5 border-t border-slate-200 pt-4">
               <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">Related guides</p>
-              <div class="mt-3 grid gap-2 text-sm font-semibold text-slate-700">
-                {group.guides.map((guide) => <a class="hover:text-blue-700" href={guide.href}>{guide.title}</a>)}
+              <div class="mt-3 grid gap-2 text-sm font-semibold text-slate-700 sm:grid-cols-2">
+                {group.guides.map((guide) => <a class="leading-5 hover:text-blue-700" href={guide.href}>{guide.title}</a>)}
               </div>
             </div>
           </div>
