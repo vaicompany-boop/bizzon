@@ -4,24 +4,36 @@ import type { Tool } from '../data/tools';
 type Props = { tool: Tool };
 const { tool } = Astro.props;
 const isLive = tool.status === 'live';
+
+const cardClasses = [
+  'group block rounded-3xl border bg-white p-6 shadow-sm',
+  isLive
+    ? 'border-blue-100 transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md'
+    : 'border-slate-200 opacity-80',
+];
+const badgeClasses = [
+  'rounded-full px-3 py-1 text-xs font-semibold',
+  isLive ? 'bg-blue-50 text-blue-700' : 'bg-slate-100 text-slate-500',
+];
 ---
 
-<a
-  href={tool.href}
-  class:list={[
-    'group block rounded-3xl border bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md',
-    isLive ? 'border-blue-100' : 'border-slate-200 opacity-80',
-  ]}
-  aria-disabled={!isLive ? 'true' : undefined}
->
-  <div class="flex items-start justify-between gap-4">
-    <h3 class="text-lg font-bold text-slate-950 group-hover:text-blue-700">{tool.title}</h3>
-    <span class:list={[
-      'rounded-full px-3 py-1 text-xs font-semibold',
-      isLive ? 'bg-blue-50 text-blue-700' : 'bg-slate-100 text-slate-500',
-    ]}>
-      {isLive ? 'Live' : 'Planned'}
-    </span>
-  </div>
-  <p class="mt-3 text-sm leading-6 text-slate-600">{tool.description}</p>
-</a>
+{
+  isLive ? (
+    <a href={tool.href} class:list={cardClasses}>
+      <div class="flex items-start justify-between gap-4">
+        <h3 class="text-lg font-bold text-slate-950 group-hover:text-blue-700">{tool.title}</h3>
+        <span class:list={badgeClasses}>Live</span>
+      </div>
+      <p class="mt-3 text-sm leading-6 text-slate-600">{tool.description}</p>
+    </a>
+  ) : (
+    <article class:list={cardClasses}>
+      <div class="flex items-start justify-between gap-4">
+        <h3 class="text-lg font-bold text-slate-950">{tool.title}</h3>
+        <span class:list={badgeClasses}>Planned</span>
+      </div>
+      <p class="mt-3 text-sm leading-6 text-slate-600">{tool.description}</p>
+      <p class="mt-4 text-sm font-semibold text-slate-500">Not live yet — included only as roadmap context.</p>
+    </article>
+  )
+}
