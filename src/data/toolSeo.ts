@@ -350,6 +350,24 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'How to Create QR Codes', href: '/how-to-create-qr-codes', reason: 'test QR codes before publishing' },
     ],
   },
+  'json-formatter': {
+    slug: 'json-formatter',
+    toolName: 'JSON Formatter & Validator',
+    primaryKeyword: 'free online JSON formatter and validator',
+    summary: 'Use this free online JSON formatter and validator to make pasted JSON readable, minify valid JSON, download clean output, and find syntax errors locally in your browser.',
+    steps: ['Paste JSON or open a local .json or text file.', 'Choose Format for readable indentation or Minify for compact output.', 'Review validation errors, copy the clean JSON, or download a .json file.'],
+    useCases: ['Format API responses, webhook payloads, config snippets, and test fixtures before reading or sharing them.', 'Minify valid JSON for compact examples, embeds, or configuration values.', 'Catch missing commas, quotes, brackets, and other syntax issues before pasting JSON into another tool.'],
+    faqs: [
+      { question: 'Does the JSON Formatter upload my JSON?', answer: 'No. Formatting, minifying, validation, copying, and file reading happen locally in your browser.' },
+      { question: 'Can it show where JSON is invalid?', answer: 'Yes. When the browser parser reports a character position, Bizzon also shows an approximate line and column to help you find the issue faster.' },
+      { question: 'Can I download the formatted JSON?', answer: 'Yes. After valid JSON is formatted or minified, you can download the output as a .json file.' },
+    ],
+    related: [
+      { label: 'JSON to CSV Converter', href: '/json-to-csv', reason: 'to turn JSON data into spreadsheet-friendly CSV' },
+      { label: 'CSV to JSON Converter', href: '/csv-to-json', reason: 'to convert table data into JSON' },
+      { label: 'JSON to YAML Converter', href: '/json-to-yaml', reason: 'to convert valid JSON into readable YAML' },
+    ],
+  },
   'invoice-maker': {
     slug: 'invoice-maker',
     toolName: 'Invoice Maker',
