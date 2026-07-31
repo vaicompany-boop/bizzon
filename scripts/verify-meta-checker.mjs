@@ -26,6 +26,13 @@ const required = [
   '/slug-generator',
   '/character-counter',
   '/word-counter',
+  'How to check an SEO title',
+  'Meta title vs page title',
+  'How to write a meta description',
+  'SEO Title Checker — Preview title length and snippets',
+  'Coffee brewing guide: methods, ratios, and beginner tips',
+  '/how-to-write-meta-descriptions',
+  '/meta-description-length-guide',
 ];
 
 for (const needle of required) {
