@@ -63,12 +63,31 @@ const toolGroups = [
     guides: guidesByHref(['/private-browser-tools', '/how-to-create-clean-filenames', '/how-to-create-qr-codes', '/free-qr-code-generator', '/how-to-make-a-qr-code-for-a-link']),
   },
 ];
+
+const toolsHubJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Free browser tools',
+  url: 'https://bizzon.app/tools',
+  description: 'Browse Bizzon free no-login browser tools for text cleanup, SEO snippets, passwords, QR codes, converters, calculators, and everyday tasks.',
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: liveTools.length,
+    itemListElement: liveTools.map((tool, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: tool.title,
+      url: `https://bizzon.app${tool.href}`,
+    })),
+  },
+};
 ---
 
-<BaseLayout title="Tools — Bizzon" description="Browse Bizzon's free browser-based tools for text, SEO, invoices, passwords, random picking, unit conversion, date math, percentage math, filename cleanup, tip calculation, VAT or sales tax, QR codes, and everyday productivity." canonicalPath="/tools">
+<BaseLayout title="Free browser tools for text, SEO, QR codes and calculators | Bizzon" description="Browse Bizzon's free no-login browser tools for text cleanup, SEO snippets, passwords, random picking, unit conversion, date math, percentage math, filenames, tips, VAT or sales tax, QR codes, and everyday productivity." canonicalPath="/tools">
+  <script type="application/ld+json" set:html={JSON.stringify(toolsHubJsonLd)} />
   <section class="mx-auto max-w-6xl px-5 py-14 md:py-20">
     <div class="grid gap-8 md:grid-cols-[1fr_18rem] md:items-end">
-      <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Useful tools for small everyday tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon has <strong>{liveToolCount} live tools</strong> for text and publishing, invoices, passwords and random choices, conversions, date and percentage math, filenames, bill splitting, VAT or sales tax estimates, and QR codes. All tools are fast, private, and browser-based.</p></div>
+      <div class="max-w-3xl"><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Toolbox</p><h1 class="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-6xl">Free browser tools for everyday tasks.</h1><p class="mt-5 text-lg text-slate-600">Bizzon has <strong>{liveToolCount} live tools</strong> for text cleanup, SEO snippets, passwords, QR codes, calculators, converters, filenames, invoices, and quick publishing checks. Open a focused tool, finish the task, and move on.</p><div class="mt-7 flex flex-col gap-3 sm:flex-row"><a class="rounded-full bg-blue-600 px-5 py-3 text-center font-bold text-white shadow-sm transition hover:bg-blue-700 hover:text-white" href="#live-tools-heading">Browse live tools</a><a class="rounded-full border border-slate-300 bg-white px-5 py-3 text-center font-bold text-slate-800 transition hover:border-blue-300 hover:text-blue-700" href="#categories-heading">Pick by task</a></div><div class="mt-5 flex flex-wrap gap-2 text-sm font-semibold text-slate-700"><a class="rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-blue-800 hover:bg-blue-100" href="/word-counter">Word Counter</a><a class="rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-blue-800 hover:bg-blue-100" href="/text-cleaner">Text Cleaner</a><a class="rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-blue-800 hover:bg-blue-100" href="/qr-code-generator">QR Code Generator</a></div></div>
       <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6"><p class="text-4xl font-black text-blue-700">{liveToolCount}</p><p class="mt-2 font-bold text-slate-950">Live tools</p><p class="mt-2 text-sm text-slate-600">The toolbox now covers text, publishing, security, decisions, conversions, date math, bill-splitting, tax, and QR utilities.</p></div>
     </div>
 
