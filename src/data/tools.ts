@@ -231,13 +231,13 @@ export const tools: Tool[] = [
   {
     title: 'Loan Calculator',
     href: '/loan-calculator',
-    description: 'Estimate monthly payments, total interest, and repayment totals for simple loan scenarios.',
-    status: 'planned',
+    description: 'Estimate monthly payments, total interest, and repayment totals for simple fixed-rate loan scenarios locally in your browser.',
+    status: 'live',
   },
   {
     title: 'Business Name Generator',
     href: '/business-name-generator',
-    description: 'Brainstorm practical business, project, and domain-name ideas from a few keywords.',
-    status: 'planned',
+    description: 'Brainstorm practical business, project, and domain-name ideas from your own keywords locally in your browser.',
+    status: 'live',
   },
 ];

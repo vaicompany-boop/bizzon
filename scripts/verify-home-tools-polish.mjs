@@ -72,6 +72,8 @@ const liveToolLinks = [
   '/vat-sales-tax-calculator',
   '/qr-code-generator',
   '/invoice-maker',
+  '/loan-calculator',
+  '/business-name-generator',
 ];
 
 const supportPageLinks = [
