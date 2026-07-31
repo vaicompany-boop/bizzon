@@ -28,6 +28,11 @@ const canonical = new URL(canonicalPath, Astro.site ?? 'https://bizzon.app').toS
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1855041425692099"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <div class="flex min-h-screen flex-col"><Header /><main class="flex-1"><slot /></main><Footer /></div>
