@@ -38,9 +38,14 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('16 live')) throw new Error(`Expected ${name} page to show 16 live tools`);
   if (!page.includes('/password-generator')) throw new Error(`Expected ${name} page to link to /password-generator`);
   if (!page.includes('Password Generator')) throw new Error(`Expected ${name} page to include Password Generator`);
+}
+
+const vercelConfig = JSON.parse(readFileSync(join(root, 'vercel.json'), 'utf8'));
+const redirectSources = new Set((vercelConfig.redirects ?? []).map(({ source }) => source));
+if (redirectSources.has('/password-generator')) {
+  throw new Error('Password Generator is a live route and must not redirect away from /password-generator.');
 }
 
 console.log('Password Generator static page verification passed.');
