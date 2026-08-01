@@ -7,20 +7,57 @@ import { supportPageLinks } from '../data/supportPages';
 const liveTools = tools.filter((tool) => tool.status === 'live');
 const plannedTools = tools.filter((tool) => tool.status === 'planned').slice(0, 3);
 const liveToolCount = liveTools.length;
-const featuredToolHrefs = [
-  '/word-counter',
-  '/text-cleaner',
-  '/character-counter',
-  '/meta-title-description-checker',
-  '/password-generator',
-  '/qr-code-generator',
-];
-const featuredTools = featuredToolHrefs
-  .map((href) => liveTools.find((tool) => tool.href === href))
-  .filter((tool): tool is (typeof liveTools)[number] => Boolean(tool));
 
 const toolByHref = new Map(liveTools.map((tool) => [tool.href, tool]));
 const guideByHref = new Map(supportPageLinks.map((page) => [page.href, page]));
+
+const categoryGroups = [
+  {
+    title: 'Text',
+    accent: 'blue',
+    icon: 'T',
+    description: 'Edit, clean, and analyze text quickly.',
+    hrefs: ['/word-counter', '/text-cleaner'],
+    allHref: '/tools#categories-heading',
+    allLabel: 'See all text tools',
+  },
+  {
+    title: 'Publish',
+    accent: 'red',
+    icon: '!',
+    description: 'SEO, metadata, and content tools for publishers.',
+    hrefs: ['/meta-title-description-checker', '/qr-code-generator'],
+    allHref: '/tools#categories-heading',
+    allLabel: 'See all publish tools',
+  },
+  {
+    title: 'Calculate',
+    accent: 'yellow',
+    icon: '%',
+    description: 'Business, finance, and everyday calculations.',
+    hrefs: ['/percentage-calculator', '/vat-sales-tax-calculator'],
+    allHref: '/tools#categories-heading',
+    allLabel: 'See all calculate tools',
+  },
+  {
+    title: 'Convert',
+    accent: 'blue',
+    icon: '{}',
+    description: 'Convert files, data, and formats in seconds.',
+    hrefs: ['/csv-to-json', '/json-to-csv'],
+    allHref: '/tools#categories-heading',
+    allLabel: 'See all convert tools',
+  },
+  {
+    title: 'Create',
+    accent: 'red',
+    icon: '+',
+    description: 'Generate secure, random, and shareable items.',
+    hrefs: ['/password-generator', '/slug-generator'],
+    allHref: '/tools#categories-heading',
+    allLabel: 'See all create tools',
+  },
+];
 
 const toolGroups = [
   {
@@ -53,6 +90,12 @@ const toolGroups = [
   },
 ];
 
+const searchTools = liveTools.map((tool) => ({
+  title: tool.title,
+  href: tool.href,
+  description: tool.description,
+}));
+
 const homeJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -72,105 +115,244 @@ const homeJsonLd = {
 
 <BaseLayout title="Bizzon Free Browser Tools — no login, no upload" description="Bizzon is a no-login collection of fast, private browser tools for text cleanup, SEO snippets, invoices, passwords, random picks, conversions, date math, percentages, filenames, tips, VAT, QR codes, and everyday tasks." canonicalPath="/">
   <script type="application/ld+json" set:html={JSON.stringify(homeJsonLd)} />
-  <section class="mx-auto grid max-w-6xl items-start gap-10 px-5 py-12 md:grid-cols-[1.05fr_0.95fr] md:py-24">
-    <div>
-      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">No login. No upload. No clutter.</p>
-      <h1 class="mt-5 text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl md:text-7xl">Simple browser tools for everyday tasks.</h1>
-      <p class="mt-6 max-w-2xl text-lg text-slate-600 md:text-xl">Bizzon now has <strong>{liveToolCount} live browser tools</strong> for writing, publishing, passwords, random picks, conversions, date math, percentage math, filenames, restaurant bills, VAT or sales tax, and QR codes. Open a focused tool, finish the small task, and move on.</p>
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a class="rounded-full bg-blue-600 px-6 py-3 text-center font-bold text-white shadow-sm transition hover:bg-blue-700 hover:text-white" href="/tools">Explore all tools</a>
-        <a class="rounded-full border border-slate-300 bg-white px-6 py-3 text-center font-bold text-slate-800 transition hover:border-blue-300 hover:text-blue-700" href="/word-counter">Try Word Counter</a>
+  <script id="home-tool-search-data" type="application/json" set:html={JSON.stringify(searchTools)} />
+
+  <section class="home-hero">
+    <div class="home-hero__copy">
+      <div class="tally-stack" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="home-kicker">No login. No upload. No clutter.</p>
+      <h1>Simple browser tools for everyday tasks.</h1>
+      <p class="home-value">No login. No upload. Runs in your browser.</p>
+      <div class="home-actions">
+        <a class="home-primary" href="/tools">Browse tools <span aria-hidden="true">→</span></a>
+        <a class="home-secondary" href="/word-counter">Try Word Counter</a>
       </div>
-      <div class="mt-8 grid gap-3 sm:grid-cols-3">
-        <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"><p class="text-3xl font-black text-slate-950">{liveToolCount}</p><p class="mt-1 text-sm font-semibold text-slate-600">Live tools</p></div>
-        <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"><p class="text-3xl font-black text-slate-950">0</p><p class="mt-1 text-sm font-semibold text-slate-600">Accounts needed</p></div>
-        <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"><p class="text-3xl font-black text-slate-950">Fast</p><p class="mt-1 text-sm font-semibold text-slate-600">No setup</p></div>
-      </div>
-    </div>
-    <div class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p class="text-sm font-semibold text-slate-500">{liveToolCount} browser tools live now</p>
-          <h2 class="mt-1 text-2xl font-black text-slate-950">Start with a common job.</h2>
-          <p class="mt-2 text-sm leading-6 text-slate-600">Shortcuts for the tasks most visitors need first. The full hub has every converter, calculator, creator, and cleanup tool.</p>
+
+      <form class="tool-finder" role="search" action="/tools">
+        <label for="home-tool-search">Find a tool</label>
+        <div class="tool-finder__box">
+          <span class="tool-finder__icon" aria-hidden="true"></span>
+          <input id="home-tool-search" name="q" type="search" placeholder="Search tools" autocomplete="off" aria-controls="home-tool-results" aria-expanded="false" />
         </div>
-        <span class="w-fit rounded-full bg-blue-50 px-4 py-2 text-sm font-bold text-blue-700">No upload</span>
+        <div id="home-tool-results" class="tool-finder__results" role="listbox" aria-label="Matching Bizzon tools" hidden></div>
+        <p class="home-private">Private by design. Your data stays in your browser.</p>
+      </form>
+    </div>
+
+    <div class="utility-collage" aria-hidden="true">
+      <div class="paper-shape paper-shape--red"></div>
+      <div class="paper-shape paper-shape--yellow"></div>
+      <div class="paper-shape paper-shape--blue"></div>
+      <div class="receipt">
+        <p>messy text...</p>
+        <p> extra spaces</p>
+        <p>line breaks</p>
+        <p>tabs\t...</p>
+        <strong>cleaned!</strong>
       </div>
-      <div class="mt-5 grid gap-3 sm:grid-cols-2">{featuredTools.map((tool) => <ToolCard tool={tool} />)}</div>
-      <div class="mt-5 flex flex-col gap-3 rounded-2xl bg-blue-50 p-4 text-sm text-blue-900 sm:flex-row sm:items-center sm:justify-between">
-        <p>All tools run locally in your browser. Bizzon does not upload or store pasted text, lists, invoice details, passwords, dates, conversions, calculations, filenames, bill amounts, tax estimates, or QR content.</p>
-        <a class="shrink-0 rounded-full bg-white px-4 py-2 text-center font-bold text-blue-700 transition hover:text-blue-900" href="/tools">See all {liveToolCount} tools →</a>
+      <div class="receipt-roll"></div>
+      <div class="paper-strip"><span></span><span></span><span></span></div>
+      <div class="percent-dial"><span>%</span></div>
+      <div class="decor-qr">
+        {Array.from({ length: 49 }).map((_, index) => <span class:list={[index % 3 === 0 || [1, 5, 8, 12, 18, 23, 29, 33, 39, 44, 47].includes(index) ? 'is-ink' : '']} />)}
+      </div>
+      <div class="calculator">
+        {[7, 8, 9, 4, 5, 6, 1, 2, 3, 0, '.', '='].map((key) => <span class={key === '=' ? 'is-red' : ''}>{key}</span>)}
+      </div>
+      <div class="blue-crosses"><span>+</span><span>+</span><span>+</span><span>+</span></div>
+    </div>
+  </section>
+
+  <section id="categories" class="home-categories" aria-labelledby="category-title">
+    <div class="home-categories__intro">
+      <h2 id="category-title">Start with the kind of task.</h2>
+      <p><strong>{liveToolCount} browser tools live now</strong> — across text work, SEO &amp; publishing, private utilities, business calculators, format converters, and social helpers.</p>
+    </div>
+    <div class="category-board">
+      {categoryGroups.map((group) => (
+        <article class={`category-panel category-panel--${group.accent}`}>
+          <div class="category-panel__head">
+            <span aria-hidden="true">{group.icon}</span>
+            <h3>{group.title}</h3>
+          </div>
+          <p>{group.description}</p>
+          <div class="category-panel__tools">
+            {group.hrefs.map((href) => {
+              const tool = toolByHref.get(href);
+              return tool ? (
+                <a href={tool.href}>
+                  <strong>{tool.title}</strong>
+                  <small>{tool.description}</small>
+                  <span aria-hidden="true">-&gt;</span>
+                </a>
+              ) : null;
+            })}
+          </div>
+          <a class="category-panel__all" href={group.allHref}>{group.allLabel} <span aria-hidden="true">-&gt;</span></a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="home-band">
+    <div class="home-band__inner home-band__inner--callout">
+      <div>
+        <p class="home-section-kicker">Account-free tools</p>
+        <h2>Looking for a Bizzon login?</h2>
+        <p>All tools run locally in your browser. Bizzon does not need an account or dashboard login. Open any tool, paste only the text or numbers needed for the task, copy the result, and leave when you are done. If a search brought you here for a Bizzon login, start with the tools hub instead.</p>
+      </div>
+      <div class="home-band__actions">
+        <a class="home-primary" href="/tools">Explore all tools</a>
+        <a class="home-secondary" href="/private-browser-tools">Read about private browser tools</a>
       </div>
     </div>
   </section>
 
-  <section class="bg-white/70 py-10">
-    <div class="mx-auto max-w-6xl px-5">
-      <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6 shadow-sm md:p-8">
-        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Account-free tools</p>
-        <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950">Looking for a Bizzon login?</h2>
-        <p class="mt-4 max-w-3xl leading-8 text-blue-950">Bizzon does not need an account or dashboard login. Open any tool, paste only the text or numbers needed for the task, copy the result, and leave when you are done. If a search brought you here for a Bizzon login, start with the tools hub instead.</p>
-        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-          <a class="rounded-full bg-blue-600 px-5 py-3 text-center font-bold text-white shadow-sm transition hover:bg-blue-700 hover:text-white" href="/tools">Open the tools hub</a>
-          <a class="rounded-full border border-blue-200 bg-white px-5 py-3 text-center font-bold text-blue-800 transition hover:border-blue-300 hover:text-blue-950" href="/private-browser-tools">Read about private browser tools</a>
-        </div>
-      </div>
+  <section class="home-section">
+    <div class="home-section__intro">
+      <p class="home-section-kicker">Start with a focused workflow</p>
+      <h2>Choose the tool cluster that matches the task.</h2>
+      <p>Use grouped shortcuts to jump straight to text tools, SEO and publishing helpers, business calculators, or private browser utilities.</p>
     </div>
-  </section>
-
-  <section class="bg-white/70 py-14">
-    <div class="mx-auto max-w-6xl px-5">
-      <div class="max-w-3xl">
-        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Start with a focused workflow</p>
-        <h2 class="mt-3 text-3xl font-black text-slate-950 md:text-4xl">Choose the tool cluster that matches the task.</h2>
-        <p class="mt-3 text-slate-600">Use grouped shortcuts to jump straight to text tools, SEO and publishing helpers, business calculators, or private browser utilities.</p>
-      </div>
-      <div class="mt-8 grid gap-6 lg:grid-cols-2">
-        {toolGroups.map((group) => (
-          <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-700">{group.eyebrow}</p>
-            <h3 class="mt-3 text-2xl font-black text-slate-950">{group.title}</h3>
-            <p class="mt-3 text-sm leading-6 text-slate-600">{group.body}</p>
-            <div class="mt-5 flex flex-wrap gap-2">
-              {group.hrefs.map((href) => {
-                const tool = toolByHref.get(href);
-                return tool ? <a class="rounded-full border border-slate-200 px-3 py-2 text-sm font-bold text-slate-800 transition hover:border-blue-300 hover:text-blue-700" href={tool.href}>{tool.title}</a> : null;
+    <div class="workflow-grid">
+      {toolGroups.map((group) => (
+        <article class="workflow-card">
+          <p class="home-section-kicker">{group.eyebrow}</p>
+          <h3>{group.title}</h3>
+          <p>{group.body}</p>
+          <div class="workflow-card__links">
+            {group.hrefs.map((href) => {
+              const tool = toolByHref.get(href);
+              return tool ? <a href={tool.href}>{tool.title}</a> : null;
+            })}
+          </div>
+          <div class="workflow-card__guides">
+            <p>Related guides</p>
+            <div>
+              {group.guideHrefs.map((href) => {
+                const guide = guideByHref.get(href);
+                return guide ? <a href={guide.href}>{guide.title} -&gt;</a> : null;
               })}
             </div>
-            <div class="mt-5 border-t border-slate-100 pt-4">
-              <p class="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Related guides</p>
-              <div class="mt-3 grid gap-2 sm:grid-cols-2">
-                {group.guideHrefs.map((href) => {
-                  const guide = guideByHref.get(href);
-                  return guide ? <a class="text-sm font-bold text-blue-700 hover:text-blue-900" href={guide.href}>{guide.title} →</a> : null;
-                })}
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
+          </div>
+        </article>
+      ))}
     </div>
   </section>
 
-  <section class="py-14">
-    <div class="mx-auto max-w-6xl px-5">
-      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Featured guide clusters</p><h2 class="mt-3 text-3xl font-black text-slate-950 md:text-4xl">Helpful guides for small tasks.</h2><p class="mt-3 max-w-2xl text-slate-600">Short support pages help visitors choose the right Bizzon tool for text cleanup, SEO snippets, filenames, calculators, private browser workflows, and QR sharing.</p></div><a class="font-bold text-blue-700" href="/tools">Browse every Bizzon tool →</a></div>
-      <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-        {supportPageLinks.map((page) => (
-          <a class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md" href={page.href}>
-            <h3 class="text-base font-bold text-slate-950">{page.title}</h3>
-            <p class="mt-3 text-sm leading-6 text-slate-600">{page.description}</p>
-            <p class="mt-4 text-sm font-bold text-blue-700">Read guide →</p>
-          </a>
-        ))}
+  <section class="home-section home-section--quiet">
+    <div class="home-section__split">
+      <div>
+        <p class="home-section-kicker">Featured guide clusters</p>
+        <h2>Helpful guides for small tasks.</h2>
+        <p>Short support pages help visitors choose the right Bizzon tool for text cleanup, SEO snippets, filenames, calculators, private browser workflows, and QR sharing.</p>
       </div>
+      <a href="/tools">Browse every Bizzon tool -&gt;</a>
+    </div>
+    <div class="guide-grid">
+      {supportPageLinks.map((page) => (
+        <a class="guide-card" href={page.href}>
+          <h3>{page.title}</h3>
+          <p>{page.description}</p>
+          <strong>Read guide -&gt;</strong>
+        </a>
+      ))}
     </div>
   </section>
 
-  <section class="bg-white/70 py-14">
-    <div class="mx-auto max-w-6xl px-5">
-      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Planned carefully</p><h2 class="mt-3 text-3xl font-black text-slate-950 md:text-4xl">More utilities are queued only when they add clear value.</h2><p class="mt-3 max-w-2xl text-slate-600">Bizzon already covers common text, publishing, privacy, conversion, QR, tax, tip, and invoice tasks. Planned tools stay practical and focused instead of adding clutter.</p></div><a class="font-bold text-blue-700" href="/tools">See the tool roadmap →</a></div>
-      <div class="mt-8 grid gap-5 md:grid-cols-3">{plannedTools.map((tool) => <ToolCard tool={tool} />)}</div>
+  <section class="home-section">
+    <div class="home-section__split">
+      <div>
+        <p class="home-section-kicker">Planned carefully</p>
+        <h2>More utilities are queued only when they add clear value.</h2>
+        <p>Bizzon already covers common text, publishing, privacy, conversion, QR, tax, tip, and invoice tasks. Planned tools stay practical and focused instead of adding clutter.</p>
+      </div>
+      <a href="/tools">See the tool roadmap -&gt;</a>
     </div>
+    <div class="planned-grid">{plannedTools.map((tool) => <ToolCard tool={tool} />)}</div>
   </section>
+
+  <script>
+    const dataScript = document.getElementById('home-tool-search-data');
+    const input = document.getElementById('home-tool-search');
+    const results = document.getElementById('home-tool-results');
+    const tools = dataScript?.textContent ? JSON.parse(dataScript.textContent) : [];
+
+    function renderToolResults() {
+      if (!(input instanceof HTMLInputElement) || !(results instanceof HTMLElement)) return;
+
+      const query = input.value.trim().toLowerCase();
+      results.innerHTML = '';
+
+      if (!query) {
+        input.setAttribute('aria-expanded', 'false');
+        results.hidden = true;
+        return;
+      }
+
+      const matches = tools
+        .filter((tool) => `${tool.title} ${tool.description}`.toLowerCase().includes(query))
+        .slice(0, 6);
+
+      input.setAttribute('aria-expanded', matches.length > 0 ? 'true' : 'false');
+      results.hidden = false;
+
+      if (matches.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'tool-finder__empty';
+        empty.textContent = 'No matching live tools yet. Browse all tools instead.';
+        results.append(empty);
+        return;
+      }
+
+      matches.forEach((tool) => {
+        const link = document.createElement('a');
+        link.href = tool.href;
+        link.setAttribute('role', 'option');
+
+        const title = document.createElement('strong');
+        title.textContent = tool.title;
+        const desc = document.createElement('span');
+        desc.textContent = tool.description;
+        const arrow = document.createElement('em');
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = '->';
+
+        link.append(title, desc, arrow);
+        results.append(link);
+      });
+    }
+
+    input?.addEventListener('input', renderToolResults);
+    input?.addEventListener('keydown', (event) => {
+      if (!(results instanceof HTMLElement)) return;
+      const links = Array.from(results.querySelectorAll('a'));
+      if (event.key === 'ArrowDown' && links[0]) {
+        event.preventDefault();
+        links[0].focus();
+      }
+      if (event.key === 'Escape') {
+        input.value = '';
+        renderToolResults();
+      }
+    });
+    results?.addEventListener('keydown', (event) => {
+      const links = Array.from(results.querySelectorAll('a'));
+      const currentIndex = links.indexOf(document.activeElement);
+      if (event.key === 'ArrowDown' && currentIndex < links.length - 1) {
+        event.preventDefault();
+        links[currentIndex + 1].focus();
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        if (currentIndex <= 0) input?.focus();
+        else links[currentIndex - 1].focus();
+      }
+      if (event.key === 'Escape' && input instanceof HTMLInputElement) {
+        input.value = '';
+        renderToolResults();
+        input.focus();
+      }
+    });
+  </script>
 </BaseLayout>

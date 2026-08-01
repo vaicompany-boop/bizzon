@@ -1,31 +1,28 @@
 ---
 const navItems = [
-  { href: '/', label: 'Home' },
   { href: '/tools', label: 'Tools' },
-  { href: '/text-cleaner', label: 'Text Cleaner' },
-  { href: '/password-generator', label: 'Passwords' },
-  { href: '/qr-code-generator', label: 'QR Codes' },
-  { href: '/vat-sales-tax-calculator', label: 'VAT' },
+  { href: '/tools#categories-heading', label: 'Categories' },
+  { href: '/private-browser-tools', label: 'Privacy' },
 ];
 ---
 
-<header class="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur">
-  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
-    <a href="/" class="flex items-center font-semibold text-slate-950" aria-label="Bizzon home">
-      <img src="/logo-wordmark.png" alt="Bizzon.app" class="h-9 w-auto max-w-[13rem] object-contain sm:h-10 sm:max-w-[15rem]" width="1020" height="246" loading="eager" decoding="async" />
+<header class="sticky top-0 z-30 border-b border-[#101a33]/15 bg-[#faf5ea]/92 backdrop-blur-sm">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-5 sm:py-4">
+    <a href="/" class="flex items-center font-serif text-3xl font-black leading-none text-[#07132d] sm:text-4xl" aria-label="Bizzon home">
+      Bizzon
     </a>
-    <nav class="hidden items-center gap-5 text-sm font-medium text-slate-600 lg:flex" aria-label="Main navigation">
+    <nav class="hidden items-center gap-8 text-base font-medium text-[#07132d] md:flex" aria-label="Main navigation">
       {navItems.map((item) => (
-        <a class="transition hover:text-blue-700" href={item.href}>{item.label}</a>
+        <a class="transition hover:text-[#df2b1f]" href={item.href}>{item.label}</a>
       ))}
     </nav>
-    <a class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:text-white" href="/tools">
-      Open tools
+    <a class="rounded-md border border-[#07132d]/20 bg-[#df2b1f] px-3 py-2 text-sm font-semibold text-white shadow-[3px_3px_0_#07132d] transition hover:-translate-y-0.5 hover:bg-[#c72218] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1267c9] sm:px-4" href="/tools">
+      Browse tools
     </a>
   </div>
-  <nav class="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 pb-3 text-sm font-semibold text-slate-600 lg:hidden" aria-label="Mobile navigation">
+  <nav class="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-4 pb-3 text-sm font-semibold text-[#07132d] md:hidden" aria-label="Mobile navigation">
     {navItems.map((item) => (
-      <a class="shrink-0 rounded-full border border-slate-200 bg-white px-3 py-1.5 transition hover:border-blue-200 hover:text-blue-700" href={item.href}>{item.label}</a>
+      <a class="shrink-0 rounded-md border border-[#07132d]/20 bg-white/70 px-3 py-1.5 transition hover:border-[#df2b1f] hover:text-[#df2b1f]" href={item.href}>{item.label}</a>
     ))}
   </nav>
 </header>

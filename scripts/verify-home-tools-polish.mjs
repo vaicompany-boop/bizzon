@@ -18,7 +18,7 @@ const home = readFileSync(pages.home, 'utf8');
 const tools = readFileSync(pages.tools, 'utf8');
 
 const homeRequired = [
-  `${liveToolCount} live browser tools`,
+  `${liveToolCount} browser tools live now`,
   'All tools run locally in your browser',
   'Popular text tools',
   'SEO and publishing tools',
