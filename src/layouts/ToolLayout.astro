@@ -1,34 +1,20 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-
 type Props = { title: string; description: string; eyebrow?: string; heading: string; intro: string; canonicalPath?: string };
 const { title, description, eyebrow = 'Free online tool', heading, intro, canonicalPath = Astro.url.pathname } = Astro.props;
 const canonicalUrl = new URL(canonicalPath, Astro.site ?? 'https://bizzon.app').toString();
-const webApplicationJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebApplication',
-  name: heading,
-  url: canonicalUrl,
-  description,
-  applicationCategory: 'UtilitiesApplication',
-  operatingSystem: 'Any',
-  isAccessibleForFree: true,
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD',
-  },
-};
+const webApplicationJsonLd = { '@context': 'https://schema.org', '@type': 'WebApplication', name: heading, url: canonicalUrl, description, applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 ---
 
 <BaseLayout title={title} description={description} canonicalPath={canonicalPath}>
   <script type="application/ld+json" set:html={JSON.stringify(webApplicationJsonLd)} />
-  <section class="mx-auto max-w-6xl px-5 py-8 md:py-16">
-    <div class="max-w-3xl">
-      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-blue-700 sm:text-sm sm:tracking-[0.24em]">{eyebrow}</p>
-      <h1 class="mt-3 text-3xl font-black leading-tight tracking-tight text-slate-950 sm:text-4xl md:mt-4 md:text-6xl">{heading}</h1>
-      <p class="mt-4 text-base leading-7 text-slate-600 sm:text-lg md:mt-5 md:text-xl">{intro}</p>
+  <section class="mx-auto max-w-6xl px-5 py-9 md:py-14">
+    <div class="grid gap-6 md:grid-cols-[9rem_minmax(0,1fr)_12rem] md:gap-10">
+      <div class="border-t-4 border-[#007d7a] pt-3"><p class="orbit-kicker">Tool station</p><p class="mt-4 text-sm font-bold text-[#183b5b]">{eyebrow}</p></div>
+      <div><h1 class="orbit-display max-w-3xl text-5xl leading-[.86] text-slate-950 md:text-7xl">{heading}</h1><p class="mt-6 max-w-2xl text-lg leading-8 text-slate-600 md:text-xl">{intro}</p></div>
+      <aside class="self-start border border-[#183b5b] bg-[#f4bf4f] p-4 text-sm leading-6 text-[#183b5b]"><p class="orbit-kicker !text-[#183b5b]">Local signal</p><p class="mt-3 font-semibold">Runs in your browser. Your input stays on this device.</p></aside>
     </div>
-    <div class="mt-7 md:mt-10"><slot /></div>
+    <div class="orbit-rule mt-9"></div>
+    <div class="mt-8"><slot /></div>
   </section>
 </BaseLayout>

@@ -18,41 +18,27 @@ const home = readFileSync(pages.home, 'utf8');
 const tools = readFileSync(pages.tools, 'utf8');
 
 const homeRequired = [
-  `${liveToolCount} live browser tools`,
-  'All tools run locally in your browser',
-  'Popular text tools',
-  'SEO and publishing tools',
-  'Business calculators',
-  'Private browser utilities',
-  'Start with a focused workflow',
-  'Featured guide clusters',
-  'Count and clean drafts',
-  'Prepare search snippets',
-  'Check prices and percentages',
-  'Create and share QR codes',
+  `${liveToolCount} browser tools`,
+  'A small task deserves a direct route.',
+  'No login. No upload. No extra tab.',
+  'Fast launch',
+  'Three frequent stops.',
+  'Words in.',
+  'Numbers out.',
+  'Make a thing.',
+  'Private by default. Useful on purpose.',
   'Word Counter',
-  'Case Converter',
-  'Character Counter',
   'Text Cleaner',
-  'Slug Generator',
-  'Meta Title &amp; Description Checker',
-  'Password Generator',
-  'Random Picker',
-  'Unit Converter Mini',
-  'Date Calculator',
-  'Percentage Calculator',
-  'Filename Cleaner',
-  'Tip Calculator',
   'VAT / Sales Tax Calculator',
   'QR Code Generator',
-  'Invoice Maker',
-  'Loan Calculator',
-  'Business Name Generator',
-  'Explore all tools',
-  `${liveToolCount} browser tools live now`,
-  'No login. No upload. No clutter.',
-  'Looking for a Bizzon login?',
-  'Bizzon does not need an account or dashboard login',
+  'CSV to JSON Converter',
+  'Image to WebP Converter',
+];
+
+const homeToolLinks = [
+  '/word-counter', '/text-cleaner', '/case-converter', '/slug-generator', '/filename-cleaner', '/character-counter',
+  '/percentage-calculator', '/vat-sales-tax-calculator', '/tip-calculator', '/date-calculator', '/unit-converter', '/invoice-maker',
+  '/qr-code-generator', '/password-generator', '/json-formatter', '/csv-to-json', '/image-to-webp', '/random-picker',
 ];
 
 const liveToolLinks = [
@@ -109,7 +95,6 @@ const toolsRequired = [
   'Business calculators',
   'Everyday utilities',
   'Related guides',
-  'Coming next',
   'Use this if you need to',
   'Word Counter',
   'Case Converter',
@@ -139,13 +124,15 @@ for (const needle of toolsRequired) {
   if (!tools.includes(needle)) throw new Error(`Expected tools page HTML to include: ${needle}`);
 }
 
+for (const href of homeToolLinks) {
+  if (!home.includes(`href="${href}"`)) throw new Error(`Expected homepage to link featured station tool: ${href}`);
+}
+
 for (const href of liveToolLinks) {
-  if (!home.includes(`href="${href}"`)) throw new Error(`Expected homepage to link live tool: ${href}`);
   if (!tools.includes(`href="${href}"`)) throw new Error(`Expected tools page to link live tool: ${href}`);
 }
 
 for (const href of supportPageLinks) {
-  if (!home.includes(`href="${href}"`)) throw new Error(`Expected homepage to link support guide: ${href}`);
   if (!tools.includes(`href="${href}"`)) throw new Error(`Expected tools page to link support guide: ${href}`);
 }
 

@@ -1,31 +1,20 @@
 ---
 const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/tools', label: 'Tools' },
-  { href: '/text-cleaner', label: 'Text Cleaner' },
-  { href: '/password-generator', label: 'Passwords' },
-  { href: '/qr-code-generator', label: 'QR Codes' },
-  { href: '/vat-sales-tax-calculator', label: 'VAT' },
+  { href: '/tools', label: 'All tools' },
+  { href: '/word-counter', label: 'Text' },
+  { href: '/vat-sales-tax-calculator', label: 'Numbers' },
+  { href: '/qr-code-generator', label: 'Make' },
 ];
 ---
 
-<header class="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur">
-  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4">
-    <a href="/" class="flex items-center font-semibold text-slate-950" aria-label="Bizzon home">
-      <img src="/logo-wordmark.png" alt="Bizzon.app" class="h-9 w-auto max-w-[13rem] object-contain sm:h-10 sm:max-w-[15rem]" width="1020" height="246" loading="eager" decoding="async" />
+<header class="border-b border-[#9db8c7] bg-[#f8fbfd]">
+  <div class="mx-auto grid max-w-6xl gap-3 px-5 py-4 md:grid-cols-[auto_1fr_auto] md:items-center">
+    <a href="/" class="flex items-center" aria-label="Bizzon home">
+      <img src="/logo-wordmark.png" alt="Bizzon.app" class="h-8 w-auto max-w-[10rem] object-contain sm:h-9" width="1020" height="246" loading="eager" decoding="async" />
     </a>
-    <nav class="hidden items-center gap-5 text-sm font-medium text-slate-600 lg:flex" aria-label="Main navigation">
-      {navItems.map((item) => (
-        <a class="transition hover:text-blue-700" href={item.href}>{item.label}</a>
-      ))}
+    <nav class="flex gap-x-5 overflow-x-auto border-y border-[#9db8c7] py-2 text-xs font-bold uppercase tracking-[.08em] text-slate-800 md:justify-center md:border-y-0 md:py-0" aria-label="Main navigation">
+      {navItems.map((item, index) => <a class="shrink-0 transition hover:text-[#007d7a]" href={item.href}><span class="mr-1 orbit-mono text-[.62rem] text-[#007d7a]">0{index + 1}</span>{item.label}</a>)}
     </nav>
-    <a class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:text-white" href="/tools">
-      Open tools
-    </a>
+    <a class="orbit-pill justify-self-start bg-[#f4bf4f] px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-[#b9d8d4] md:justify-self-end" href="/tools">Open library <span aria-hidden="true">↗</span></a>
   </div>
-  <nav class="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 pb-3 text-sm font-semibold text-slate-600 lg:hidden" aria-label="Mobile navigation">
-    {navItems.map((item) => (
-      <a class="shrink-0 rounded-full border border-slate-200 bg-white px-3 py-1.5 transition hover:border-blue-200 hover:text-blue-700" href={item.href}>{item.label}</a>
-    ))}
-  </nav>
 </header>

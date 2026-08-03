@@ -3,176 +3,65 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ToolCard from '../components/ToolCard.astro';
 import { tools } from '../data/tools';
 import { supportPageLinks } from '../data/supportPages';
-
 const liveTools = tools.filter((tool) => tool.status === 'live');
-const plannedTools = tools.filter((tool) => tool.status === 'planned').slice(0, 3);
 const liveToolCount = liveTools.length;
-const featuredToolHrefs = [
-  '/word-counter',
-  '/text-cleaner',
-  '/character-counter',
-  '/meta-title-description-checker',
-  '/password-generator',
-  '/qr-code-generator',
+const stations = [
+  { code: 'A', title: 'Words in.', note: 'Count, clean, convert, format, and prepare text before it leaves your desk.', hrefs: ['/word-counter', '/text-cleaner', '/case-converter', '/slug-generator', '/filename-cleaner', '/character-counter'], tint: 'bg-[#e7f3f4]' },
+  { code: 'B', title: 'Numbers out.', note: 'Check a date, price, percentage, tax amount, bill, or conversion without opening a sheet.', hrefs: ['/percentage-calculator', '/vat-sales-tax-calculator', '/tip-calculator', '/date-calculator', '/unit-converter', '/invoice-maker'], tint: 'bg-[#f4bf4f]' },
+  { code: 'C', title: 'Make a thing.', note: 'Make a QR code, tidy data, format an image, or produce a small useful output.', hrefs: ['/qr-code-generator', '/password-generator', '/json-formatter', '/csv-to-json', '/image-to-webp', '/random-picker'], tint: 'bg-[#b9d8d4]' },
 ];
-const featuredTools = featuredToolHrefs
-  .map((href) => liveTools.find((tool) => tool.href === href))
-  .filter((tool): tool is (typeof liveTools)[number] => Boolean(tool));
-
-const toolByHref = new Map(liveTools.map((tool) => [tool.href, tool]));
-const guideByHref = new Map(supportPageLinks.map((page) => [page.href, page]));
-
-const toolGroups = [
-  {
-    eyebrow: 'Popular text tools',
-    title: 'Count and clean drafts',
-    body: 'Use these when a draft, pasted note, headline, filename, or CMS field needs cleanup before publishing.',
-    hrefs: ['/word-counter', '/character-counter', '/text-cleaner', '/case-converter', '/slug-generator', '/filename-cleaner'],
-    guideHrefs: ['/best-free-text-tools', '/free-word-counter', '/character-limit-guide', '/how-to-clean-pasted-text', '/word-count-vs-character-count', '/how-to-create-clean-filenames', '/how-to-make-a-url-slug'],
-  },
-  {
-    eyebrow: 'SEO and publishing tools',
-    title: 'Prepare search snippets',
-    body: 'Check title and description length, create clean slugs, and prepare QR destinations before a page or campaign goes live.',
-    hrefs: ['/meta-title-description-checker', '/slug-generator', '/qr-code-generator', '/word-counter'],
-    guideHrefs: ['/how-to-write-meta-descriptions', '/meta-description-length-guide', '/how-to-create-qr-codes', '/free-qr-code-generator', '/how-to-make-a-qr-code-for-a-link'],
-  },
-  {
-    eyebrow: 'Business calculators',
-    title: 'Check prices and percentages',
-    body: 'Run quick estimates for discounts, increases, VAT or sales tax, loan payments, tips, invoice drafts, dates, and units without opening a spreadsheet.',
-    hrefs: ['/percentage-calculator', '/vat-sales-tax-calculator', '/loan-calculator', '/tip-calculator', '/invoice-maker', '/date-calculator', '/unit-converter', '/business-name-generator'],
-    guideHrefs: ['/quick-business-calculators', '/vat-vs-sales-tax-calculator-guide', '/vat-calculator-germany', '/vat-calculator-eu', '/percentage-increase-calculator', '/discount-calculator', '/tip-calculator-guide'],
-  },
-  {
-    eyebrow: 'Private browser utilities',
-    title: 'Create and share QR codes',
-    body: 'Generate passwords, pick random names or winners, create QR codes, and handle everyday one-off tasks with local browser utilities.',
-    hrefs: ['/password-generator', '/random-picker', '/qr-code-generator', '/date-calculator', '/unit-converter'],
-    guideHrefs: ['/private-browser-tools', '/how-to-create-qr-codes', '/free-qr-code-generator', '/how-to-make-a-qr-code-for-a-link'],
-  },
-];
-
-const homeJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Bizzon',
-  url: 'https://bizzon.app/',
-  description: 'Free no-login browser tools for text cleanup, SEO snippets, passwords, QR codes, calculators, converters, and everyday tasks.',
-  hasPart: liveTools.slice(0, 12).map((tool) => ({
-    '@type': 'WebApplication',
-    name: tool.title,
-    url: `https://bizzon.app${tool.href}`,
-    applicationCategory: 'UtilitiesApplication',
-    operatingSystem: 'Any',
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  })),
-};
+const byHref = new Map(liveTools.map((tool) => [tool.href, tool]));
+const starters = ['/word-counter', '/vat-sales-tax-calculator', '/qr-code-generator'].map((href) => byHref.get(href)).filter(Boolean);
 ---
 
 <BaseLayout title="Bizzon Free Browser Tools — no login, no upload" description="Bizzon is a no-login collection of fast, private browser tools for text cleanup, SEO snippets, invoices, passwords, random picks, conversions, date math, percentages, filenames, tips, VAT, QR codes, and everyday tasks." canonicalPath="/">
-  <script type="application/ld+json" set:html={JSON.stringify(homeJsonLd)} />
-  <section class="mx-auto grid max-w-6xl items-start gap-10 px-5 py-12 md:grid-cols-[1.05fr_0.95fr] md:py-24">
-    <div>
-      <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">No login. No upload. No clutter.</p>
-      <h1 class="mt-5 text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-5xl md:text-7xl">Simple browser tools for everyday tasks.</h1>
-      <p class="mt-6 max-w-2xl text-lg text-slate-600 md:text-xl">Bizzon now has <strong>{liveToolCount} live browser tools</strong> for writing, publishing, passwords, random picks, conversions, date math, percentage math, filenames, restaurant bills, VAT or sales tax, and QR codes. Open a focused tool, finish the small task, and move on.</p>
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a class="rounded-full bg-blue-600 px-6 py-3 text-center font-bold text-white shadow-sm transition hover:bg-blue-700 hover:text-white" href="/tools">Explore all tools</a>
-        <a class="rounded-full border border-slate-300 bg-white px-6 py-3 text-center font-bold text-slate-800 transition hover:border-blue-300 hover:text-blue-700" href="/word-counter">Try Word Counter</a>
+  <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebSite', name: 'Bizzon', url: 'https://bizzon.app/', description: 'Free no-login browser tools for everyday text, number, file, and sharing tasks.' })} />
+  <section class="mx-auto max-w-6xl px-5 pb-11 pt-8 md:pb-16 md:pt-14">
+    <div class="grid gap-7 md:grid-cols-[minmax(0,1fr)_17rem] md:gap-12">
+      <div class="border-l-4 border-[#007d7a] pl-5 md:pl-7">
+        <p class="orbit-kicker">Browser tools / no account required</p>
+        <h1 class="orbit-display mt-5 max-w-4xl text-6xl leading-[.83] text-slate-950 md:text-8xl">A small task deserves a direct route.</h1>
+        <p class="mt-7 max-w-xl text-lg leading-8 text-slate-600 md:text-xl">{liveToolCount} browser tools for the text, numbers, files, and sharing jobs that show up in a normal day. Pick a station, finish locally, move on.</p>
+        <div class="mt-8 flex flex-wrap gap-3"><a class="bg-[#183b5b] px-5 py-3 font-bold text-white transition hover:bg-[#007d7a]" href="/tools">Choose a tool <span class="ml-2" aria-hidden="true">↗</span></a><a class="orbit-pill px-5 py-3 font-bold text-slate-950 transition hover:bg-[#b9d8d4]" href="/text-cleaner">Clean pasted text</a></div>
       </div>
-      <div class="mt-8 grid gap-3 sm:grid-cols-3">
-        <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"><p class="text-3xl font-black text-slate-950">{liveToolCount}</p><p class="mt-1 text-sm font-semibold text-slate-600">Live tools</p></div>
-        <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"><p class="text-3xl font-black text-slate-950">0</p><p class="mt-1 text-sm font-semibold text-slate-600">Accounts needed</p></div>
-        <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"><p class="text-3xl font-black text-slate-950">Fast</p><p class="mt-1 text-sm font-semibold text-slate-600">No setup</p></div>
-      </div>
-    </div>
-    <div class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <p class="text-sm font-semibold text-slate-500">{liveToolCount} browser tools live now</p>
-          <h2 class="mt-1 text-2xl font-black text-slate-950">Start with a common job.</h2>
-          <p class="mt-2 text-sm leading-6 text-slate-600">Shortcuts for the tasks most visitors need first. The full hub has every converter, calculator, creator, and cleanup tool.</p>
-        </div>
-        <span class="w-fit rounded-full bg-blue-50 px-4 py-2 text-sm font-bold text-blue-700">No upload</span>
-      </div>
-      <div class="mt-5 grid gap-3 sm:grid-cols-2">{featuredTools.map((tool) => <ToolCard tool={tool} />)}</div>
-      <div class="mt-5 flex flex-col gap-3 rounded-2xl bg-blue-50 p-4 text-sm text-blue-900 sm:flex-row sm:items-center sm:justify-between">
-        <p>All tools run locally in your browser. Bizzon does not upload or store pasted text, lists, invoice details, passwords, dates, conversions, calculations, filenames, bill amounts, tax estimates, or QR content.</p>
-        <a class="shrink-0 rounded-full bg-white px-4 py-2 text-center font-bold text-blue-700 transition hover:text-blue-900" href="/tools">See all {liveToolCount} tools →</a>
-      </div>
+      <aside class="orbit-cut border border-[#183b5b] bg-[#f8fbfd] p-6">
+        <p class="orbit-kicker">Desk note / 01</p>
+        <p class="orbit-display mt-7 text-3xl leading-[.9] text-slate-950">No login. No upload. No extra tab.</p>
+        <p class="mt-6 border-t border-[#9db8c7] pt-4 text-sm leading-6 text-slate-600">The tool stays close to the job: browser-first controls, plain language, and a result you can use right away.</p>
+      </aside>
     </div>
   </section>
 
-  <section class="bg-white/70 py-10">
+  <section class="border-y border-[#9db8c7] bg-[#f8fbfd]">
+    <div class="mx-auto grid max-w-6xl gap-6 px-5 py-8 md:grid-cols-[12rem_1fr] md:items-center md:py-10">
+      <div><p class="orbit-kicker">Fast launch</p><h2 class="orbit-display mt-3 text-3xl leading-none text-slate-950">Three frequent stops.</h2></div>
+      <div class="grid gap-3 sm:grid-cols-3">{starters.map((tool) => tool && <ToolCard tool={tool} />)}</div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 py-12 md:py-20">
+    <div class="grid gap-12 md:gap-16">
+      {stations.map((station, index) => (
+        <section class:list={["grid gap-7 md:grid-cols-[minmax(0,1fr)_13rem] md:gap-10", index > 0 && 'orbit-rule pt-12 md:pt-16']}>
+          <div>
+            <div class="flex items-baseline justify-between gap-4"><h2 class="orbit-display text-4xl leading-none text-slate-950">{station.title}</h2><span class="orbit-mono text-sm font-bold text-[#007d7a]">STATION {station.code}</span></div>
+            <p class="mt-4 max-w-2xl text-base leading-7 text-slate-600">{station.note}</p>
+            <div class="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{station.hrefs.map((href) => { const tool = byHref.get(href); return tool ? <ToolCard tool={tool} /> : null; })}</div>
+          </div>
+          <aside class:list={["orbit-cut self-start border border-[#183b5b] p-5", station.tint]}><p class="orbit-kicker !text-[#183b5b]">Route {station.code}</p><p class="orbit-display mt-5 text-2xl leading-[.92] text-[#183b5b]">Open a tool. Keep your work moving.</p><a class="mt-7 inline-block border-b-2 border-[#183b5b] pb-1 text-sm font-bold text-[#183b5b]" href="/tools">See all routes ↗</a></aside>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-t border-[#9db8c7] bg-[#f8fbfd] py-12 md:py-16">
     <div class="mx-auto max-w-6xl px-5">
-      <div class="rounded-[2rem] border border-blue-100 bg-blue-50 p-6 shadow-sm md:p-8">
-        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Account-free tools</p>
-        <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950">Looking for a Bizzon login?</h2>
-        <p class="mt-4 max-w-3xl leading-8 text-blue-950">Bizzon does not need an account or dashboard login. Open any tool, paste only the text or numbers needed for the task, copy the result, and leave when you are done. If a search brought you here for a Bizzon login, start with the tools hub instead.</p>
-        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-          <a class="rounded-full bg-blue-600 px-5 py-3 text-center font-bold text-white shadow-sm transition hover:bg-blue-700 hover:text-white" href="/tools">Open the tools hub</a>
-          <a class="rounded-full border border-blue-200 bg-white px-5 py-3 text-center font-bold text-blue-800 transition hover:border-blue-300 hover:text-blue-950" href="/private-browser-tools">Read about private browser tools</a>
-        </div>
-      </div>
+      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p class="orbit-kicker">Field notes</p><h2 class="orbit-display mt-3 text-4xl leading-none text-slate-950">Helpful guides for small tasks.</h2><p class="mt-4 max-w-2xl text-slate-600">Short, practical pages to help you choose the right Bizzon tool and finish the job with less guesswork.</p></div><a class="orbit-pill px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-[#b9d8d4]" href="/tools">All tools ↗</a></div>
+      <div class="mt-8 grid gap-3 md:grid-cols-2 lg:grid-cols-4">{supportPageLinks.map((page) => <a class="orbit-cut border border-[#9db8c7] bg-white p-5 transition hover:-translate-y-1 hover:border-[#007d7a] hover:bg-[#e7f3f4]" href={page.href}><p class="orbit-display text-lg leading-[.95] text-slate-950">{page.title}</p><p class="mt-3 text-sm leading-6 text-slate-600">{page.description}</p><p class="mt-5 text-sm font-bold text-[#007d7a]">Read guide ↗</p></a>)}</div>
     </div>
   </section>
 
-  <section class="bg-white/70 py-14">
-    <div class="mx-auto max-w-6xl px-5">
-      <div class="max-w-3xl">
-        <p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Start with a focused workflow</p>
-        <h2 class="mt-3 text-3xl font-black text-slate-950 md:text-4xl">Choose the tool cluster that matches the task.</h2>
-        <p class="mt-3 text-slate-600">Use grouped shortcuts to jump straight to text tools, SEO and publishing helpers, business calculators, or private browser utilities.</p>
-      </div>
-      <div class="mt-8 grid gap-6 lg:grid-cols-2">
-        {toolGroups.map((group) => (
-          <article class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-blue-700">{group.eyebrow}</p>
-            <h3 class="mt-3 text-2xl font-black text-slate-950">{group.title}</h3>
-            <p class="mt-3 text-sm leading-6 text-slate-600">{group.body}</p>
-            <div class="mt-5 flex flex-wrap gap-2">
-              {group.hrefs.map((href) => {
-                const tool = toolByHref.get(href);
-                return tool ? <a class="rounded-full border border-slate-200 px-3 py-2 text-sm font-bold text-slate-800 transition hover:border-blue-300 hover:text-blue-700" href={tool.href}>{tool.title}</a> : null;
-              })}
-            </div>
-            <div class="mt-5 border-t border-slate-100 pt-4">
-              <p class="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Related guides</p>
-              <div class="mt-3 grid gap-2 sm:grid-cols-2">
-                {group.guideHrefs.map((href) => {
-                  const guide = guideByHref.get(href);
-                  return guide ? <a class="text-sm font-bold text-blue-700 hover:text-blue-900" href={guide.href}>{guide.title} →</a> : null;
-                })}
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
+  <section class="border-t border-[#9db8c7] bg-[#007d7a] py-7">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5"><p class="orbit-display text-2xl leading-none text-white">Private by default. Useful on purpose.</p><a class="orbit-pill bg-[#f4bf4f] px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-[#f8fbfd]" href="/tools">Browse every tool ↗</a></div>
   </section>
-
-  <section class="py-14">
-    <div class="mx-auto max-w-6xl px-5">
-      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Featured guide clusters</p><h2 class="mt-3 text-3xl font-black text-slate-950 md:text-4xl">Helpful guides for small tasks.</h2><p class="mt-3 max-w-2xl text-slate-600">Short support pages help visitors choose the right Bizzon tool for text cleanup, SEO snippets, filenames, calculators, private browser workflows, and QR sharing.</p></div><a class="font-bold text-blue-700" href="/tools">Browse every Bizzon tool →</a></div>
-      <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-        {supportPageLinks.map((page) => (
-          <a class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md" href={page.href}>
-            <h3 class="text-base font-bold text-slate-950">{page.title}</h3>
-            <p class="mt-3 text-sm leading-6 text-slate-600">{page.description}</p>
-            <p class="mt-4 text-sm font-bold text-blue-700">Read guide →</p>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  {plannedTools.length > 0 && (
-    <section class="bg-white/70 py-14">
-      <div class="mx-auto max-w-6xl px-5">
-        <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><p class="text-sm font-semibold uppercase tracking-[0.24em] text-blue-700">Planned carefully</p><h2 class="mt-3 text-3xl font-black text-slate-950 md:text-4xl">More utilities are queued only when they add clear value.</h2><p class="mt-3 max-w-2xl text-slate-600">Bizzon already covers common text, publishing, privacy, conversion, QR, tax, tip, and invoice tasks. Planned tools stay practical and focused instead of adding clutter.</p></div><a class="font-bold text-blue-700" href="/tools">See the tool roadmap →</a></div>
-        <div class="mt-8 grid gap-5 md:grid-cols-3">{plannedTools.map((tool) => <ToolCard tool={tool} />)}</div>
-      </div>
-    </section>
-  )}
 </BaseLayout>
