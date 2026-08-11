@@ -4,6 +4,14 @@ import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
 
+const redirectedPaths = new Set([
+  '/best-free-text-tools',
+  '/character-limit-guide',
+  '/discount-calculator',
+  '/free-qr-code-generator',
+  '/free-word-counter',
+]);
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://bizzon.app',
@@ -13,5 +21,9 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) => !redirectedPaths.has(new URL(page).pathname),
+    }),
+  ],
 });
