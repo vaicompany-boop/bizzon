@@ -109,7 +109,7 @@ const pages = [
   },
 ];
 
-const redirects = new Map(JSON.parse(readFileSync('vercel.json', 'utf8')).redirects.filter(r => !r.source.includes(':')).map(r => [r.source, r.destination]));
+const redirects = new Map(JSON.parse(readFileSync('vercel.json', 'utf8')).redirects.filter(r => !r.has && !r.source.includes(':')).map(r => [r.source, r.destination]));
 const activePages = pages.filter(page => !redirects.has('/' + page.slug));
 const failures = [];
 for (const source of redirects.keys()) if (existsSync(join('dist', source.slice(1), 'index.html'))) failures.push(`${source}: retired page still built`);

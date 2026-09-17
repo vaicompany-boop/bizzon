@@ -2,6 +2,12 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.bizzon.app" }],
+      "destination": "https://bizzon.app/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {
