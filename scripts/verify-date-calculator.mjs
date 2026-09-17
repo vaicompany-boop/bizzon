@@ -1,3 +1,5 @@
+import { tools as registeredTools } from '../src/data/tools.ts';
+const liveToolCount = registeredTools.filter(tool => tool.status === 'live').length;
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -39,7 +41,7 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('16 live')) throw new Error(`Expected ${name} page to show 16 live tools`);
+  if (!page.includes(`${liveToolCount} ${name === 'home' ? 'browser tools' : 'live tools'}`)) throw new Error(`Expected ${name} page to show current live tool count ${liveToolCount}`);
   if (!page.includes('/date-calculator')) throw new Error(`Expected ${name} page to link to /date-calculator`);
   if (!page.includes('Date Calculator')) throw new Error(`Expected ${name} page to include Date Calculator`);
 }

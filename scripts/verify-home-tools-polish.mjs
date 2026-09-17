@@ -1,3 +1,4 @@
+import { redirectedPaths } from '../src/data/redirects.ts';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { tools as registeredTools } from '../src/data/tools.ts';
@@ -132,7 +133,7 @@ for (const href of liveToolLinks) {
   if (!tools.includes(`href="${href}"`)) throw new Error(`Expected tools page to link live tool: ${href}`);
 }
 
-for (const href of supportPageLinks) {
+for (const href of supportPageLinks.filter(href => !redirectedPaths.has(href))) {
   if (!tools.includes(`href="${href}"`)) throw new Error(`Expected tools page to link support guide: ${href}`);
 }
 

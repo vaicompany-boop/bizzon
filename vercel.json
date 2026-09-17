@@ -12,6 +12,7 @@
       "destination": "https://bizzon.app/:path*",
       "permanent": true
     },
+    { "source": "/how-to-make-a-qr-code-for-a-link", "destination": "/how-to-create-qr-codes", "permanent": true },
     { "source": "/free-word-counter", "destination": "/word-counter", "permanent": true },
     { "source": "/best-free-text-tools", "destination": "/tools", "permanent": true },
     { "source": "/character-limit-guide", "destination": "/character-counter", "permanent": true },

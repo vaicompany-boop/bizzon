@@ -1,3 +1,5 @@
+import { redirectedPaths } from './redirects';
+
 export type SupportPage = {
   slug: string;
   title: string;
@@ -9,7 +11,7 @@ export type SupportPage = {
   relatedTools: { label: string; href: string; reason: string }[];
 };
 
-export const supportPages: SupportPage[] = [
+const allSupportPages: SupportPage[] = [
   {
     slug: 'best-free-text-tools',
     title: 'Best Free Text Tools',
@@ -59,11 +61,27 @@ export const supportPages: SupportPage[] = [
     intro: 'Clean filenames are easier to scan, share, upload, and manage. This guide explains a simple naming workflow for web-friendly files and bulk filename cleanup.',
     steps: ['Remove confusing spaces, symbols, duplicate separators, and inconsistent casing.', 'Use short readable words that describe the file.', 'Choose hyphens or underscores consistently for the whole batch.'],
     sections: [
-      { heading: 'Prefer readable names over messy exports', body: 'Camera files, downloads, screenshots, and exported documents often have names that are hard to search later. Rename them with clear words before uploading or archiving.' },
-      { heading: 'Use Filename Cleaner for batches', body: 'Filename Cleaner lets you paste one filename per line and clean the whole list with consistent separators, casing, and character cleanup.' },
-      { heading: 'Use Slug Generator for one clean name', body: 'When you only need one web-friendly name, Slug Generator is a quick way to turn a title, product name, or phrase into a clean slug.' },
-      { heading: 'Normalize text before renaming', body: 'If filenames came from messy copied text, Text Cleaner and Case Converter can help normalize the words before final filename cleanup.' },
-    ],
+      {
+            "heading": "Worked example: a PDF menu",
+            "body": "With the default lowercase, accent removal, keep-extension, hyphen, and duplicate options enabled, \"Café Menu.PDF\" becomes cafe-menu.pdf. Paste the same name twice and the second result is cafe-menu-2.pdf. The tool normalizes the basename and final extension separately; copying these results does not rename files on your computer."
+      },
+      {
+            "heading": "Choose names before choosing separators",
+            "body": "Use a meaningful subject and a distinguishing date or version, such as menu-autumn-2026.pdf. Hyphens and underscores are both available; use one style for the batch. Ampersands become the word and. Accent removal handles decomposed accent marks, but the remaining allowed letters are ASCII, so non-Latin names may lose meaningful text."
+      },
+      {
+            "heading": "Extensions and fallback names",
+            "body": "Only the last dot separates the extension. With defaults, archive.tar.gz becomes archive-tar.gz, which may not be what an archive workflow expects. Names reduced to nothing use the fallback, initially file. Review hidden files and compound extensions separately, and remember that changing a suffix does not convert a file’s format."
+      },
+      {
+            "heading": "Checklist before a batch rename",
+            "body": "Keep a mapping from each original name to its result. Check extensions, empty-name fallbacks, case changes, and every duplicate. Compare the proposed names with the destination folder before applying them through your own file manager or script. Keep a backup when other documents or published links refer to the old names."
+      },
+      {
+            "heading": "Limitations: uniqueness and file-system rules",
+            "body": "Duplicate handling adds suffixes for repeated normalized names in the pasted list; it does not inspect existing files or guarantee that a generated suffix will not collide with another input name. It does not enforce every operating system’s reserved names or path-length limits. Review the full output rather than treating the unique option as permission to overwrite files."
+      }
+],
     relatedTools: [
       { label: 'Filename Cleaner', href: '/filename-cleaner', reason: 'clean filenames in bulk' },
       { label: 'Slug Generator', href: '/slug-generator', reason: 'create one clean URL-style name' },
@@ -100,6 +118,7 @@ export const supportPages: SupportPage[] = [
     intro: 'Many small tasks do not need an account, upload, or dashboard. Bizzon focuses on browser-based utilities that help you finish the task with less friction.',
     steps: ['Open the tool that matches the small task.', 'Paste or enter only the information needed.', 'Copy the result and close the page when done.'],
     sections: [
+      { heading: 'Local processing is not an offline visit', body: 'Pages load Vercel Analytics and external Google Fonts. YouTube thumbnail previews request images from Google. Invoice Maker opens a separate app whose storage must be checked there. Browser localStorage can persist after closing a tab. Read the Privacy page for these exceptions and browser storage controls.' },
       { heading: 'Why browser-based tools are useful', body: 'For many everyday utilities, local browser processing is faster and simpler than uploading data to a full web app. It also keeps the workflow focused.' },
       { heading: 'Use the full toolbox as a starting point', body: 'The tools hub groups Bizzon utilities by text, publishing, security, decisions, conversions, dates, percentages, filenames, tips, tax, and QR codes.' },
       { heading: 'Be careful with sensitive information', body: 'Even with local tools, avoid pasting secrets where they do not belong. For passwords, use the Password Generator and save results in a trusted password manager.' },
@@ -120,11 +139,27 @@ export const supportPages: SupportPage[] = [
     intro: 'Copied text often brings hidden clutter: doubled spaces, empty lines, tabs, smart quotes, strange dashes, and inconsistent casing. This guide shows a simple cleanup workflow using Bizzon text tools.',
     steps: ['Paste the messy copy into Text Cleaner and remove common clutter.', 'Check the cleaned text with Word Counter or Character Counter if length matters.', 'Use Case Converter when headings, labels, or lists need consistent capitalization.'],
     sections: [
-      { heading: 'Start with the source of the mess', body: 'Text from PDFs, emails, chat apps, web pages, and generated drafts can carry line breaks, spacing problems, and punctuation that makes editing harder. Cleaning first saves time later.' },
-      { heading: 'Use Text Cleaner for the first pass', body: 'Text Cleaner handles common copy-paste issues such as extra spaces, empty lines, tabs, smart quotes, and punctuation spacing without needing a full document editor.' },
-      { heading: 'Measure the cleaned result', body: 'After cleanup, Word Counter and Character Counter help you check whether the text fits a post, form field, article target, or publishing requirement.' },
-      { heading: 'Normalize capitalization last', body: 'When the words are clean, Case Converter can turn headings, labels, and lists into title case, sentence case, uppercase, lowercase, or code-friendly formats.' },
-    ],
+      {
+            "heading": "Worked example: spacing around punctuation",
+            "body": "Paste \"  Hello,   world !  \" without the outer quotation marks. Fix extra spaces produces \"Hello, world!\": it collapses runs of ordinary spaces or tabs, removes spaces before punctuation, and trims the start and end of each line. Copy the result only after checking that intentional spacing was not meaningful."
+      },
+      {
+            "heading": "Choose one operation before combining them",
+            "body": "Fix extra spaces preserves internal blank lines. Remove empty lines drops blank and whitespace-only lines, but does not collapse repeated spaces inside a sentence. Normalize smart quotes converts curly quotes and apostrophes to straight ones and converts en/em dashes to hyphens. Each button processes the original input; switching modes does not chain the previous output."
+      },
+      {
+            "heading": "Worked example: preserving paragraph structure",
+            "body": "For a two-paragraph email, first use Fix extra spaces so the empty line between paragraphs remains. Clean everything applies quote normalization, spacing cleanup, then empty-line removal; that paragraph separator disappears. Copy the output back into the input only if you deliberately want to apply a separate operation on top of the result."
+      },
+      {
+            "heading": "Checklist before replacing the original",
+            "body": "Keep an original copy. Check paragraph boundaries, indentation, punctuation, code snippets, and any table-like columns. Compare the output in the destination editor, then use Word Counter or Character Counter if a length target matters. A smaller character total confirms removal, not that the wording is correct."
+      },
+      {
+            "heading": "Limitations: PDF and invisible characters",
+            "body": "This cleaner works on plain text. It does not reconstruct a PDF layout, join lines wrapped by an export, remove a hyphen from a split word, or correct OCR spelling. Not every invisible Unicode character is removed by spacing cleanup. Avoid Clean everything for code, poetry, or aligned data where spaces, quotes, and blank lines carry meaning."
+      }
+],
     relatedTools: [
       { label: 'Text Cleaner', href: '/text-cleaner', reason: 'remove messy copy-paste formatting' },
       { label: 'Word Counter', href: '/word-counter', reason: 'measure cleaned draft length' },
@@ -140,11 +175,27 @@ export const supportPages: SupportPage[] = [
     intro: 'Word count and character count answer different questions. Word count helps with reading length and draft size; character count helps when a field, platform, or snippet has a strict limit.',
     steps: ['Use Word Counter when you care about draft size, paragraphs, sentences, or reading time.', 'Use Character Counter when a platform or field has a strict limit.', 'Use the Meta Title & Description Checker for SEO title and description previews.'],
     sections: [
-      { heading: 'Word count is best for writing scope', body: 'Word count helps estimate whether a draft is short, medium, or long. It is useful for articles, emails, assignments, newsletters, scripts, and documentation.' },
-      { heading: 'Character count is best for hard limits', body: 'Character count is more important for social profiles, ads, form fields, SMS-style messages, SEO titles, and places where every letter and space counts.' },
-      { heading: 'Characters with spaces and without spaces both matter', body: 'Some limits count spaces and punctuation. Others focus on visible characters. A good character counter shows both so you can edit with confidence.' },
-      { heading: 'SEO snippets need a special check', body: 'Meta titles and descriptions are not only about length. The Meta Title & Description Checker helps you measure and preview snippet-style copy in context.' },
-    ],
+      {
+            "heading": "Worked example: the same text, different measures",
+            "body": "Enter \"Hello, world!\" without the quotation marks. Both counters report 2 words, 13 characters, and 12 characters without spaces. The comma and exclamation mark contribute to character length but are not words. With a character limit of 15, Character Counter shows 2 remaining. Adding a trailing space raises the total by one without adding a word."
+      },
+      {
+            "heading": "How words and characters are counted",
+            "body": "Words are runs of Unicode letters or numbers; internal apostrophes and hyphens keep forms such as don’t and well-known together. An emoji alone is not a word. Character totals use JavaScript UTF-16 code units: a simple smile emoji can occupy two units even though it looks like one symbol. Combining marks and joined emoji can use still more. Languages without spaces are not segmented with a dictionary."
+      },
+      {
+            "heading": "Reading time, lines, and sentences",
+            "body": "Word Counter estimates reading time at 200 words per minute, rounded up to whole minutes for nonempty word counts. It is a pacing assumption, not a measurement of an individual reader. Sentence counting is a punctuation heuristic and may misread abbreviations or unfinished sentences. Paragraph totals count nonempty lines, so a single paragraph pasted with hard line wraps can count as several."
+      },
+      {
+            "heading": "Checklist for a submission limit",
+            "body": "Check whether the destination asks for words, characters, or bytes and whether spaces count. Paste the final text, including required headings, into the relevant counter. Remove only unintended whitespace, then verify the destination form itself. The without-spaces total removes tabs and line breaks as well as ordinary spaces; do not use it for a limit that includes whitespace."
+      },
+      {
+            "heading": "Limitations: platform rules take priority",
+            "body": "A social platform may count URLs, emoji, or normalized text differently. UTF-16 totals are not byte sizes and are not a count of visible symbols. Use Word Counter for draft length and Character Counter for an entered numerical target, but treat a destination’s own validation as the final check. Text Cleaner can alter the input, so count again after cleaning."
+      }
+],
     relatedTools: [
       { label: 'Word Counter', href: '/word-counter', reason: 'count words, paragraphs, sentences, and reading time' },
       { label: 'Character Counter', href: '/character-counter', reason: 'measure characters and limits' },
@@ -179,11 +230,27 @@ export const supportPages: SupportPage[] = [
     intro: 'VAT and sales tax calculations often look similar, but the practical question is usually simple: add tax to a net price or remove included tax from a gross price.',
     steps: ['Choose add-tax mode when you know the net price before tax.', 'Choose remove-tax mode when the final price already includes tax.', 'Use percentage and bill calculators for related pricing checks.'],
     sections: [
-      { heading: 'Adding tax starts from a net price', body: 'If you know the price before VAT or sales tax, add-tax mode estimates the tax amount and final gross price.' },
-      { heading: 'Removing tax starts from a gross price', body: 'If the final price already includes tax, remove-tax mode estimates the original net price and included tax amount.' },
-      { heading: 'Percentage math supports quick pricing checks', body: 'Percentage Calculator helps with related questions such as discounts, markups, increases, decreases, and percentage change.' },
-      { heading: 'Important numbers still need official checks', body: 'Bizzon calculators are useful for quick estimates. For legal, accounting, or tax filing decisions, verify rates and rules with official sources or a qualified professional.' },
-    ],
+      {
+            "heading": "Worked example: add tax at an illustrative rate",
+            "body": "For arithmetic practice, use net price 100 and rate 20%. Add-tax mode calculates tax as 100 × 0.20 = 20 and gross as 100 + 20 = 120. The rate here is an example, not a determination of the rate for a product or jurisdiction. Enter the applicable rate only after checking the relevant authority."
+      },
+      {
+            "heading": "Worked example: remove included tax",
+            "body": "For gross price 120 at the same illustrative 20% rate, remove-tax mode divides by 1.20: net = 120 ÷ 1.20 = 100 and included tax = 120 − 100 = 20. Subtracting 20% of 120 would give 96, which is wrong because the percentage applies to the net base, not the tax-inclusive total."
+      },
+      {
+            "heading": "What the two modes actually calculate",
+            "body": "Both modes use a single percentage on one amount. Add-tax starts from a pre-tax value; remove-tax starts from an inclusive value. The calculator rounds monetary values to two decimal places during the calculation. It does not model an invoice with independently rounded lines, multiple rates, compounding taxes, exemptions, or tax credits."
+      },
+      {
+            "heading": "Checklist before using the result",
+            "body": "Identify whether the source price includes tax. Confirm the rate and taxable base with the relevant tax authority, select the matching mode, and compare the net plus tax against gross. Keep currency conversion separate. For a real invoice, verify rounding and required fields against your accounting process instead of copying an estimate unchecked."
+      },
+      {
+            "heading": "Limitations: arithmetic does not decide tax treatment",
+            "body": "VAT and sales tax have different rules for liability, collection, and reporting. Identical percentage arithmetic does not make their legal treatment interchangeable. This tool cannot determine place of supply, registration obligations, reduced-rate eligibility, or recoverable input VAT. Use it to check a chosen scenario; seek official guidance or qualified advice for the underlying tax decision."
+      }
+],
     relatedTools: [
       { label: 'VAT / Sales Tax Calculator', href: '/vat-sales-tax-calculator', reason: 'add or remove tax from prices' },
       { label: 'Percentage Calculator', href: '/percentage-calculator', reason: 'handle related percentage math' },
@@ -198,11 +265,27 @@ export const supportPages: SupportPage[] = [
     intro: 'QR codes are useful when people need to open a link or short piece of information from a phone. This guide shows a simple browser-based workflow for creating downloadable QR codes.',
     steps: ['Prepare the link or short text you want people to scan.', 'Generate and preview the QR code in Bizzon.', 'Download the PNG and test it before printing or sharing.'],
     sections: [
-      { heading: 'Start with clean short content', body: 'QR codes work best with short links or concise text. Long content creates denser codes that can be harder to scan in real life.' },
-      { heading: 'Use QR Code Generator for the image', body: 'Bizzon QR Code Generator creates a preview and downloadable PNG in the browser, with practical size and correction options.' },
-      { heading: 'Clean the link and page details first', body: 'If the QR points to a page, use Slug Generator for clean URLs and the Meta Title & Description Checker for clearer page snippets.' },
-      { heading: 'Always test before publishing', body: 'Scan the QR code with a phone before printing it on a flyer, menu, card, sign, or document. Make sure the destination opens correctly.' },
-    ],
+      {
+            "heading": "Worked example: a public tool link",
+            "body": "Enter https://bizzon.app/tools, select 384 pixels and Medium error correction, and keep a dark foreground on a white background. The preview encodes that exact URL after trimming leading and trailing whitespace. Download the PNG and scan it with a phone: the decoded address should match the input and open the tool library. Generating the code does not visit or validate the destination."
+      },
+      {
+            "heading": "Decide what the scan should do",
+            "body": "Use a full https URL when the goal is opening a page. Plain text is encoded as text; entering a phone number or contact details does not automatically create a structured contact card. For a menu or booking page, visit the public URL in a signed-out browser first. A preview link that works only for you will still fail for visitors after scanning."
+      },
+      {
+            "heading": "Checklist before printing",
+            "body": "Confirm the final URL, remove unintended private tokens, add a visible destination label, and scan the downloaded image at its final size. Keep the square proportions and strong contrast. The generator uses a two-module margin; add ample blank space around the image in the print layout and check it on multiple phones. Test under the lighting and distance your visitors will actually use."
+      },
+      {
+            "heading": "Limitations: static codes and dense payloads",
+            "body": "This is a static QR code, not a managed redirect. You cannot change the encoded destination after distributing the PNG. A destination you control can keep the same URL while its content changes. Longer input and higher error correction can produce a denser grid; a larger image alone does not rescue a crowded or low-contrast print. Shorten unnecessary content if generation fails."
+      },
+      {
+            "heading": "Keep the destination and label in sync",
+            "body": "A code labelled Menu should open the menu, not a homepage that requires searching. Keep a readable URL beside the image as an alternative for people who cannot scan it. Do not rename an already published destination just to make it look cleaner: preserve the working address or arrange a permanent redirect before printing."
+      }
+],
     relatedTools: [
       { label: 'QR Code Generator', href: '/qr-code-generator', reason: 'create downloadable QR codes' },
       { label: 'Slug Generator', href: '/slug-generator', reason: 'clean the page URL first' },
@@ -367,7 +450,7 @@ export const supportPages: SupportPage[] = [
     relatedTools: [
       { label: 'Percentage Calculator', href: '/percentage-calculator', reason: 'calculate percentage increase and percentage change' },
       { label: 'VAT / Sales Tax Calculator', href: '/vat-sales-tax-calculator', reason: 'add or remove tax after a price change' },
-      { label: 'Discount Calculator', href: '/discount-calculator', reason: 'compare increases with sale-price reductions' },
+      { label: 'Discount Calculator', href: '/percentage-calculator', reason: 'compare increases with sale-price reductions' },
       { label: 'Quick Business Calculators', href: '/quick-business-calculators', reason: 'choose related calculators for pricing checks' },
     ],
   },
@@ -407,11 +490,14 @@ export const supportPages: SupportPage[] = [
     relatedTools: [
       { label: 'Tip Calculator', href: '/tip-calculator', reason: 'calculate tip amount, total, and per-person split' },
       { label: 'Percentage Calculator', href: '/percentage-calculator', reason: 'check custom percentage math' },
-      { label: 'Discount Calculator', href: '/discount-calculator', reason: 'handle coupons or reduced prices before splitting' },
+      { label: 'Discount Calculator', href: '/percentage-calculator', reason: 'handle coupons or reduced prices before splitting' },
       { label: 'Quick Business Calculators', href: '/quick-business-calculators', reason: 'find related everyday and business calculators' },
     ],
   },
 ];
+
+// Redirected legacy records remain here for history, but are never built or discovered.
+export const supportPages = allSupportPages.filter((page) => !redirectedPaths.has(`/${page.slug}`));
 
 export const supportPageLinks = supportPages.map((page) => ({
   title: page.title,

@@ -1,103 +1,29 @@
-import { readFileSync, existsSync } from 'node:fs';
-import { join } from 'node:path';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { tools } from '../src/data/tools.ts';
 
-const root = process.cwd();
-const routePath = join(root, 'dist', 'invoice-maker', 'index.html');
-const homePath = join(root, 'dist', 'index.html');
-const toolsPath = join(root, 'dist', 'tools', 'index.html');
-const sitemapPath = join(root, 'dist', 'sitemap-0.xml');
-
-for (const [name, path] of Object.entries({ invoiceMaker: routePath, home: homePath, tools: toolsPath, sitemap: sitemapPath })) {
-  if (!existsSync(path)) throw new Error(`Expected ${name} file to exist at ${path}`);
+// This route deliberately hands off to the dedicated application. Testing the
+// unused legacy component would not prove the deployed entry page is correct.
+const html = readFileSync('dist/invoice-maker/index.html', 'utf8');
+const app = 'https://invoice-maker-chi-lyart.vercel.app/';
+for (const destination of [app, `${app}invoices/new`]) {
+  assert.ok(html.includes(`href="${destination}" target="_blank" rel="noopener noreferrer"`), `Safe external handoff: ${destination}`);
 }
-
-const html = readFileSync(routePath, 'utf8');
-const home = readFileSync(homePath, 'utf8');
-const tools = readFileSync(toolsPath, 'utf8');
-const sitemap = readFileSync(sitemapPath, 'utf8');
-
-const required = [
-  'Invoice Maker',
-  'Create and download invoices as PDF',
-  'Browser-only pro utility',
-  'id="invoiceNumber"',
-  'id="invoiceDate"',
-  'id="invoiceDueDate"',
-  'id="sellerName"',
-  'id="sellerDetails"',
-  'id="clientName"',
-  'id="clientDetails"',
-  'id="invoiceCurrency"',
-  'id="invoiceTaxRate"',
-  'id="invoiceDiscountType"',
-  'id="invoiceDiscountValue"',
-  'id="paymentTerms"',
-  'id="invoiceLanguage"',
-  'id="taxMode"',
-  'id="signatureName"',
-  'id="recurringPreset"',
-  'id="emailInvoiceDraft"',
-  'id="clientEmail"',
-  'id="autoInvoiceNumber"',
-  'id="downloadInvoiceJson"',
-  'id="importInvoiceJson"',
-  'id="importInvoiceFile"',
-  'id="invoiceStyle"',
-  'id="invoiceLogo"',
-  'id="logoPreview"',
-  'id="saveInvoiceTemplate"',
-  'id="loadInvoiceTemplate"',
-  'id="invoiceItems"',
-  'id="addInvoiceItem"',
-  'id="downloadInvoicePdf"',
-  'id="invoicePreview"',
-  'jsPDF',
-  'Download PDF',
-  'Save template',
-  'Load template',
-  'Logo upload',
-  'PDF style',
-  'Payment terms',
-  'Language',
-  'English',
-  'Deutsch',
-  'Bosanski',
-  'VAT / tax mode',
-  'Reverse charge',
-  'Tax exempt',
-  'Signature',
-  'Recurring invoice',
-  'Email draft',
-  'Client email',
-  'Auto number',
-  'Download JSON backup',
-  'Import JSON backup',
-  'Download PDF',
-  'How saving and backups work',
-  'Save template keeps the current invoice in this browser only',
-  'Load template restores that saved browser template',
-  'Download JSON backup saves a portable invoice file',
-  'Import JSON backup restores an invoice from a previously downloaded JSON file',
-  'Subtotal',
-  'Tax',
-  'Total',
-  'FAQPage',
-  '/vat-sales-tax-calculator',
-  '/percentage-calculator',
-];
-
-for (const needle of required) {
-  if (!html.includes(needle)) throw new Error(`Expected Invoice Maker page HTML to include: ${needle}`);
+for (const text of ['Open the full Invoice Maker app.', 'Review storage before use', 'Review its privacy and storage behavior', 'Tool guide', 'FAQ', 'application/ld+json']) {
+  assert.ok(html.includes(text), `Missing entry-page contract: ${text}`);
 }
-
-for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('16 live')) throw new Error(`Expected ${name} page to show 16 live tools`);
-  if (!page.includes('/invoice-maker')) throw new Error(`Expected ${name} page to link to /invoice-maker`);
-  if (!page.includes('Invoice Maker')) throw new Error(`Expected ${name} page to include Invoice Maker`);
+for (const href of ['/privacy', '/vat-sales-tax-calculator', '/percentage-calculator', '/date-calculator']) {
+  assert.ok(html.includes(`href="${href}"`), `Missing related/help link: ${href}`);
 }
-
-if (!sitemap.includes('https://bizzon.app/invoice-maker')) {
-  throw new Error('Expected sitemap to include https://bizzon.app/invoice-maker');
+assert.ok(html.includes('<link rel="canonical" href="https://bizzon.app/invoice-maker"'));
+assert.ok(!html.includes('id="invoiceNumber"'), 'Legacy embedded editor must not be advertised as the current app');
+const blocks = [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map(m => JSON.parse(m[1]));
+assert.ok(blocks.some(b => b['@type'] === 'WebApplication' && b.url === 'https://bizzon.app/invoice-maker'));
+assert.ok(blocks.some(b => b['@type'] === 'FAQPage' && b.mainEntity.length > 0));
+const count = tools.filter(t => t.status === 'live').length;
+for (const [route, label] of [['index.html', 'browser tools'], ['tools/index.html', 'live tools']]) {
+  const page = readFileSync(`dist/${route}`, 'utf8');
+  assert.ok(page.includes(`${count} ${label}`), 'Tool count must match registry');
+  assert.ok(page.includes('href="/invoice-maker"'), 'Invoice entry remains discoverable');
 }
-
-console.log('Invoice Maker static page verification passed.');
+console.log('Invoice Maker handoff, safety, schema, privacy and discovery verification passed.');

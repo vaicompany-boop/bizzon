@@ -1,3 +1,5 @@
+import { tools as registeredTools } from '../src/data/tools.ts';
+const liveToolCount = registeredTools.filter(tool => tool.status === 'live').length;
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -37,13 +39,14 @@ for (const needle of required) {
 }
 
 for (const [name, page] of Object.entries({ home, tools })) {
-  if (!page.includes('16 live')) throw new Error(`Expected ${name} page to show 16 live tools`);
+  if (!page.includes(`${liveToolCount} ${name === 'home' ? 'browser tools' : 'live tools'}`)) throw new Error(`Expected ${name} page to show current live tool count ${liveToolCount}`);
   if (!page.includes('/vat-sales-tax-calculator')) throw new Error(`Expected ${name} page to link to /vat-sales-tax-calculator`);
   if (!page.includes('VAT / Sales Tax Calculator')) throw new Error(`Expected ${name} page to include VAT / Sales Tax Calculator`);
 }
 
-for (const planned of ['Invoice Helper']) {
-  if (!tools.includes(planned)) throw new Error(`Expected tools page roadmap to include ${planned}`);
+for (const tool of registeredTools.filter(tool => tool.status === 'planned')) {
+  if (!tools.includes(tool.name)) throw new Error(`Expected tools page roadmap to include ${tool.name}`);
 }
+if (!tools.includes('href="/invoice-maker"')) throw new Error('Expected live Invoice Maker to replace the former Invoice Helper roadmap item');
 
 console.log('VAT / Sales Tax Calculator static page verification passed.');

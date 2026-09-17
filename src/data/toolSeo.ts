@@ -29,7 +29,7 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Meta Title & Description Checker', href: '/meta-title-description-checker', reason: 'for SEO snippet checks' },
     ],
     relatedGuides: [
-      { label: 'Best Free Text Tools', href: '/best-free-text-tools', reason: 'choose the right writing utility' },
+      { label: 'Tool library', href: '/tools', reason: 'choose the right writing utility' },
       { label: 'Word Count vs Character Count', href: '/word-count-vs-character-count', reason: 'decide which metric matters' },
       { label: 'How to Clean Pasted Text', href: '/how-to-clean-pasted-text', reason: 'clean drafts before counting' },
       { label: 'How to Write Meta Descriptions', href: '/how-to-write-meta-descriptions', reason: 'measure SEO snippet drafts' },
@@ -53,7 +53,7 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Character Counter', href: '/character-counter', reason: 'to check text length after conversion' },
     ],
     relatedGuides: [
-      { label: 'Best Free Text Tools', href: '/best-free-text-tools', reason: 'use case conversion inside a broader writing workflow' },
+      { label: 'Tool library', href: '/tools', reason: 'use case conversion inside a broader writing workflow' },
       { label: 'How to Clean Pasted Text', href: '/how-to-clean-pasted-text', reason: 'clean messy copy before changing capitalization' },
     ],
   },
@@ -75,7 +75,6 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'Case Converter', href: '/case-converter', reason: 'to reformat text quickly' },
     ],
     relatedGuides: [
-      { label: 'Character Limit Guide', href: '/character-limit-guide', reason: 'decide how to edit text for strict limits' },
       { label: 'Word Count vs Character Count', href: '/word-count-vs-character-count', reason: 'understand which metric fits the task' },
       { label: 'Meta Description Length Guide', href: '/meta-description-length-guide', reason: 'apply character counts to SEO snippets' },
     ],
@@ -99,8 +98,8 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
     ],
     relatedGuides: [
       { label: 'How to Clean Pasted Text', href: '/how-to-clean-pasted-text', reason: 'follow a practical cleanup workflow' },
-      { label: 'Best Free Text Tools', href: '/best-free-text-tools', reason: 'combine cleanup with counting and formatting tools' },
-      { label: 'Free Word Counter', href: '/free-word-counter', reason: 'measure cleaned drafts after removing clutter' },
+      { label: 'Tool library', href: '/tools', reason: 'combine cleanup with counting and formatting tools' },
+      { label: 'Free Word Counter', href: '/word-counter', reason: 'measure cleaned drafts after removing clutter' },
     ],
   },
   'slug-generator': {
@@ -146,7 +145,7 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
     relatedGuides: [
       { label: 'Meta Description Length Guide', href: '/meta-description-length-guide', reason: 'write clearer search descriptions' },
       { label: 'How to Write Meta Descriptions', href: '/how-to-write-meta-descriptions', reason: 'draft titles and descriptions from intent' },
-      { label: 'Character Limit Guide', href: '/character-limit-guide', reason: 'tighten snippets for practical limits' },
+      { label: 'Character Limit Guide', href: '/character-counter', reason: 'tighten snippets for practical limits' },
     ],
   },
   'password-generator': {
@@ -168,7 +167,7 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
     ],
     relatedGuides: [
       { label: 'Private Browser Tools', href: '/private-browser-tools', reason: 'understand privacy-first browser utilities' },
-      { label: 'Free QR Code Generator', href: '/free-qr-code-generator', reason: 'share short non-secret details with QR codes when appropriate' },
+      { label: 'Free QR Code Generator', href: '/qr-code-generator', reason: 'share short non-secret details with QR codes when appropriate' },
     ],
   },
   'random-picker': {
@@ -190,7 +189,7 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
     ],
     relatedGuides: [
       { label: 'Private Browser Tools', href: '/private-browser-tools', reason: 'understand local browser utility workflows' },
-      { label: 'Best Free Text Tools', href: '/best-free-text-tools', reason: 'clean and format list text before drawing' },
+      { label: 'Tool library', href: '/tools', reason: 'clean and format list text before drawing' },
     ],
   },
   'unit-converter': {
@@ -256,7 +255,6 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
     ],
     relatedGuides: [
       { label: 'Percentage Increase Calculator', href: '/percentage-increase-calculator', reason: 'measure growth from one value to another' },
-      { label: 'Discount Calculator', href: '/discount-calculator', reason: 'turn percentage-off offers into final prices' },
       { label: 'Quick Business Calculators', href: '/quick-business-calculators', reason: 'pick the right calculator for pricing tasks' },
     ],
   },
@@ -301,7 +299,7 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
     ],
     relatedGuides: [
       { label: 'Tip Calculator Guide', href: '/tip-calculator-guide', reason: 'handle tips, rounding, and per-person totals' },
-      { label: 'Discount Calculator', href: '/discount-calculator', reason: 'check coupons before calculating a final split' },
+      { label: 'Discount Calculator', href: '/percentage-calculator', reason: 'check coupons before calculating a final split' },
     ],
   },
   'vat-sales-tax-calculator': {
@@ -319,7 +317,7 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
     related: [
       { label: 'Percentage Calculator', href: '/percentage-calculator', reason: 'for general percentage math' },
       { label: 'Tip Calculator', href: '/tip-calculator', reason: 'for bill totals' },
-      { label: 'Tools roadmap', href: '/tools', reason: 'to watch the planned invoice utility' },
+      { label: 'Invoice Maker', href: '/invoice-maker', reason: 'to open the dedicated invoice workspace' },
     ],
     relatedGuides: [
       { label: 'VAT Calculator Germany', href: '/vat-calculator-germany', reason: 'review common German VAT estimate workflows' },
@@ -345,8 +343,6 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
       { label: 'VAT / Sales Tax Calculator', href: '/vat-sales-tax-calculator', reason: 'for small business calculations' },
     ],
     relatedGuides: [
-      { label: 'Free QR Code Generator', href: '/free-qr-code-generator', reason: 'prepare QR codes for flyers and menus' },
-      { label: 'How to Make a QR Code for a Link', href: '/how-to-make-a-qr-code-for-a-link', reason: 'turn a final link into a scannable code' },
       { label: 'How to Create QR Codes', href: '/how-to-create-qr-codes', reason: 'test QR codes before publishing' },
     ],
   },
@@ -371,14 +367,14 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
   'invoice-maker': {
     slug: 'invoice-maker',
     toolName: 'Invoice Maker',
-    primaryKeyword: 'free online invoice maker',
-    summary: 'Use this free online invoice maker to create a polished invoice with business details, client details, logo, line items, discounts, tax modes, payment terms, language options, signature, recurring invoice notes, reusable templates, and a downloadable PDF.',
-    steps: ['Enter the invoice number, date, due date, payment terms, language, tax mode, your business details, and client details.', 'Add invoice line items with quantity, unit price, currency, discount, signature, and tax settings.', 'Choose a PDF style, optionally upload a logo, save a browser-only template, preview the invoice, open an email draft, and download a PDF for sending to your client.'],
-    useCases: ['Create simple invoices for freelance work, small services, consulting, design, repairs, and local business tasks.', 'Calculate line totals, subtotal, tax, and final amount without opening a spreadsheet.', 'Download a clean PDF invoice that can be emailed or archived after review.'],
+    primaryKeyword: 'invoice maker',
+    summary: 'Open the dedicated invoice workspace from Bizzon. This page links to a separate app; review its privacy and storage behavior before entering client information.',
+    steps: ['Open Invoice Maker or Create new invoice to launch the separate app in a new tab.', 'Review the app settings and enter the details needed for your invoice.', 'Check line items, tax treatment, totals, and required fields before exporting or sending a document.'],
+    useCases: ['Open a dedicated workspace for an invoice draft.', 'Check tax arithmetic with the Bizzon VAT calculator before drafting totals.', 'Review payment dates with Date Calculator before setting a deadline.'],
     faqs: [
-      { question: 'Does the Invoice Maker upload my invoice details?', answer: 'No. Invoice editing and PDF creation happen in your browser. Bizzon does not upload or store your invoice data.' },
-      { question: 'Can I add tax to the invoice?', answer: 'Yes. Enter a tax rate and the tool calculates subtotal, tax, and total. For official tax requirements, verify local rules before sending.' },
-      { question: 'Can I download the invoice as a PDF?', answer: 'Yes. Use the Download PDF button to generate a PDF file from the invoice details in your browser.' },
+      { question: 'Where does Invoice Maker open?', answer: 'The buttons open invoice-maker-chi-lyart.vercel.app in a new tab. The invoice editor is not embedded on this Bizzon page.' },
+      { question: 'Does this page store invoice details?', answer: 'This page has no invoice entry form. Review storage and privacy information in the separate app before entering details; its browser storage belongs to that app origin.' },
+      { question: 'Does an invoice template determine tax requirements?', answer: 'No. Check the applicable tax rules and required invoice fields for your situation before sending an invoice.' },
     ],
     related: [
       { label: 'VAT / Sales Tax Calculator', href: '/vat-sales-tax-calculator', reason: 'to check tax amounts' },
@@ -388,7 +384,7 @@ export const toolSeoEntries: Record<string, ToolSeoEntry> = {
     relatedGuides: [
       { label: 'Quick Business Calculators', href: '/quick-business-calculators', reason: 'choose calculators for invoice-adjacent checks' },
       { label: 'VAT Calculator Germany', href: '/vat-calculator-germany', reason: 'estimate German VAT before drafting totals' },
-      { label: 'Discount Calculator', href: '/discount-calculator', reason: 'calculate discounts before adding line items' },
+      { label: 'Discount Calculator', href: '/percentage-calculator', reason: 'calculate discounts before adding line items' },
     ],
   },
 };

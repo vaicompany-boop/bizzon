@@ -57,22 +57,22 @@ const supportGuideHrefs = [
 ];
 
 const expectedGuideCounts = {
-  'word-counter': 4,
-  'case-converter': 2,
-  'character-counter': 3,
-  'text-cleaner': 3,
+  'word-counter': 3,
+  'case-converter': 1,
+  'character-counter': 2,
+  'text-cleaner': 1,
   'slug-generator': 3,
-  'meta-title-description-checker': 3,
-  'password-generator': 2,
-  'random-picker': 2,
+  'meta-title-description-checker': 2,
+  'password-generator': 1,
+  'random-picker': 1,
   'unit-converter': 2,
   'date-calculator': 2,
-  'percentage-calculator': 3,
+  'percentage-calculator': 2,
   'filename-cleaner': 2,
-  'tip-calculator': 2,
+  'tip-calculator': 1,
   'vat-sales-tax-calculator': 3,
-  'qr-code-generator': 3,
-  'invoice-maker': 3,
+  'qr-code-generator': 1,
+  'invoice-maker': 2,
 };
 
 const missing = [];
@@ -86,7 +86,7 @@ const routeSpecificSnippets = {
     'Word count vs character count',
     'href="/word-count-vs-character-count"',
     'href="/how-to-clean-pasted-text"',
-    'href="/best-free-text-tools"',
+    'href="/tools"',
     'href="/meta-title-description-checker"',
   ],
   'random-picker': [

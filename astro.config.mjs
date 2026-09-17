@@ -4,13 +4,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
 
-const redirectedPaths = new Set([
-  '/best-free-text-tools',
-  '/character-limit-guide',
-  '/discount-calculator',
-  '/free-qr-code-generator',
-  '/free-word-counter',
-]);
+import { readFileSync } from 'node:fs';
+const redirects = JSON.parse(readFileSync(new URL('./vercel.json', import.meta.url), 'utf8')).redirects;
+const redirectedPaths = new Set(redirects.filter((rule) => !rule.source.includes(':')).map((rule) => rule.source));
 
 // https://astro.build/config
 export default defineConfig({

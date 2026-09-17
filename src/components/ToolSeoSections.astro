@@ -1,4 +1,5 @@
 ---
+import { toolLimitations } from '../data/toolLimitations';
 import { toolSeoEntries } from '../data/toolSeo';
 
 type Props = { slug: string };
@@ -29,6 +30,8 @@ const faqJsonLd = {
     How to use the {entry.toolName}
   </h2>
   <p class="mt-4 max-w-3xl text-slate-600">{entry.summary}</p>
+
+  {toolLimitations[slug] && <aside class="mt-6 border-l-4 border-[#007d7a] bg-[#e7f3f4] p-5"><h3 class="font-bold text-slate-950">Method and limitations</h3><p class="mt-2 leading-7 text-slate-700">{toolLimitations[slug]}</p></aside>}
 
   <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_1fr]">
     <div class="rounded-3xl border border-slate-200 bg-slate-50 p-6">

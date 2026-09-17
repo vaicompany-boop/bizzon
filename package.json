@@ -32,7 +32,8 @@
     "test:qr-code-generator": "npm run build && node scripts/verify-qr-code-generator.mjs",
     "test:invoice-maker": "npm run build && node scripts/verify-invoice-maker.mjs",
     "gsc:status": "node scripts/gsc-bizzon-status.mjs",
-    "astro": "astro"
+    "astro": "astro",
+    "test:adsense-readiness": "npm run build && node scripts/verify-adsense-readiness.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

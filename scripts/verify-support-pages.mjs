@@ -109,8 +109,11 @@ const pages = [
   },
 ];
 
+const redirects = new Map(JSON.parse(readFileSync('vercel.json', 'utf8')).redirects.filter(r => !r.source.includes(':')).map(r => [r.source, r.destination]));
+const activePages = pages.filter(page => !redirects.has('/' + page.slug));
 const failures = [];
-for (const page of pages) {
+for (const source of redirects.keys()) if (existsSync(join('dist', source.slice(1), 'index.html'))) failures.push(`${source}: retired page still built`);
+for (const page of activePages) {
   const file = join('dist', page.slug, 'index.html');
   if (!existsSync(file)) {
     failures.push(`${page.slug}: missing dist page`);
@@ -134,7 +137,8 @@ for (const page of pages) {
     if (!html.includes(check)) failures.push(`${page.slug}: missing ${check}`);
   }
 
-  for (const href of page.mustLink) {
+  for (const oldHref of page.mustLink) {
+    const href = redirects.get(oldHref) || oldHref;
     if (!html.includes(`href="${href}"`)) failures.push(`${page.slug}: missing link ${href}`);
   }
 
@@ -144,13 +148,13 @@ for (const page of pages) {
 
 const toolsHtml = existsSync(join('dist', 'tools', 'index.html')) ? readFileSync(join('dist', 'tools', 'index.html'), 'utf8') : '';
 if (!toolsHtml.includes('Guides for choosing the right tool')) failures.push('/tools: missing support guide section');
-for (const page of pages) {
+for (const page of activePages) {
   if (!toolsHtml.includes(`href="/${page.slug}"`)) failures.push(`/tools: missing support page link /${page.slug}`);
 }
 
 const homeHtml = existsSync(join('dist', 'index.html')) ? readFileSync(join('dist', 'index.html'), 'utf8') : '';
 if (!homeHtml.includes('Helpful guides for small tasks')) failures.push('/: missing support guide section');
-if (!homeHtml.includes('href="/best-free-text-tools"')) failures.push('/: missing best free text tools link');
+if (!homeHtml.includes('href="/how-to-clean-pasted-text"')) failures.push('/: missing pasted text guide link');
 
 if (failures.length) {
   console.error('Support page verification failed:');
@@ -158,4 +162,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Support page verification OK: ${pages.length} SEO support pages, structured data, internal links, and guide hubs verified.`);
+console.log(`Support page verification OK: ${activePages.length} SEO support pages, structured data, internal links, and guide hubs verified.`);

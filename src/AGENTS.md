@@ -48,6 +48,13 @@ npm run build
 
 If changing interactive behavior, manually browser-test the changed route in dev server and check console errors.
 
+## Content and readiness contracts
+
+- `vercel.json` is the redirect authority. `src/data/redirects.ts` and the sitemap filter consume it; redirected support records are excluded from static generation and discovery. Link directly to final destinations.
+- `src/data/site.ts` holds the public AdSense account ID; keep `public/ads.txt` consistent. Verification uses a meta tag only. Ad serving and consent setup require a separate owner review.
+- `/privacy` describes actual site services and tool exceptions; update it when adding external requests or persistent storage. `/invoice-maker` is a handoff to a separate app, not the unused local component.
+- Run `npm run test:adsense-readiness` for shared metadata, trust, content, redirect, sitemap, and local-link checks; see `docs/adsense-readiness.md` for scope and owner followups.
+
 ## Child DOX Index
 
 No child AGENTS.md files yet.
